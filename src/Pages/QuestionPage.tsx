@@ -7,6 +7,8 @@ import { CheckCircle2, XCircle, Trophy, Coins, LucideCoins } from 'lucide-react'
 import { Progress } from "@/components/ui/progress"
 import { Timer } from "@/components/Timer"
 import { AppContext } from "@/Context/AppContext"
+import maleAvatar from "../assets/male_avatar.jpeg"
+import femaleAvatar from "../assets/female_avatar.jpeg"
 
 interface QuestionPageProps {
   question: QuestionType
@@ -76,7 +78,7 @@ export default function QuestionPage({
       {/* Timer */}
       {questionResponse === null && (
         <div className="flex justify-center mb-6">
-          <Timer seconds={timerInSeconds} />
+          <Timer seconds={timerInSeconds}/>
         </div>
       )}
 
@@ -158,7 +160,7 @@ export default function QuestionPage({
         <>
           <div className="flex flex-col gap-2 my-4">
             <h2 className="text-blue-500  font-bold">Explanation</h2>
-            <p className="text-lg text-gray-500">{question.explanation.length > 300 ? question.explanation.slice(0,300)[0] + "..." : question.explanation}</p>
+            <p className="text-lg text-gray-500 font-semibold">{question.explanation.length > 300 ? question.explanation.slice(0,300)[0] + "..." : question.explanation}</p>
           </div>
         </>
       )}

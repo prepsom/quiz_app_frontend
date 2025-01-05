@@ -163,7 +163,7 @@ export default function LevelPage() {
 
   if (gameComplete && completionStatus) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white p-4">
+      <div className="min-h-screen max-w-[430px] flex items-center justify-center bg-gradient-to-b from-blue-100 to-white p-4">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -230,17 +230,19 @@ export default function LevelPage() {
   }  
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
+      <div className="min-h-screen bg-blue-100">
         {/* Back Button */}
-        <div className="flex p-2 items-center justify-between">
+        <div className="flex p-1 items-center justify-between">
           <div className='text-3xl text-gray-500 cursor-pointer hover:text-gray-700' onClick={handleExit}>
             <XCircle/>
           </div>
-          <h1 className='font-bold text-blue-700 text-2xl'>{subject?.subjectName.toUpperCase()}</h1>
           <div className='flex items-center gap-1 border rounded-3xl bg-blue-200 p-2 '>
             <span className='text-blue-500 font-bold text-2xl'>{totalPointsInLevel}</span>
-            <span className='text-3xl bg-purple-500 rounded-full'>🪙</span>
+            <span className='text-3xl'>🪙</span>
           </div>
+        </div>
+        <div className='text-center mb-2'>
+          <h1 className='font-bold text-blue-700 text-2xl'>{subject?.subjectName.toUpperCase()}</h1>
         </div>
 
         {currentQuestion && (
