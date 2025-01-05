@@ -5,37 +5,38 @@ export function Navigation() {
   const location = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t py-2 px-4">
-      <div className="max-w-lg mx-auto flex justify-around items-center">
-        <Link 
-          to="/"
-          className={`flex flex-col items-center gap-1 ${
-            location.pathname === '/' ? 'text-blue-500' : 'text-gray-500'
-          }`}
-        >
-          <Home className="w-6 h-6" />
-          <span className="text-xs">Home</span>
-        </Link>
-        <Link 
-          to="/leaderboard"
-          className={`flex flex-col items-center gap-1 ${
-            location.pathname === '/leaderboard' ? 'text-blue-500' : 'text-gray-500'
-          }`}
-        >
-          <Trophy className="w-6 h-6" />
-          <span className="text-xs">Leaderboard</span>
-        </Link>
-        <Link 
-          to="/profile"
-          className={`flex flex-col items-center gap-1 ${
-            location.pathname === '/profile' ? 'text-blue-500' : 'text-gray-500'
-          }`}
-        >
-          <User className="w-6 h-6" />
-          <span className="text-xs">Profile</span>
-        </Link>
-      </div>
-    </nav>
+    <div className="fixed bottom-0 left-0 right-0 flex justify-center bg-white">
+      <nav className="w-full max-w-md border-t py-2 px-4">
+        <div className="flex justify-around items-center">
+          <Link 
+            to="/"
+            className={`flex flex-col items-center gap-1 ${
+              location.pathname === '/' ? 'text-blue-500' : 'text-gray-500'
+            }`}
+          >
+            <Home className="w-6 h-6" />
+            <span className="text-xs">Home</span>
+          </Link>
+          <Link 
+            to="/leaderboard"
+            className={`flex flex-col items-center gap-1 ${
+              location.pathname === '/leaderboard' ? 'text-blue-500' : 'text-gray-500'
+            }`}
+          >
+            <Trophy className="w-6 h-6" />
+            <span className="text-xs">Leaderboard</span>
+          </Link>
+          <Link 
+            to="/profile"
+            className={`flex flex-col items-center gap-1 ${
+              location.pathname === '/profile' ? 'text-blue-500' : 'text-gray-500'
+            }`}
+          >
+            <User className="w-6 h-6" />
+            <span className="text-xs">Profile</span>
+          </Link>
+        </div>
+      </nav>
+    </div>
   );
 }
-
