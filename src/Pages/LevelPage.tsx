@@ -13,6 +13,7 @@ import { AppContext } from '@/Context/AppContext'
 import { useQuestionsByLevel } from '@/hooks/useQuestionsByLevel'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { useGetSubjectById } from '@/hooks/useGetSubjectById'
+import { Timer } from '@/components/Timer'
 
 interface LevelCompletionResponse {
   success: boolean
@@ -42,7 +43,7 @@ export default function LevelPage() {
   const [availableQuestions, setAvailableQuestions] = useState<QuestionType[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const [currentQuestionResponse,setCurrentQuestionResponse] = useState<QuestionResponseType | null>(null);
-  
+  const [questionTimerInSeconds,setQuestionTimerInSeconds] = useState<number>(0);  
 
 
   // Initialize available questions once when questions are loaded
@@ -68,7 +69,17 @@ export default function LevelPage() {
     }
   }, [isInitialized, availableQuestions, currentQuestion, gameComplete]);
 
-  console.log(currentQuestion);
+  useEffect(() => {
+    if(currentQuestion===null) return;
+
+    setQuestionTimerInSeconds(0);
+    const intevnal = setInterval(() => {
+      setQuestionTimerInSeconds((prev) => prev+1);
+    },1000);
+
+    return () => clearInterval(intevnal);
+
+  },[currentQuestion])
 
   const handleLevelCompletion = async () => {
     setIsSubmittingCompletion(true)
@@ -113,6 +124,7 @@ export default function LevelPage() {
   const handleAnswerSubmit = async (answerId: string,responseTimeInSeconds:number) => {
     if (!currentQuestion) return
     try {
+      console.log(responseTimeInSeconds);
       const response = await axios.post<{success:boolean;message:string;questionResponse:QuestionResponseType}>(
         `${API_URL}/question-response`,
         {
@@ -145,7 +157,7 @@ export default function LevelPage() {
     }
   }
 
-  if (isQuestionsLoading || isLevelLoading || isSubmittingCompletion) {
+  if (isQuestionsLoading || isLevelLoading || isSubmittingCompletion || isSubjectLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
@@ -153,7 +165,7 @@ export default function LevelPage() {
     )
   }
 
-  if (questionsError || isLevelError) {
+  if (questionsError || isLevelError || subjectError) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <p className="text-red-500">{questionsError !== "" ? questionsError : isLevelError}</p>
@@ -236,10 +248,9 @@ export default function LevelPage() {
           <div className='text-3xl text-gray-500 cursor-pointer hover:text-gray-700' onClick={handleExit}>
             <XCircle/>
           </div>
-          <div className='flex items-center gap-1 border rounded-3xl bg-blue-200 p-2 '>
-            <span className='text-blue-500 font-bold text-2xl'>{totalPointsInLevel}</span>
-            <span className='text-3xl'>🪙</span>
-          </div>
+          {currentQuestionResponse===null && 
+              <Timer seconds={questionTimerInSeconds}/>
+          }
         </div>
         <div className='text-center mb-2'>
           <h1 className='font-bold text-blue-700 text-2xl'>{subject?.subjectName.toUpperCase()}</h1>
@@ -254,6 +265,7 @@ export default function LevelPage() {
             currentPointsInLevel={totalPointsInLevel}
             questionResponse={currentQuestionResponse}
             onNext={onNext}
+            currentQuestionTimerInSeconds={questionTimerInSeconds}
           />
         )}
       </div>

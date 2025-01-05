@@ -14,6 +14,7 @@ interface QuestionPageProps {
   currentPointsInLevel: number
   questionResponse: QuestionResponseType | null
   onNext?: () => void
+  currentQuestionTimerInSeconds:number;
 }
 
 export default function QuestionPage({ 
@@ -23,28 +24,16 @@ export default function QuestionPage({
   currentLevel,
   currentPointsInLevel,
   questionResponse,
-  onNext
+  onNext,
+  currentQuestionTimerInSeconds,
 }: QuestionPageProps) {
   const { question: currentQuestion, isLoading: isQuestionWithAnswersLoading } = useQuestionWithAnswers(question.id)
   const [selectedAnswer, setSelectedAnswer] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [timerInSeconds, setTimerInSeconds] = useState<number>(0)
 
   useEffect(() => {
     setSelectedAnswer("")
-    setTimerInSeconds(0)
   }, [question])
-  
-  useEffect(() => {
-    if (questionResponse) return // Stop timer when question is answered
-    
-    setTimerInSeconds((prev) => prev + 1)
-    const interval = setInterval(() => {
-      setTimerInSeconds((prev) => prev + 1)
-    }, 1000)
-
-    return () => clearInterval(interval);
-  }, [questionResponse])
 
   const handleSubmit = async (responseTimeInSeconds: number) => {
     if (!selectedAnswer) return
@@ -70,20 +59,13 @@ export default function QuestionPage({
         <div className="font-semibold text-md">{currentLevel?.levelName}</div>
       </div>
 
-      {/* Timer */}
-      {questionResponse === null && (
-        <div className="flex justify-center mb-6">
-          <Timer seconds={timerInSeconds}/>
-        </div>
-      )}
-
       <div className="flex flex-col items-center">
-        <div className="bg-white font-semibold text-lg text-gray-800 py-2 px-4 rounded-lg border-2 border-[#c4eff4] flex items-center justify-center flex-wrap">
+        <div className="bg-white text-center flex items-center justify-center font-semibold text-lg text-gray-800 py-2 px-4 rounded-lg border-2 border-[#c4eff4]">
           {currentQuestion?.questionTitle}
         </div>
 
       {/* Question Card */}
-      <div className="rounded-3xl shadow-sm p-6 mb-6 w-full">
+      <div className="rounded-3xl p-6 mb-6 w-full">
 
         <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer}>
           <div className="space-y-3">
@@ -165,7 +147,7 @@ export default function QuestionPage({
           <div className="w-full max-w-md">
             {!questionResponse ? (
               <Button
-                onClick={() => handleSubmit(timerInSeconds)}
+                onClick={() => handleSubmit(currentQuestionTimerInSeconds)}
                 disabled={!selectedAnswer || isSubmitting}
                 className="w-full py-6 text-lg font-medium bg-[#1e8bf1] hover:bg-blue-600 text-white rounded-xl"
               >
