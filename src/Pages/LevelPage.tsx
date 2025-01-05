@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { Loader2, CheckCircle2, XCircle, ArrowLeft } from 'lucide-react'
+import { Loader2, CheckCircle2, XCircle, ArrowLeft, XCircleIcon } from 'lucide-react'
 import { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import { API_URL } from '@/App'
@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { AppContext } from '@/Context/AppContext'
 import { useQuestionsByLevel } from '@/hooks/useQuestionsByLevel'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
+import { useGetSubjectById } from '@/hooks/useGetSubjectById'
 
 interface LevelCompletionResponse {
   success: boolean
@@ -29,6 +30,7 @@ export default function LevelPage() {
 
   const { level, isLoading: isLevelLoading, error: isLevelError } = useGetLevelById(levelId)
   const {questions, isLoading: isQuestionsLoading, error: questionsError} = useQuestionsByLevel(levelId);
+  const {subject,isLoading:isSubjectLoading,error:subjectError} = useGetSubjectById(level?.subjectId ? level.subjectId : null);
 
   const [showExitAlert,setShowExitAlert] = useState<boolean>(false);
   const [gameComplete, setGameComplete] = useState(false);
@@ -230,15 +232,15 @@ export default function LevelPage() {
     <>
       <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
         {/* Back Button */}
-        <div className="p-4">
-          <Button 
-            variant="ghost" 
-            onClick={handleExit}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Levels
-          </Button>
+        <div className="flex p-2 items-center justify-between">
+          <div className='text-3xl text-gray-500 cursor-pointer hover:text-gray-700' onClick={handleExit}>
+            <XCircle/>
+          </div>
+          <h1 className='font-bold text-blue-700 text-2xl'>{subject?.subjectName.toUpperCase()}</h1>
+          <div className='flex items-center gap-1 border rounded-3xl bg-blue-200 p-2 '>
+            <span className='text-blue-500 font-bold text-2xl'>{totalPointsInLevel}</span>
+            <span className='text-3xl bg-purple-500 rounded-full'>🪙</span>
+          </div>
         </div>
 
         {currentQuestion && (

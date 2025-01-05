@@ -3,19 +3,31 @@ import { useSubjectsByGrade } from '@/hooks/useSubjectsByGrade'
 import { AppContextType } from '@/types'
 import { useContext } from 'react'
 import { Navigate } from 'react-router-dom'
-import { Loader2, BookOpen } from 'lucide-react'
+import { Loader2} from 'lucide-react'
 import { SubjectCard } from '@/components/SubjectCard'
+import { useUsersTotalPoints } from '@/hooks/useUsersTotalPoints'
 
 export default function SubjectsPage() {
-  const { loggedInUser ,usersTotalPoints} = useContext(AppContext) as AppContextType;
+  const { loggedInUser} = useContext(AppContext) as AppContextType;
+  const {totalPoints:usersTotalPoints,isLoading:isUsersTotalPointsLoading,error:usersTotalPointsError} = useUsersTotalPoints();
   if (loggedInUser === null) return <Navigate to="/login" />  
   const { subjects, isLoading } = useSubjectsByGrade(loggedInUser?.gradeId);
 
-  if (isLoading) {
+  if (isLoading || isUsersTotalPointsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
       </div>
+    )
+  }
+
+  if(usersTotalPointsError) {
+    return (
+      <>
+        <div className='flex items-center justify-center text-red-500'>
+          {usersTotalPointsError}
+        </div>
+      </>
     )
   }
 
@@ -24,7 +36,6 @@ export default function SubjectsPage() {
       {/* Header */}
       <div className="bg-blue-500 p-6 flex items-center justify-between text-white">
         <h1 className="text-2xl font-bold">Your Subjects</h1>
-        <BookOpen className="w-6 h-6" />
       </div>
 
       {/* Score Display */}

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 
 
-export const useGetSubjectById = (subjectId:string) => {
+export const useGetSubjectById = (subjectId:string | null) => {
 
     const [subject,setSubject] = useState<SubjectType | null>(null);
     const [isLoading,setIsLoading] = useState<boolean>(true);
@@ -14,7 +14,7 @@ export const useGetSubjectById = (subjectId:string) => {
     useEffect(() => {
         
         const fetchSubjectById = async () => {
-            if(subjectId==="") return;
+            if(subjectId==="" || subjectId===null) return;
             try {
                 const response = await axios.get<{success:boolean;subject:SubjectType}>(`${API_URL}/subject/${subjectId}`);
                 console.log(response);

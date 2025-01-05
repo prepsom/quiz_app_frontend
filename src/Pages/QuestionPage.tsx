@@ -1,11 +1,12 @@
-import { LevelType, QuestionResponseType, QuestionType } from "@/types"
+import { AppContextType, LevelType, QuestionResponseType, QuestionType } from "@/types"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { useQuestionWithAnswers } from "@/hooks/useQuestionWithAnswers"
-import { CheckCircle2, XCircle, Trophy } from 'lucide-react'
+import { CheckCircle2, XCircle, Trophy, Coins, LucideCoins } from 'lucide-react'
 import { Progress } from "@/components/ui/progress"
 import { Timer } from "@/components/Timer"
+import { AppContext } from "@/Context/AppContext"
 
 interface QuestionPageProps {
   question: QuestionType
@@ -26,6 +27,7 @@ export default function QuestionPage({
   questionResponse,
   onNext
 }: QuestionPageProps) {
+  const {loggedInUser} = useContext(AppContext) as AppContextType;
   const { question: currentQuestion, isLoading: isQuestionWithAnswersLoading } = useQuestionWithAnswers(question.id)
   const [selectedAnswer, setSelectedAnswer] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -65,28 +67,10 @@ export default function QuestionPage({
   return (
     <div className="w-full max-w-md mx-auto px-4">
       {/* Header Section */}
-      <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-lg font-semibold text-gray-900">
-              Level {currentLevel?.position ? currentLevel.position + 1 : 1}
-            </h1>
-            <p className="text-sm text-gray-500">{currentLevel?.levelName}</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-yellow-500" />
-            <span className="font-semibold text-gray-700">{currentPointsInLevel}</span>
-          </div>
-        </div>
 
-        {/* Progress Bar */}
-        {/* <div className="space-y-2">
-          <div className="flex justify-between text-sm text-gray-500">
-            <span>Question {question.position + 1} of {totalQuestions}</span>
-            <span>{Math.round((question.position + 1) / totalQuestions * 100)}%</span>
-          </div>
-          <Progress value={((question.position + 1) / totalQuestions) * 100} />
-        </div> */}
+      <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="font-semibold text-blue-400 text-xl">LEVEL {currentLevel?.position ? currentLevel.position+1:1}:</div>
+        <div className="font-semibold text-md">{currentLevel?.levelName}</div>
       </div>
 
       {/* Timer */}
@@ -96,11 +80,14 @@ export default function QuestionPage({
         </div>
       )}
 
-      {/* Question Card */}
-      <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">
+      <div className="rounded-2xl shadow-sm p-4 border-2 border-cyan-200 bg-white mb-8">
         <h2 className="text-center text-gray-800 text-xl font-semibold mb-8">
           {currentQuestion?.questionTitle}
         </h2>
+      </div>
+
+      {/* Question Card */}
+      <div className="rounded-3xl shadow-sm p-6 mb-6">
 
         <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer}>
           <div className="space-y-3">
@@ -124,7 +111,7 @@ export default function QuestionPage({
                           : 'bg-gray-50'
                       : isSelected
                         ? 'bg-blue-50 border-blue-200 border-2'
-                        : 'bg-gray-50 hover:bg-gray-100'
+                        : 'bg-white shadow-sm hover:bg-gray-100'
                     }
                   `}
                 >
@@ -167,33 +154,13 @@ export default function QuestionPage({
       </div>
 
       {/* Result Display */}
-      {questionResponse && (
-        <div className={`bg-white rounded-3xl shadow-sm p-4 mb-2 ${
-          questionResponse.isCorrect ? 'border-2 border-green-200' : 'border-2 border-red-200'
-        }`}>
-          <div className="flex items-center justify-center mb-4">
-            {questionResponse.isCorrect ? (
-              <CheckCircle2 className="w-12 h-12 text-green-500" />
-            ) : (
-              <XCircle className="w-12 h-12 text-red-500" />
-            )}
+      {questionResponse && question.explanation!=="" && (
+        <>
+          <div className="flex flex-col gap-2 my-4">
+            <h2 className="text-blue-500  font-bold">Explanation</h2>
+            <p className="text-lg text-gray-500">{question.explanation.length > 300 ? question.explanation.slice(0,300)[0] + "..." : question.explanation}</p>
           </div>
-          <h3 className={`text-center text-2xl font-semibold mb-4 ${
-            questionResponse.isCorrect ? 'text-green-700' : 'text-red-700'
-          }`}>
-            {questionResponse.isCorrect ? 'Correct!' : 'Incorrect'}
-          </h3>
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-sm text-gray-500">Points earned</p>
-              <p className="text-lg font-semibold text-gray-900">{questionResponse.pointsEarned}</p>
-            </div>
-            <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-sm text-gray-500">Response time</p>
-              <p className="text-lg font-semibold text-gray-900">{questionResponse.responseTime}s</p>
-            </div>
-          </div>
-        </div>
+        </>
       )}
 
       {/* Action Button */}
@@ -217,7 +184,7 @@ export default function QuestionPage({
           onClick={onNext}
           className="w-full py-6 text-lg font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-xl"
         >
-          Next Question
+          Next
         </Button>
       )}
     </div>

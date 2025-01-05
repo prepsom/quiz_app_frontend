@@ -4,9 +4,7 @@ import { useGetSubjectById } from '@/hooks/useGetSubjectById'
 import { useLevelsBySubject } from '@/hooks/useLevelsBySubject'
 import { Loader2, BookOpen, ArrowLeft } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { AppContextType} from '@/types'
-import { useContext, useMemo } from 'react'
-import { AppContext } from '@/Context/AppContext'
+import { useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { useUsersTotalPoints } from '@/hooks/useUsersTotalPoints'
 
@@ -62,7 +60,6 @@ const LevelsPage = () => {
       {/* Header */}
       <div className="p-6 flex items-center justify-between text-blue-600">
         <h1 className="text-2xl font-bold">{subject.subjectName} (Level - {currentLevel})</h1>
-        <BookOpen className="w-6 h-6" />
       </div>
 
       {/* Score Display */}
