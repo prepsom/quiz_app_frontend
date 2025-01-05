@@ -1,14 +1,10 @@
-import { AppContextType, LevelType, QuestionResponseType, QuestionType } from "@/types"
+import { LevelType, QuestionResponseType, QuestionType } from "@/types"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect} from "react"
 import { useQuestionWithAnswers } from "@/hooks/useQuestionWithAnswers"
-import { CheckCircle2, XCircle, Trophy, Coins, LucideCoins } from 'lucide-react'
-import { Progress } from "@/components/ui/progress"
+import { CheckCircle2, XCircle} from 'lucide-react'
 import { Timer } from "@/components/Timer"
-import { AppContext } from "@/Context/AppContext"
-import maleAvatar from "../assets/male_avatar.jpeg"
-import femaleAvatar from "../assets/female_avatar.jpeg"
 
 interface QuestionPageProps {
   question: QuestionType
@@ -29,7 +25,6 @@ export default function QuestionPage({
   questionResponse,
   onNext
 }: QuestionPageProps) {
-  const {loggedInUser} = useContext(AppContext) as AppContextType;
   const { question: currentQuestion, isLoading: isQuestionWithAnswersLoading } = useQuestionWithAnswers(question.id)
   const [selectedAnswer, setSelectedAnswer] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -48,7 +43,7 @@ export default function QuestionPage({
       setTimerInSeconds((prev) => prev + 1)
     }, 1000)
 
-    return () => clearInterval(interval)
+    return () => clearInterval(interval);
   }, [questionResponse])
 
   const handleSubmit = async (responseTimeInSeconds: number) => {
@@ -82,14 +77,13 @@ export default function QuestionPage({
         </div>
       )}
 
-      <div className="rounded-2xl shadow-sm p-4 border-2 border-cyan-200 bg-white mb-8">
-        <h2 className="text-center text-gray-800 text-xl font-semibold mb-8">
+      <div className="flex flex-col items-center">
+        <div className="bg-white font-semibold text-lg text-gray-800 py-2 px-4 rounded-lg border-2 border-[#c4eff4] flex items-center justify-center flex-wrap">
           {currentQuestion?.questionTitle}
-        </h2>
-      </div>
+        </div>
 
       {/* Question Card */}
-      <div className="rounded-3xl shadow-sm p-6 mb-6">
+      <div className="rounded-3xl shadow-sm p-6 mb-6 w-full">
 
         <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer}>
           <div className="space-y-3">
@@ -124,7 +118,7 @@ export default function QuestionPage({
                         id={answer.id}
                         className="border-2 border-gray-300 text-blue-500"
                       />
-                      <span className="text-gray-700">{answer.value}</span>
+                      <span className = {`${isSelected ? 'text-blue-500' : 'text-gray-700'}`}>{answer.value}</span>
                     </label>
                   ) : (
                     <div className="flex items-center w-full">
@@ -154,41 +148,46 @@ export default function QuestionPage({
           </div>
         </RadioGroup>
       </div>
+      </div>
 
       {/* Result Display */}
       {questionResponse && question.explanation!=="" && (
         <>
           <div className="flex flex-col gap-2 my-4">
-            <h2 className="text-blue-500  font-bold">Explanation</h2>
+            <h2 className="text-blue-500  font-bold">EXPLANATION</h2>
             <p className="text-lg text-gray-500 font-semibold">{question.explanation.length > 300 ? question.explanation.slice(0,300)[0] + "..." : question.explanation}</p>
           </div>
         </>
       )}
 
       {/* Action Button */}
-      {!questionResponse ? (
-        <Button
-          onClick={() => handleSubmit(timerInSeconds)}
-          disabled={!selectedAnswer || isSubmitting}
-          className="w-full py-6 text-lg font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-xl"
-        >
-          {isSubmitting ? (
-            <div className="flex items-center gap-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-              <span>Submitting...</span>
-            </div>
-          ) : (
-            "Submit"
-          )}
-        </Button>
-      ) : (
-        <Button
-          onClick={onNext}
-          className="w-full py-6 text-lg font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-xl"
-        >
-          Next
-        </Button>
-      )}
+      <div className="fixed bottom-4 left-0 right-0 flex justify-center p-4">
+          <div className="w-full max-w-md">
+            {!questionResponse ? (
+              <Button
+                onClick={() => handleSubmit(timerInSeconds)}
+                disabled={!selectedAnswer || isSubmitting}
+                className="w-full py-6 text-lg font-medium bg-[#1e8bf1] hover:bg-blue-600 text-white rounded-xl"
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                    <span>Submitting...</span>
+                  </div>
+                ) : (
+                  "Submit"
+                )}
+              </Button>
+            ) : (
+              <Button
+                onClick={onNext}
+                className="w-full py-6 text-lg font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-xl"
+              >
+                Next
+              </Button>
+            )}
+          </div>
+      </div>
     </div>
   )
 }

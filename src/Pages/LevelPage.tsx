@@ -230,9 +230,9 @@ export default function LevelPage() {
   }  
   return (
     <>
-      <div className="min-h-screen bg-blue-100">
+      <div className="min-h-screen bg-[#ecfbff]">
         {/* Back Button */}
-        <div className="flex p-1 items-center justify-between">
+        <div className="flex p-1 items-center justify-between px-6">
           <div className='text-3xl text-gray-500 cursor-pointer hover:text-gray-700' onClick={handleExit}>
             <XCircle/>
           </div>
