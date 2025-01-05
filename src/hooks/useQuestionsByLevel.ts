@@ -5,7 +5,8 @@ import { useEffect, useState } from "react"
 
 export const useQuestionsByLevel = (levelId:string) => {
     const [questions,setQuestions] = useState<QuestionType[]>([]);
-    const [isLoading,setIsLoading] = useState<boolean>(false);
+    const [isLoading,setIsLoading] = useState<boolean>(true);
+    const [error,setError] = useState<string>("");
 
     useEffect(() => {
 
@@ -19,6 +20,7 @@ export const useQuestionsByLevel = (levelId:string) => {
                 setQuestions(response.data.questions);
             } catch (error) {
                 console.log(error);
+                setError("Error in fetching questions by level");
             } finally {
                 setIsLoading(false);
             }
@@ -28,6 +30,6 @@ export const useQuestionsByLevel = (levelId:string) => {
     
     },[levelId])
 
-    return {questions,setQuestions,isLoading};
+    return {questions,setQuestions,isLoading,error};
 
 }

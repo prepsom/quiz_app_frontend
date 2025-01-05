@@ -28,7 +28,7 @@ export const useUsersTotalPoints = () => {
         fetchUsersTotalPoints();
     },[])
 
-    return {totalPoints,isLoading,error};
+    return {totalPoints,isLoading,error,setTotalPoints};
 }
 
 // social mixer event

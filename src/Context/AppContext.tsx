@@ -8,7 +8,7 @@ export const AppContext = createContext< AppContextType | null>(null);
 
 const AppContextProvider = ({children}:{children:React.ReactNode}) => {
 
-    const {totalPoints,isLoading:isPointsLoading} = useUsersTotalPoints();
+    const {totalPoints,isLoading:isPointsLoading,setTotalPoints} = useUsersTotalPoints();
     const {loggedInUser,setLoggedInUser,isLoading} = useAuthUser();
     
     if(isLoading || isPointsLoading) {
@@ -22,6 +22,7 @@ const AppContextProvider = ({children}:{children:React.ReactNode}) => {
     return (
         <>
             <AppContext.Provider value={{
+                setUsersTotalPoints:setTotalPoints,
                 usersTotalPoints:totalPoints,
                 loggedInUser:loggedInUser,
                 setLoggedInUser:setLoggedInUser,

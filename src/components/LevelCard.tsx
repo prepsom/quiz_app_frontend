@@ -56,7 +56,15 @@ export function LevelCard({ level, isLocked, isCompleted, currentLevel }: LevelC
         )}
 
         {isCompleted && (
-          <span className="text-green-500 font-medium">Completed</span>
+          <>
+        <Button 
+            onClick={() => navigate(`/level/${level.id}`)}
+            className="bg-green-500 hover:bg-green-600 text-white rounded-full px-6"
+          >
+            <Play className="w-4 h-4 mr-2" />
+            PLAY AGAIN
+          </Button>
+          </>          
         )}
       </div>
     </Card>

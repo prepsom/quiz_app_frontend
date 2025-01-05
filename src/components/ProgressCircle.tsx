@@ -1,49 +1,54 @@
 interface ProgressCircleProps {
-    progress: number;
-    color: string;
-    size?: number;
-  }
-  
-  export function ProgressCircle({ progress, color, size = 40 }: ProgressCircleProps) {
-    const circumference = 2 * Math.PI * 16; // radius = 16
-    const strokeDashoffset = circumference - (progress / 100) * circumference;
-  
-    return (
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg
-          className="transform -rotate-90"
-          width={size}
-          height={size}
-          viewBox="0 0 40 40"
-        >
-          <circle
-            cx="20"
-            cy="20"
-            r="16"
-            stroke="#e5e7eb"
-            strokeWidth="4"
-            fill="none"
-          />
-          <circle
-            cx="20"
-            cy="20"
-            r="16"
-            stroke={color}
-            strokeWidth="4"
-            fill="none"
-            strokeLinecap="round"
-            style={{
-              strokeDasharray: circumference,
-              strokeDashoffset: strokeDashoffset,
-              transition: 'stroke-dashoffset 0.5s ease',
-            }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center text-sm font-medium">
-          {progress}%
-        </div>
-      </div>
-    );
-  }
-  
-  
+  progress: number
+  size?: number
+  strokeWidth?: number
+  className?: string
+}
+
+export function ProgressCircle({ 
+  progress, 
+  size = 40, 
+  strokeWidth = 4,
+  className = "" 
+}: ProgressCircleProps) {
+  const radius = (size - strokeWidth) / 2
+  const circumference = radius * 2 * Math.PI
+  const offset = circumference - (progress / 100) * circumference
+
+  return (
+    <div className={className}>
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        style={{ transform: 'rotate(-90deg)' }}
+      >
+        <circle
+          className="stroke-gray-200"
+          strokeWidth={strokeWidth}
+          fill="transparent"
+          r={radius}
+          cx={size / 2}
+          cy={size / 2}
+        />
+        <circle
+          className="stroke-blue-500 transition-all duration-300 ease-in-out"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          fill="transparent"
+          r={radius}
+          cx={size / 2}
+          cy={size / 2}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+        />
+      </svg>
+      <span 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-medium"
+      >
+        {progress}%
+      </span>
+    </div>
+  )
+}
+

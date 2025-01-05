@@ -1,16 +1,17 @@
-import { useParams } from 'react-router-dom'
-import { useLevelQuestions } from '@/hooks/useLevelQuestions'
-import { useQuestionWithAnswers } from '@/hooks/useQuestionWithAnswers'
-import { Loader2, CheckCircle2, XCircle } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Loader2, CheckCircle2, XCircle, ArrowLeft } from 'lucide-react'
+import { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import { API_URL } from '@/App'
 import QuestionPage from './QuestionPage'
-import { QuestionResponseType, QuestionType } from '@/types'
+import { AppContextType, QuestionResponseType, QuestionType } from '@/types'
 import { useGetLevelById } from '@/hooks/useGetLevelById'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { AppContext } from '@/Context/AppContext'
+import { useQuestionsByLevel } from '@/hooks/useQuestionsByLevel'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 
 interface LevelCompletionResponse {
   success: boolean
@@ -22,40 +23,50 @@ interface LevelCompletionResponse {
 }
 
 export default function LevelPage() {
-  const { levelId } = useParams<{ levelId: string }>()
+  const navigate = useNavigate();
+  const { levelId } = useParams<{ levelId: string }>();
   if (!levelId) return null
 
   const { level, isLoading: isLevelLoading, error: isLevelError } = useGetLevelById(levelId)
-  const {
-    unansweredQuestions,
-    isLoading,
-    error,
-    markQuestionAsAnswered,
-    currentPointsInLevel
-  } = useLevelQuestions(levelId)
+  const {questions, isLoading: isQuestionsLoading, error: questionsError} = useQuestionsByLevel(levelId);
 
-  const [gameComplete, setGameComplete] = useState(false)
-  const [totalPointsInLevel, setTotalPointsInLevel] = useState<number>(currentPointsInLevel)
-  const [difficulty, setDifficulty] = useState<"EASY" | "MEDIUM" | "HARD">("EASY")
-  const [currentQuestion, setCurrentQuestion] = useState<QuestionType | null>(null)
-  const [completionStatus, setCompletionStatus] = useState<LevelCompletionResponse | null>(null)
-  const [isSubmittingCompletion, setIsSubmittingCompletion] = useState(false)
+  const [showExitAlert,setShowExitAlert] = useState<boolean>(false);
+  const [gameComplete, setGameComplete] = useState(false);
+  const [totalPointsInLevel, setTotalPointsInLevel] = useState<number>(0);
+  const [difficulty, setDifficulty] = useState<"EASY" | "MEDIUM" | "HARD">("EASY");
+  const [currentQuestion, setCurrentQuestion] = useState<QuestionType | null>(null);
+  const [completionStatus, setCompletionStatus] = useState<LevelCompletionResponse | null>(null);
+  const [isSubmittingCompletion, setIsSubmittingCompletion] = useState(false);
+  const [availableQuestions, setAvailableQuestions] = useState<QuestionType[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [currentQuestionResponse,setCurrentQuestionResponse] = useState<QuestionResponseType | null>(null);
+  
 
-  const { question: questionWithAnswers, isLoading: isQuestionLoading } = 
-    useQuestionWithAnswers(currentQuestion?.id ?? '')
 
+  // Initialize available questions once when questions are loaded
   useEffect(() => {
-    if (unansweredQuestions.length === 0 && !isLoading && !gameComplete) {
-      setGameComplete(true)
-      handleLevelCompletion()
-    } else if (unansweredQuestions.length !== 0 && !isLoading) {
-      pickQuestion()
+    if (!isQuestionsLoading && questions.length > 0 && !isInitialized) {
+      setAvailableQuestions(questions);
+      setIsInitialized(true);
     }
-  }, [unansweredQuestions, isLoading, gameComplete])
+  }, [isQuestionsLoading, questions, isInitialized]);
 
+  // Handle game progression
   useEffect(() => {
-    setTotalPointsInLevel(currentPointsInLevel)
-  }, [currentPointsInLevel])
+    if (!isInitialized) return;
+    
+    if (availableQuestions.length===0 && !gameComplete && !currentQuestion) {
+      console.log('current question :- ' , currentQuestion);
+      setGameComplete(true);
+      handleLevelCompletion();
+    } else if (!currentQuestion && availableQuestions.length > 0) {
+      console.log('available:- ' , availableQuestions);
+      console.log('picked question')
+      pickQuestion();
+    }
+  }, [isInitialized, availableQuestions, currentQuestion, gameComplete]);
+
+  console.log(currentQuestion);
 
   const handleLevelCompletion = async () => {
     setIsSubmittingCompletion(true)
@@ -65,7 +76,7 @@ export default function LevelPage() {
         {},
         { withCredentials: true }
       )
-      setCompletionStatus(response.data)
+      setCompletionStatus(response.data);
     } catch (error: any) {
       setCompletionStatus({
         success: false,
@@ -77,49 +88,62 @@ export default function LevelPage() {
   }
 
   const pickQuestion = () => {
-    let questionsByDifficulty = unansweredQuestions.filter((question) => question.difficulty === difficulty)
+    let questionsByDifficulty = availableQuestions.filter((question) => question.difficulty === difficulty)
     
     while (questionsByDifficulty.length === 0) {
       if (difficulty === "EASY") {
         setDifficulty("MEDIUM")
-        questionsByDifficulty = unansweredQuestions.filter((question) => question.difficulty === "MEDIUM")   
+        questionsByDifficulty = availableQuestions.filter((question) => question.difficulty === "MEDIUM")   
       } else if (difficulty === "MEDIUM") {
         setDifficulty("HARD")
-        questionsByDifficulty = unansweredQuestions.filter((question) => question.difficulty === "HARD")
+        questionsByDifficulty = availableQuestions.filter((question) => question.difficulty === "HARD")
       } else {
         setGameComplete(true)
         return
       }
     }
 
-    const nextQuestion = questionsByDifficulty[0]
-    setCurrentQuestion(nextQuestion)
+    const nextQuestion = questionsByDifficulty[0];
+    setCurrentQuestion(nextQuestion);
+    setAvailableQuestions(prev => prev.filter(question => question.id !== nextQuestion.id));
   }
 
-  const handleAnswerSubmit = async (answerId: string) => {
+  const handleAnswerSubmit = async (answerId: string,responseTimeInSeconds:number) => {
     if (!currentQuestion) return
-
     try {
       const response = await axios.post<{success:boolean;message:string;questionResponse:QuestionResponseType}>(
         `${API_URL}/question-response`,
         {
           questionId: currentQuestion.id,
           selectedAnswerId: answerId,
-          timeTaken: 90,
+          timeTaken: responseTimeInSeconds,
         },
         {
           withCredentials: true,
         }
-      )
-      setTotalPointsInLevel((prev) => prev + response.data.questionResponse.pointsEarned)
-      markQuestionAsAnswered(currentQuestion.id)
-      pickQuestion()
+      );
+      console.log(response);
+      setTotalPointsInLevel((prev) => prev + response.data.questionResponse.pointsEarned);
+      setCurrentQuestionResponse(response.data.questionResponse);
     } catch (error) {
       console.error(error)
     }
   }
 
-  if (isLoading || isQuestionLoading || isLevelLoading || isSubmittingCompletion) {
+  const onNext = () => {
+    setCurrentQuestion(null);
+    setCurrentQuestionResponse(null);
+  }
+  
+  const handleExit = () => {
+    if (gameComplete || !currentQuestion) {
+      navigate(`/levels/${level?.subjectId}`)
+    } else {
+      setShowExitAlert(true)
+    }
+  }
+
+  if (isQuestionsLoading || isLevelLoading || isSubmittingCompletion) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
@@ -127,10 +151,10 @@ export default function LevelPage() {
     )
   }
 
-  if (error || isLevelError) {
+  if (questionsError || isLevelError) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
-        <p className="text-red-500">{error}</p>
+        <p className="text-red-500">{questionsError !== "" ? questionsError : isLevelError}</p>
       </div>
     )
   }
@@ -193,23 +217,62 @@ export default function LevelPage() {
     )
   }
 
-  if (!questionWithAnswers || !currentQuestion) {
+
+
+  if (!currentQuestion &&  availableQuestions.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <p className="text-gray-600">No questions available</p>
       </div>
     )
-  }
-
+  }  
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white pt-8">
-      <QuestionPage
-        question={questionWithAnswers}
-        onSubmit={handleAnswerSubmit}
-        totalQuestions={unansweredQuestions.length}
-        currentLevel={level}
-      />
-    </div>
+    <>
+      <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
+        {/* Back Button */}
+        <div className="p-4">
+          <Button 
+            variant="ghost" 
+            onClick={handleExit}
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Levels
+          </Button>
+        </div>
+
+        {currentQuestion && (
+          <QuestionPage
+            question={currentQuestion}
+            onSubmit={handleAnswerSubmit}
+            totalQuestions={questions.length}
+            currentLevel={level}
+            currentPointsInLevel={totalPointsInLevel}
+            questionResponse={currentQuestionResponse}
+            onNext={onNext}
+          />
+        )}
+      </div>
+
+      <AlertDialog open={showExitAlert} onOpenChange={setShowExitAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to exit?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Your progress in this level will be lost. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => navigate(`/levels/${level?.subjectId}`)}
+              className="bg-red-500 text-white hover:bg-red-600"
+            >
+              Exit Level
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }
-

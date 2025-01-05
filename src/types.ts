@@ -6,6 +6,7 @@ export type AppContextType = {
     loggedInUser:UserType | null;
     setLoggedInUser:React.Dispatch<SetStateAction<UserType | null>>;
     usersTotalPoints:number;
+    setUsersTotalPoints:React.Dispatch<SetStateAction<number>>;
 }
 
 

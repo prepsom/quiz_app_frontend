@@ -2,16 +2,20 @@ import { LevelCard } from '@/components/LevelCard'
 import { useCompletedLevelsBySubject } from '@/hooks/useCompletedLevelsBySubject'
 import { useGetSubjectById } from '@/hooks/useGetSubjectById'
 import { useLevelsBySubject } from '@/hooks/useLevelsBySubject'
-import { Loader2, BookOpen } from 'lucide-react'
-import { useParams } from 'react-router-dom'
+import { Loader2, BookOpen, ArrowLeft } from 'lucide-react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AppContextType} from '@/types'
 import { useContext, useMemo } from 'react'
 import { AppContext } from '@/Context/AppContext'
+import { Button } from '@/components/ui/button'
+import { useUsersTotalPoints } from '@/hooks/useUsersTotalPoints'
 
 const LevelsPage = () => {
+
+  const navigate = useNavigate();
   const { subjectId } = useParams<{subjectId: string}>()
   if (!subjectId) return <div>No subject selected</div>
-  const {usersTotalPoints} = useContext(AppContext) as AppContextType;
+  const {totalPoints:usersTotalPoints,isLoading:isUsersPointsLoading,error:usersPointsError} = useUsersTotalPoints();
   const { subject, error, isLoading: isSubjectLoading } = useGetSubjectById(subjectId)
   const { completedLevels, error: completedLevelsError, isLoading: isCompletedLevelsLoading } = useCompletedLevelsBySubject(subjectId)
   const { levels, isLoading } = useLevelsBySubject(subjectId)
@@ -35,7 +39,7 @@ const LevelsPage = () => {
     return { uncompletedLevels: uncompleted, nextLevel }
   }, [levels, completedLevels])
 
-  if (isLoading || isSubjectLoading || isCompletedLevelsLoading) {
+  if (isLoading || isSubjectLoading || isCompletedLevelsLoading || isUsersPointsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
@@ -43,7 +47,7 @@ const LevelsPage = () => {
     )
   }
 
-  if (error || !subject || completedLevelsError) {
+  if (error || !subject || completedLevelsError || usersPointsError) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <p className="text-red-500">Subject not found</p>
@@ -62,7 +66,8 @@ const LevelsPage = () => {
       </div>
 
       {/* Score Display */}
-      <div className="px-6 mb-6 flex justify-end">
+      <div className="px-6 mb-6 flex justify-between">
+        <Button onClick={() => navigate("/subjects")} variant={"default"} className='bg-blue-500 text-white hover:bg-blue-600'><ArrowLeft/>Subjects</Button>
         <div className="bg-blue-500 rounded-full px-4 py-1 text-white flex items-center gap-2">
           <span>{usersTotalPoints}</span>
           <div className="w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center">
@@ -73,6 +78,7 @@ const LevelsPage = () => {
 
       {/* Levels List */}
       <div className="bg-white rounded-t-3xl min-h-screen p-6 shadow-lg">
+
         <div className="max-w-md mx-auto space-y-4">
           {/* Completed Levels */}
           {completedLevels.map((level) => (
