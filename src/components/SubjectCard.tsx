@@ -31,6 +31,8 @@ export function SubjectCard({ subject }: SubjectCardProps) {
     ? Math.round((completedLevels.length / totalLevels.length) * 100) 
     : 0
 
+  if(progress==100) return;
+  
   if (isTotalLevelsLoading || isCompletedLevelsLoading) {
     return (
       <Card className="p-4">

@@ -2,7 +2,7 @@ import { LevelCard } from '@/components/LevelCard'
 import { useCompletedLevelsBySubject } from '@/hooks/useCompletedLevelsBySubject'
 import { useGetSubjectById } from '@/hooks/useGetSubjectById'
 import { useLevelsBySubject } from '@/hooks/useLevelsBySubject'
-import { Loader2, BookOpen, ArrowLeft } from 'lucide-react'
+import { Loader2 , ArrowLeft } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMemo } from 'react'
 import { Button } from '@/components/ui/button'
@@ -76,7 +76,7 @@ const LevelsPage = () => {
       {/* Levels List */}
       <div className="bg-white rounded-t-3xl min-h-screen p-6 shadow-lg">
 
-        <div className="max-w-md mx-auto space-y-4">
+        {(completedLevels.length!==0 || uncompletedLevels.length!==0 ) ?  <div className="max-w-md mx-auto space-y-4">
           {/* Completed Levels */}
           {completedLevels.map((level) => (
             <LevelCard
@@ -98,11 +98,18 @@ const LevelsPage = () => {
               currentLevel={currentLevel}
             />
           ))}
-        </div>
+        </div> : (
+          <>
+            <div className='flex text-2xl font-semibold text-gray-700 items-center justify-center mt-48'>
+              This subject has no levels
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
 }
 
-export default LevelsPage
+export default LevelsPage;
+
 

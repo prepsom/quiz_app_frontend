@@ -6,6 +6,7 @@ import { Navigate } from 'react-router-dom'
 import { Loader2} from 'lucide-react'
 import { SubjectCard } from '@/components/SubjectCard'
 import { useUsersTotalPoints } from '@/hooks/useUsersTotalPoints'
+import SubjectsCarousel from '@/components/SubjectsCarousel'
 
 export default function SubjectsPage() {
   const { loggedInUser} = useContext(AppContext) as AppContextType;
@@ -32,23 +33,24 @@ export default function SubjectsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
+    <div className="min-h-screen bg-white">      
       {/* Header */}
-      <div className="bg-blue-500 p-6 flex items-center justify-between text-white">
+      {/* <div className="bg-blue-500 p-6 flex items-center justify-between text-white">
         <h1 className="text-2xl font-bold">Your Subjects</h1>
-      </div>
+      </div> */}
 
       {/* Score Display */}
-      <div className="px-6 py-4 flex justify-end">
-        <div className="bg-blue-500 rounded-full px-4 py-1 text-white flex items-center gap-2">
-          <span>{usersTotalPoints}</span>
-          <div className="w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center">
-            <span className="text-xs">🪙</span>
-          </div>
-        </div>
+
+      <div className='p-4 flex flex-col justify-center'>
+        <div className='text-gray-500'>Hello {loggedInUser.name}!</div>
+        <div className='text-2xl text-gray-600 font-semibold'>What would you like to learn today</div>
       </div>
 
+      <SubjectsCarousel subjects={subjects}/>
+
       {/* Subjects List */}
+
+      <div className='p-4 flex items-center my-2 text-2xl font-semibold text-gray-700'>Unfinished games</div>
       <div className="max-w-lg mx-auto p-4 space-y-4">
         {subjects.map((subject) => (
           <SubjectCard key={subject.id} subject={subject} />
