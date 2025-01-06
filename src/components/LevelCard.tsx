@@ -15,7 +15,7 @@ export function LevelCard({ level, isLocked, isCompleted, currentLevel }: LevelC
   const navigate = useNavigate()
 
   return (
-    <Card className="p-4 hover:shadow-md transition-shadow">
+    <Card onClick={() => navigate(`/level/${level.id}`)} className="p-4 hover:shadow-md transition-shadow">
       <div className="flex items-center gap-4">
         <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
           isCompleted ? 'bg-green-100' : 
@@ -44,28 +44,6 @@ export function LevelCard({ level, isLocked, isCompleted, currentLevel }: LevelC
             </p>
           )}
         </div>
-
-        {!isLocked && !isCompleted && (
-          <Button 
-            onClick={() => navigate(`/level/${level.id}`)}
-            className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-6"
-          >
-            <Play className="w-4 h-4 mr-2" />
-            START
-          </Button>
-        )}
-
-        {isCompleted && (
-          <>
-        <Button 
-            onClick={() => navigate(`/level/${level.id}`)}
-            className="bg-green-500 hover:bg-green-600 text-white rounded-full px-6"
-          >
-            <Play className="w-4 h-4 mr-2" />
-            PLAY AGAIN
-          </Button>
-          </>          
-        )}
       </div>
     </Card>
   )

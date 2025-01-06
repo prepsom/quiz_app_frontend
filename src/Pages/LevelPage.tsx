@@ -1,15 +1,14 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { Loader2, CheckCircle2, XCircle, ArrowLeft, XCircleIcon } from 'lucide-react'
-import { useState, useEffect, useContext } from 'react'
+import { Loader2, CheckCircle2, XCircle} from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
 import axios from 'axios'
 import { API_URL } from '@/App'
 import QuestionPage from './QuestionPage'
-import { AppContextType, QuestionResponseType, QuestionType } from '@/types'
+import { QuestionResponseType, QuestionType } from '@/types'
 import { useGetLevelById } from '@/hooks/useGetLevelById'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { AppContext } from '@/Context/AppContext'
 import { useQuestionsByLevel } from '@/hooks/useQuestionsByLevel'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { useGetSubjectById } from '@/hooks/useGetSubjectById'
@@ -43,8 +42,15 @@ export default function LevelPage() {
   const [availableQuestions, setAvailableQuestions] = useState<QuestionType[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const [currentQuestionResponse,setCurrentQuestionResponse] = useState<QuestionResponseType | null>(null);
-  const [questionTimerInSeconds,setQuestionTimerInSeconds] = useState<number>(0);  
+  const [questionTimerInSeconds,setQuestionTimerInSeconds] = useState<number>(0);
 
+  // current question number = current no of questions attempted 
+  // total questions in level -> fixed
+  // available questions in level - > dynamic 
+  // 4 -> answered , total -> 20
+  // available questions -> 16 
+  // therefore answered -> total quesitons.length - available.quesitions.length
+  const questionNumber = useMemo(() => questions.length - availableQuestions.length , [questions,availableQuestions]);
 
   // Initialize available questions once when questions are loaded
   useEffect(() => {
@@ -244,9 +250,9 @@ export default function LevelPage() {
     <>
       <div className="min-h-screen bg-[#ecfbff]">
         {/* Back Button */}
-        <div className="flex p-1 items-center justify-between px-6">
+        <div className="flex p-4 items-center justify-between px-6">
           <div className='text-3xl text-gray-500 cursor-pointer hover:text-gray-700' onClick={handleExit}>
-            <XCircle/>
+            <XCircle className='w-8 h-8'/>
           </div>
           {currentQuestionResponse===null && 
               <Timer seconds={questionTimerInSeconds}/>
@@ -266,6 +272,7 @@ export default function LevelPage() {
             questionResponse={currentQuestionResponse}
             onNext={onNext}
             currentQuestionTimerInSeconds={questionTimerInSeconds}
+            currentQuestionNumber={questionNumber}
           />
         )}
       </div>

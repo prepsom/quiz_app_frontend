@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { useNavigate } from 'react-router-dom'
+import owlMascotImage from "../assets/owl_image.png"
 
 const LandingPage = () => {
     const navigate = useNavigate();
@@ -8,13 +9,13 @@ const LandingPage = () => {
       <div className="w-full max-w-md flex flex-col items-center space-y-8">
         {/* School Logo/Text */}
         <div className="bg-white px-8 py-3 rounded-xl shadow-sm">
-          <span className="text-gray-600 text-lg">Your School</span>
+          <span className="text-gray-600 text-lg">School Name</span>
         </div>
 
         {/* Owl Mascot */}
-        <div className="w-48 h-48 relative">
+        <div className="w-56 h-56 relative">
           <img
-            src="/placeholder.svg?height=192&width=192"
+            src={owlMascotImage}
             alt="Owl mascot with graduation cap"
             className="w-full h-full object-contain"
           />

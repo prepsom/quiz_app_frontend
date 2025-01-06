@@ -5,30 +5,18 @@ import { useContext } from 'react'
 import { Navigate } from 'react-router-dom'
 import { Loader2} from 'lucide-react'
 import { SubjectCard } from '@/components/SubjectCard'
-import { useUsersTotalPoints } from '@/hooks/useUsersTotalPoints'
 import SubjectsCarousel from '@/components/SubjectsCarousel'
 
 export default function SubjectsPage() {
   const { loggedInUser} = useContext(AppContext) as AppContextType;
-  const {totalPoints:usersTotalPoints,isLoading:isUsersTotalPointsLoading,error:usersTotalPointsError} = useUsersTotalPoints();
   if (loggedInUser === null) return <Navigate to="/login" />  
   const { subjects, isLoading } = useSubjectsByGrade(loggedInUser?.gradeId);
 
-  if (isLoading || isUsersTotalPointsLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
       </div>
-    )
-  }
-
-  if(usersTotalPointsError) {
-    return (
-      <>
-        <div className='flex items-center justify-center text-red-500'>
-          {usersTotalPointsError}
-        </div>
-      </>
     )
   }
 

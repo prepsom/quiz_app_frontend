@@ -24,8 +24,8 @@ function App() {
                 <Route path="/" element={<Layout/>}>
                   <Route path="subjects" element={<SubjectsPage/>}/>
                   <Route path="leaderboard" element={<LeaderBoardPage/>}/>
+                  <Route path="levels/:subjectId" element={<LevelsPage/>}/>
                 </Route>
-                <Route path="levels/:subjectId" element={<LevelsPage/>}/>
                 <Route path="level/:levelId" element={<LevelPage/>}/>
               </Route>
             </Routes>
