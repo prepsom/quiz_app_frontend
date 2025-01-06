@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { Loader2, CheckCircle2, XCircle, ArrowLeft } from 'lucide-react'
+import { Loader2, CheckCircle2, XCircle, ArrowLeft, XCircleIcon } from 'lucide-react'
 import { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import { API_URL } from '@/App'
@@ -12,6 +12,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { AppContext } from '@/Context/AppContext'
 import { useQuestionsByLevel } from '@/hooks/useQuestionsByLevel'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
+import { useGetSubjectById } from '@/hooks/useGetSubjectById'
+import { Timer } from '@/components/Timer'
 
 interface LevelCompletionResponse {
   success: boolean
@@ -29,6 +31,7 @@ export default function LevelPage() {
 
   const { level, isLoading: isLevelLoading, error: isLevelError } = useGetLevelById(levelId)
   const {questions, isLoading: isQuestionsLoading, error: questionsError} = useQuestionsByLevel(levelId);
+  const {subject,isLoading:isSubjectLoading,error:subjectError} = useGetSubjectById(level?.subjectId ? level.subjectId : null);
 
   const [showExitAlert,setShowExitAlert] = useState<boolean>(false);
   const [gameComplete, setGameComplete] = useState(false);
@@ -40,7 +43,7 @@ export default function LevelPage() {
   const [availableQuestions, setAvailableQuestions] = useState<QuestionType[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
   const [currentQuestionResponse,setCurrentQuestionResponse] = useState<QuestionResponseType | null>(null);
-  
+  const [questionTimerInSeconds,setQuestionTimerInSeconds] = useState<number>(0);  
 
 
   // Initialize available questions once when questions are loaded
@@ -66,7 +69,17 @@ export default function LevelPage() {
     }
   }, [isInitialized, availableQuestions, currentQuestion, gameComplete]);
 
-  console.log(currentQuestion);
+  useEffect(() => {
+    if(currentQuestion===null) return;
+
+    setQuestionTimerInSeconds(0);
+    const intevnal = setInterval(() => {
+      setQuestionTimerInSeconds((prev) => prev+1);
+    },1000);
+
+    return () => clearInterval(intevnal);
+
+  },[currentQuestion])
 
   const handleLevelCompletion = async () => {
     setIsSubmittingCompletion(true)
@@ -111,6 +124,7 @@ export default function LevelPage() {
   const handleAnswerSubmit = async (answerId: string,responseTimeInSeconds:number) => {
     if (!currentQuestion) return
     try {
+      console.log(responseTimeInSeconds);
       const response = await axios.post<{success:boolean;message:string;questionResponse:QuestionResponseType}>(
         `${API_URL}/question-response`,
         {
@@ -143,7 +157,7 @@ export default function LevelPage() {
     }
   }
 
-  if (isQuestionsLoading || isLevelLoading || isSubmittingCompletion) {
+  if (isQuestionsLoading || isLevelLoading || isSubmittingCompletion || isSubjectLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
@@ -151,7 +165,7 @@ export default function LevelPage() {
     )
   }
 
-  if (questionsError || isLevelError) {
+  if (questionsError || isLevelError || subjectError) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <p className="text-red-500">{questionsError !== "" ? questionsError : isLevelError}</p>
@@ -161,7 +175,7 @@ export default function LevelPage() {
 
   if (gameComplete && completionStatus) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white p-4">
+      <div className="min-h-screen max-w-[430px] flex items-center justify-center bg-gradient-to-b from-blue-100 to-white p-4">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -228,17 +242,18 @@ export default function LevelPage() {
   }  
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
+      <div className="min-h-screen bg-[#ecfbff]">
         {/* Back Button */}
-        <div className="p-4">
-          <Button 
-            variant="ghost" 
-            onClick={handleExit}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Levels
-          </Button>
+        <div className="flex p-1 items-center justify-between px-6">
+          <div className='text-3xl text-gray-500 cursor-pointer hover:text-gray-700' onClick={handleExit}>
+            <XCircle/>
+          </div>
+          {currentQuestionResponse===null && 
+              <Timer seconds={questionTimerInSeconds}/>
+          }
+        </div>
+        <div className='text-center mb-2'>
+          <h1 className='font-bold text-blue-700 text-2xl'>{subject?.subjectName.toUpperCase()}</h1>
         </div>
 
         {currentQuestion && (
@@ -250,6 +265,7 @@ export default function LevelPage() {
             currentPointsInLevel={totalPointsInLevel}
             questionResponse={currentQuestionResponse}
             onNext={onNext}
+            currentQuestionTimerInSeconds={questionTimerInSeconds}
           />
         )}
       </div>

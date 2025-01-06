@@ -54,6 +54,8 @@ export type QuestionType = {
     questionHint:string | null;
     difficulty:"EASY" | "MEDIUM" | "HARD",
     levelId:string;
+    explanation:string;
+    ready:boolean;
     Answers?:AnswerType[];
 }
 
