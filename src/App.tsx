@@ -8,6 +8,7 @@ import Layout from "./Layouts/Layout"
 import LevelsPage from "./Pages/LevelsPage"
 import LevelPage from "./Pages/LevelPage"
 import LeaderBoardPage from "./Pages/LeaderBoardPage"
+import ProfilePage from "./Pages/ProfilePage"
 
 export const API_URL = "http://localhost:3000"
 
@@ -19,9 +20,10 @@ function App() {
           <Router>
             <Routes>
               <Route path="/login" element={<LoginPage/>}/>
+              <Route index element={<LandingPage/>}/>
               <Route path="/" element={<ProtectedRoute/>}>
-                <Route index element={<LandingPage/>}/>
                 <Route path="/" element={<Layout/>}>
+                  <Route path="profile" element={<ProfilePage/>}/>
                   <Route path="subjects" element={<SubjectsPage/>}/>
                   <Route path="leaderboard" element={<LeaderBoardPage/>}/>
                   <Route path="levels/:subjectId" element={<LevelsPage/>}/>

@@ -112,7 +112,7 @@ export default function QuestionPage({
                             ? <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
                             : <XCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
                         )}
-                        {!isChosenAnswer && <div className="w-5 h-5 mr-3" />}
+                        {!isChosenAnswer && <div className="border-2 rounded-full mr-4 p-2"></div>}
                         <span 
                           className={`
                             ${isChosenAnswer && questionResponse?.isCorrect

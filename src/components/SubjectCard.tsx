@@ -6,11 +6,14 @@ import { useLevelsBySubject } from "@/hooks/useLevelsBySubject"
 import { useCompletedLevelsBySubject } from "@/hooks/useCompletedLevelsBySubject"
 import { Skeleton } from "./ui/skeleton"
 import { ProgressCircle } from "./ProgressCircle"
+import mathsImageIcon from "../assets/MathImageIcon.png"
+import scienceImageIcon from "../assets/ScienceImageIcon.png"
+import computerImageIcon from "../assets/ComputerImageIcon.png"
 
-const subjectIcons = {
-  'Mathematics': Book,
-  'Science': Flask,
-  'Computer': Monitor,
+const subjectImageIcons = {
+  'Mathematics': mathsImageIcon,
+  'Science': scienceImageIcon,
+  'Computer': computerImageIcon,
 } as const
 
 interface SubjectCardProps {
@@ -19,7 +22,7 @@ interface SubjectCardProps {
 
 export function SubjectCard({ subject }: SubjectCardProps) {
   const navigate = useNavigate()
-  const Icon = subjectIcons[subject.subjectName as keyof typeof subjectIcons] || Book
+  const Icon = subjectImageIcons[subject.subjectName as keyof typeof subjectImageIcons] || Book
   const { levels: totalLevels, isLoading: isTotalLevelsLoading, error: totalLevelsError } = useLevelsBySubject(subject.id)
   const { 
     completedLevels, 
@@ -65,7 +68,7 @@ export function SubjectCard({ subject }: SubjectCardProps) {
     >
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-          <Icon className="w-6 h-6 text-blue-500" />
+          {typeof Icon==="string" ? <> <img  className="w-12 h-12" src={Icon} alt="" /></> : <Icon className="w-6 h-6 text-blue-500" />}
         </div>
 
         <div className="flex-1">

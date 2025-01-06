@@ -12,6 +12,7 @@ import { AppContext } from '@/Context/AppContext'
 import { Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Checkbox } from '@/components/ui/checkbox'
+import owlMascot from "../assets/owl_image.png"
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -73,15 +74,15 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white flex flex-col items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8 space-y-8 bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border-0">
+      <Card className="w-full max-w-md p-8 space-y-8 bg-white/80 shadow-xl rounded-2xl border-0">
         <div className="flex flex-col items-center space-y-4">
           <div className="w-32 h-12 bg-blue-500 flex items-center justify-center rounded-xl shadow-sm">
             <span className="text-white font-medium">School Logo</span>
           </div>
           
-          <div className="w-32 h-32 relative">
+          <div className="w-44 h-44 relative">
             <img
-              src="/placeholder.svg?height=128&width=128"
+              src={owlMascot}
               alt="Owl mascot"
               className="w-full h-full object-contain"
             />
@@ -111,7 +112,7 @@ export default function LoginPage() {
               value={formData.email}
               onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
               required
-              className="w-full bg-white/80 backdrop-blur-sm border-blue-100 focus:border-blue-500"
+              className="w-full bg-white/80 border-blue-100 focus:border-blue-500"
             />
             {fieldErrors.email && (
               <p className="text-sm text-red-500 font-medium">{fieldErrors.email}</p>
@@ -125,7 +126,7 @@ export default function LoginPage() {
               value={formData.password}
               onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
               required
-              className="w-full bg-white/80 backdrop-blur-sm border-blue-100 focus:border-blue-500"
+              className="w-full bg-white/80 border-blue-100 focus:border-blue-500"
             />
             {fieldErrors.password && (
               <p className="text-sm text-red-500 font-medium">{fieldErrors.password}</p>

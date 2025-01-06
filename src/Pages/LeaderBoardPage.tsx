@@ -66,7 +66,7 @@ const LeaderBoardPage = () => {
 
       {/* Leaderboard Content */}
       <div className="container mx-auto py-8 px-4 max-w-3xl">
-        <Card className="overflow-hidden bg-white/50 backdrop-blur-sm border-none shadow-xl">
+        <Card className="overflow-hidden border-none bg-[#ecfbff]">
           {usersWithTotalPoints.map((userWithPoints, index) => {
             const rank = calculateRank(index)
             return (
