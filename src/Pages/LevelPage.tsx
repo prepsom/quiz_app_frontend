@@ -78,7 +78,7 @@ export default function LevelPage() {
   useEffect(() => {
     if (!isInitialized) return;
 
-    if (availableQuestions.length === 0 && !gameComplete) {
+    if (availableQuestions.length === 0 && !gameComplete && !currentQuestion) {
       setGameComplete(true);
       handleLevelCompletion();
     } else if (!currentQuestion && availableQuestions.length > 0) {
@@ -115,6 +115,8 @@ export default function LevelPage() {
       setIsSubmittingCompletion(false);
     }
   };
+
+  console.log(availableQuestions);
 
   const pickQuestion = () => {
     let questionsByDifficulty = availableQuestions.filter(
@@ -210,12 +212,6 @@ export default function LevelPage() {
   const onNext = () => {
     setCurrentQuestion(null);
     setCurrentQuestionResponse(null);
-    if (availableQuestions.length > 0) {
-      pickQuestion();
-    } else {
-      setGameComplete(true);
-      handleLevelCompletion();
-    }
   };
 
   const handleExit = () => {
