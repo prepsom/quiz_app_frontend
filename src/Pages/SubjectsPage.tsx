@@ -22,21 +22,12 @@ export default function SubjectsPage() {
 
   return (
     <div className="min-h-screen bg-white">      
-      {/* Header */}
-      {/* <div className="bg-blue-500 p-6 flex items-center justify-between text-white">
-        <h1 className="text-2xl font-bold">Your Subjects</h1>
-      </div> */}
-
-      {/* Score Display */}
-
-      <div className='p-4 flex flex-col justify-center'>
-        <div className='text-gray-500'>Hello {loggedInUser.name}!</div>
+      <div className='p-4 flex flex-col justify-center gap-2'>
+        <div className='text-gray-500 mt-4'>Hello {loggedInUser.name}!</div>
         <div className='text-2xl text-gray-600 font-semibold'>What would you like to learn today</div>
-      </div>
+      </div>  
 
       <SubjectsCarousel subjects={subjects}/>
-
-      {/* Subjects List */}
 
       <div className='p-4 flex items-center my-2 text-2xl font-semibold text-gray-700'>Unfinished games</div>
       <div className="max-w-lg mx-auto p-4 space-y-4">
