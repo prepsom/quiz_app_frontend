@@ -1,20 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { Loader2, XCircle } from 'lucide-react';
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { API_URL } from "@/App";
 import QuestionPage from "./QuestionPage";
-import { QuestionResponseType, QuestionType } from "@/types";
+import { LevelCompletionResponse, QuestionResponseType, QuestionType } from "@/types";
 import { useGetLevelById } from "@/hooks/useGetLevelById";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useQuestionsByLevel } from "@/hooks/useQuestionsByLevel";
 import {
   AlertDialog,
@@ -28,15 +19,20 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useGetSubjectById } from "@/hooks/useGetSubjectById";
 import { Timer } from "@/components/Timer";
+import FeedbackPage from "./FeedbackPage";
+import { Navigation } from "@/components/Navigation";
 
-interface LevelCompletionResponse {
-  success: boolean;
-  message: string;
-  noOfCorrectQuestions?: number;
-  totalQuestions?: number;
-  percentage?: number;
-  isComplete?: boolean;
-}
+// const exampleCompletionData:LevelCompletionResponse = {
+//   success:true,
+//   message:"Level completed",
+//   isComplete:true,
+//   noOfCorrectQuestions:4,
+//   totalQuestions:8,
+//   percentage:50,
+//   recommendations:["recommended lorem ipsum asjdaklsjd asjdklajsd askdj","asldkjasldk  asjdlajsd asljkdalsd"],
+//   strengths:["asdasd asdasd asdasd", "asjdaklsd asdjlaksjd aasdja;sd"],
+//   weaknesses:["sjdaslkdja","sajd;kasjdasd","sajd;klasjdasd"],
+// }
 
 export default function LevelPage() {
   const navigate = useNavigate();
@@ -227,7 +223,8 @@ export default function LevelPage() {
     isSubjectLoading
   ) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
+      <div className="min-h-screen flex items-center justify-center gap-2 bg-gradient-to-b from-blue-100 to-white">
+        {isSubmittingCompletion && <div className="text-blue-500 font-semibold">Generating Report</div>}
         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
       </div>
     );
@@ -235,61 +232,11 @@ export default function LevelPage() {
 
   if (gameComplete && completionStatus) {
     return (
-      <div className="min-h-screen max-w-[430px] flex items-center justify-center bg-gradient-to-b from-blue-100 to-white p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {completionStatus.success ? (
-                <>
-                  <CheckCircle2 className="w-6 h-6 text-green-500" />
-                  Level Complete!
-                </>
-              ) : (
-                <>
-                  <XCircle className="w-6 h-6 text-red-500" />
-                  Level Not Complete
-                </>
-              )}
-            </CardTitle>
-            <CardDescription>{completionStatus.message}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {completionStatus.success && (
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600">
-                    Correct Answers: {completionStatus.noOfCorrectQuestions} /{" "}
-                    {completionStatus.totalQuestions}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Success Rate: {completionStatus.percentage}%
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Points Earned: {totalPointsInLevel}
-                  </p>
-                </div>
-              )}
-              <div className="flex gap-4">
-                <Button asChild className="w-full">
-                  <Link to={`/levels/${level?.subjectId}`}>
-                    Return to Levels
-                  </Link>
-                </Button>
-                {!completionStatus.success && (
-                  <Button
-                    variant="outline"
-                    onClick={() => window.location.reload()}
-                    className="w-full"
-                  >
-                    Try Again
-                  </Button>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+      <>
+        <FeedbackPage levelCompletionData={completionStatus} level={level!}/>
+        <Navigation/>
+      </>
+    )
   }
 
   if (!currentQuestion && availableQuestions.length === 0) {
