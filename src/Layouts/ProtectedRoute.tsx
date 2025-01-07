@@ -9,7 +9,7 @@ const ProtectedRoute = () => {
     const {loggedInUser} = useContext(AppContext) as AppContextType;
 
     if(loggedInUser===null) {
-        return <Navigate to="/login"/>
+        return <Navigate to="/"/>
     }
 
     return <Outlet/>

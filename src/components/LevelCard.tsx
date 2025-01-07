@@ -1,73 +1,64 @@
-import { LevelType } from "@/types"
-import { Lock, Star, Play, CheckCircle } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { useNavigate } from "react-router-dom"
+import { LevelType } from "@/types";
+import { Star, CheckCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import levelLocked3DIcon from "../assets/LevelLockedIcon.png";
 
 interface LevelCardProps {
-  level: LevelType
-  isLocked: boolean
-  isCompleted: boolean
-  currentLevel: number
+  level: LevelType;
+  isLocked: boolean;
+  isCompleted: boolean;
+  currentLevel: number;
+  index: number;
 }
 
-export function LevelCard({ level, isLocked, isCompleted, currentLevel }: LevelCardProps) {
-  const navigate = useNavigate()
+export function LevelCard({
+  level,
+  isLocked,
+  isCompleted,
+  index,
+}: LevelCardProps) {
+  const navigate = useNavigate();
 
   return (
-    <Card className="p-4 hover:shadow-md transition-shadow">
-      <div className="flex items-center gap-4">
-        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-          isCompleted ? 'bg-green-100' : 
-          isLocked ? 'bg-gray-100' : 
-          'bg-blue-500'
-        }`}>
-          {isCompleted ? (
-            <CheckCircle className="w-6 h-6 text-green-500" />
-          ) : isLocked ? (
-            <Lock className="w-6 h-6 text-gray-400" />
-          ) : (
-            <Star className="w-6 h-6 text-white" />
-          )}
-        </div>
-
-        <div className="flex-1">
-          <div className="text-sm text-gray-500 uppercase">
-            LEVEL {level.position + 1}
-          </div>
-          <h3 className="font-medium text-gray-900">
-            {level.levelName}
-          </h3>
-          {level.levelDescription && (
-            <p className="text-sm text-gray-500">
-              {level.levelDescription}
-            </p>
-          )}
-        </div>
-
-        {!isLocked && !isCompleted && (
-          <Button 
-            onClick={() => navigate(`/level/${level.id}`)}
-            className="bg-blue-500 hover:bg-blue-600 text-white rounded-full px-6"
-          >
-            <Play className="w-4 h-4 mr-2" />
-            START
-          </Button>
-        )}
-
-        {isCompleted && (
+    <div
+      onClick={() => navigate(`/level/${level.id}`)}
+      className="flex items-center gap-4"
+    >
+      <div
+        className={`w-12 h-12 rounded-full flex items-center justify-center ${
+          isCompleted
+            ? "bg-green-100"
+            : isLocked
+            ? "bg-gray-100"
+            : "bg-blue-500"
+        }`}
+      >
+        {isCompleted ? (
+          <CheckCircle className="w-6 h-6 text-green-500" />
+        ) : isLocked ? (
           <>
-        <Button 
-            onClick={() => navigate(`/level/${level.id}`)}
-            className="bg-green-500 hover:bg-green-600 text-white rounded-full px-6"
-          >
-            <Play className="w-4 h-4 mr-2" />
-            PLAY AGAIN
-          </Button>
-          </>          
+            <img src={levelLocked3DIcon} alt="" />
+          </>
+        ) : (
+          <Star className="w-6 h-6 text-white" />
         )}
       </div>
-    </Card>
-  )
-}
 
+      <div className="flex-1">
+        <div className="text-sm text-blue-500 font-light uppercase">
+          LEVEL {index + 1}
+        </div>
+        <h3
+          className={`text-lg text-[#374151] font-bold ${
+            isLocked ? "text-[#9ca3af]" : ""
+          } `}
+        >
+          {level.levelName}
+        </h3>
+        {level.levelDescription && (
+          <p className="text-sm text-gray-500">{level.levelDescription}</p>
+        )}
+      </div>
+    </div>
+  );
+}

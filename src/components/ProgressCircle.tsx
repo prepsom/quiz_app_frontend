@@ -1,19 +1,19 @@
 interface ProgressCircleProps {
-  progress: number
-  size?: number
-  strokeWidth?: number
-  className?: string
+  progress: number;
+  size?: number;
+  strokeWidth?: number;
+  className?: string;
 }
 
-export function ProgressCircle({ 
-  progress, 
-  size = 40, 
+export function ProgressCircle({
+  progress,
+  size = 40,
   strokeWidth = 4,
-  className = "" 
+  className = "",
 }: ProgressCircleProps) {
-  const radius = (size - strokeWidth) / 2
-  const circumference = radius * 2 * Math.PI
-  const offset = circumference - (progress / 100) * circumference
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const offset = circumference - (progress / 100) * circumference;
 
   return (
     <div className={className}>
@@ -21,7 +21,7 @@ export function ProgressCircle({
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
-        style={{ transform: 'rotate(-90deg)' }}
+        style={{ transform: "rotate(-90deg)" }}
       >
         <circle
           className="stroke-gray-200"
@@ -43,12 +43,9 @@ export function ProgressCircle({
           strokeDashoffset={offset}
         />
       </svg>
-      <span 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-medium"
-      >
+      <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-medium">
         {progress}%
       </span>
     </div>
-  )
+  );
 }
-

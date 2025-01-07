@@ -12,7 +12,7 @@ export function Timer({ seconds }: TimerProps) {
     <>
       <div className="flex items-center gap-2">
         <Clock className="w-4 h-4 text-blue-500" />
-        <span className="font-mono text-lg font-medium text-blue-600">
+        <span className="font-mono text-xl font-semibold text-blue-600">
           {String(minutes).padStart(2, "0")}:
           {String(remainingSeconds).padStart(2, "0")}
         </span>

@@ -1,35 +1,41 @@
-import { SubjectType } from "@/types"
-import { Card } from "@/components/ui/card"
-import { useNavigate } from "react-router-dom"
-import { Book, FlaskRoundIcon as Flask, Monitor } from 'lucide-react'
-import { useLevelsBySubject } from "@/hooks/useLevelsBySubject"
-import { useCompletedLevelsBySubject } from "@/hooks/useCompletedLevelsBySubject"
-import { Skeleton } from "./ui/skeleton"
-import { ProgressCircle } from "./ProgressCircle"
+import { SubjectType } from "@/types";
+import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import { Book } from "lucide-react";
+import { useLevelsBySubject } from "@/hooks/useLevelsBySubject";
+import { useCompletedLevelsBySubject } from "@/hooks/useCompletedLevelsBySubject";
+import { Skeleton } from "./ui/skeleton";
+import { ProgressCircle } from "./ProgressCircle";
+import mathsImageIcon from "../assets/MathImageIcon.png";
+import scienceImageIcon from "../assets/ScienceImageIcon.png";
+import computerImageIcon from "../assets/ComputerImageIcon.png";
 
-const subjectIcons = {
-  'Mathematics': Book,
-  'Science': Flask,
-  'Computer': Monitor,
-} as const
+const subjectImageIcons = {
+  Mathematics: mathsImageIcon,
+  Science: scienceImageIcon,
+  Computer: computerImageIcon,
+} as const;
 
 interface SubjectCardProps {
-  subject: SubjectType
+  subject: SubjectType;
 }
 
 export function SubjectCard({ subject }: SubjectCardProps) {
-  const navigate = useNavigate()
-  const Icon = subjectIcons[subject.subjectName as keyof typeof subjectIcons] || Book
-  const { levels: totalLevels, isLoading: isTotalLevelsLoading, error: totalLevelsError } = useLevelsBySubject(subject.id)
-  const { 
-    completedLevels, 
-    isLoading: isCompletedLevelsLoading, 
-    error: completedLevelsError 
-  } = useCompletedLevelsBySubject(subject.id)
+  const navigate = useNavigate();
+  const Icon =
+    subjectImageIcons[subject.subjectName as keyof typeof subjectImageIcons] ||
+    Book;
+  const { levels: totalLevels, isLoading: isTotalLevelsLoading } =
+    useLevelsBySubject(subject.id);
+  const { completedLevels, isLoading: isCompletedLevelsLoading } =
+    useCompletedLevelsBySubject(subject.id);
 
-  const progress = totalLevels.length > 0 
-    ? Math.round((completedLevels.length / totalLevels.length) * 100) 
-    : 0
+  const progress =
+    totalLevels.length > 0
+      ? Math.round((completedLevels.length / totalLevels.length) * 100)
+      : 0;
+
+  if (progress == 100) return;
 
   if (isTotalLevelsLoading || isCompletedLevelsLoading) {
     return (
@@ -43,50 +49,46 @@ export function SubjectCard({ subject }: SubjectCardProps) {
           <Skeleton className="w-10 h-10 rounded-full" />
         </div>
       </Card>
-    )
-  }
-
-  if (completedLevelsError || totalLevelsError) {
-    return (
-      <Card className="p-4">
-        <div className="text-red-500 flex items-center justify-center">
-          {completedLevelsError || totalLevelsError}
-        </div>
-      </Card>
-    )
+    );
   }
 
   return (
-    <Card 
+    <Card
       className="p-4 hover:shadow-md transition-shadow bg-white rounded-xl cursor-pointer"
       onClick={() => navigate(`/levels/${subject.id}`)}
     >
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
-          <Icon className="w-6 h-6 text-blue-500" />
+          {typeof Icon === "string" ? (
+            <>
+              {" "}
+              <img className="w-12 h-12" src={Icon} alt="" />
+            </>
+          ) : (
+            <Icon className="w-6 h-6 text-blue-500" />
+          )}
         </div>
 
         <div className="flex-1">
-          <h3 className="font-medium text-gray-900">
-            {subject.subjectName}
-          </h3>
+          <h3 className="font-medium text-gray-900">{subject.subjectName}</h3>
           <p className="text-sm text-gray-500">
             {completedLevels.length} of {totalLevels.length} levels completed
           </p>
         </div>
 
         <div className="relative">
-          <ProgressCircle 
+          <ProgressCircle
             progress={progress}
             className={`relative ${
-              progress >= 66 ? 'stroke-green-500' :
-              progress >= 33 ? 'stroke-blue-500' :
-              'stroke-orange-500'
+              progress >= 66
+                ? "stroke-green-500"
+                : progress >= 33
+                ? "stroke-blue-500"
+                : "stroke-orange-500"
             }`}
           />
         </div>
       </div>
     </Card>
-  )
+  );
 }
-
