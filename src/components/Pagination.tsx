@@ -1,13 +1,17 @@
-import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationProps {
-  currentPage: number
-  noOfPages: number
-  setCurrentPage: (page: number) => void
+  currentPage: number;
+  noOfPages: number;
+  setCurrentPage: (page: number) => void;
 }
 
-const Pagination = ({ currentPage, noOfPages, setCurrentPage }: PaginationProps) => {
+const Pagination = ({
+  currentPage,
+  noOfPages,
+  setCurrentPage,
+}: PaginationProps) => {
   return (
     <div className="flex justify-center items-center gap-2">
       <Button
@@ -19,22 +23,24 @@ const Pagination = ({ currentPage, noOfPages, setCurrentPage }: PaginationProps)
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
-      
+
       <div className="flex gap-2">
-        {Array.from({ length: noOfPages }, (_, i) => i + 1).map((pageNumber) => (
-          <Button
-            key={pageNumber}
-            variant={currentPage === pageNumber ? "default" : "outline"}
-            onClick={() => setCurrentPage(pageNumber)}
-            className={`h-8 w-8 ${
-              currentPage === pageNumber 
-                ? 'bg-blue-500 text-white hover:bg-blue-600' 
-                : 'bg-white'
-            }`}
-          >
-            {pageNumber}
-          </Button>
-        ))}
+        {Array.from({ length: noOfPages }, (_, i) => i + 1).map(
+          (pageNumber) => (
+            <Button
+              key={pageNumber}
+              variant={currentPage === pageNumber ? "default" : "outline"}
+              onClick={() => setCurrentPage(pageNumber)}
+              className={`h-8 w-8 ${
+                currentPage === pageNumber
+                  ? "bg-blue-500 text-white hover:bg-blue-600"
+                  : "bg-white"
+              }`}
+            >
+              {pageNumber}
+            </Button>
+          )
+        )}
       </div>
 
       <Button
@@ -47,8 +53,7 @@ const Pagination = ({ currentPage, noOfPages, setCurrentPage }: PaginationProps)
         <ChevronRight className="h-4 w-4" />
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default Pagination
-
+export default Pagination;

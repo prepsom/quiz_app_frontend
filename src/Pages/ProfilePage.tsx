@@ -1,12 +1,11 @@
-
 const ProfilePage = () => {
   return (
     <>
-        <div className='flex items-center justify-center font-semibold'>
-            Profile page coming soon.
-        </div>
+      <div className="flex items-center justify-center font-semibold">
+        Profile page coming soon.
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;

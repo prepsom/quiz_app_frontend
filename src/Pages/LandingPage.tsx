@@ -13,8 +13,8 @@ const LandingPage = () => {
     if(loggedInUser!==null) return <Navigate to="/subjects"/>
 
     return (
-    <div className="min-h-screen bg-[#EEF6FF] flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md flex flex-col items-center space-y-8">
+    <div className="min-h-screen bg-[#EEF6FF] flex flex-col items-center justify-center p-2">
+      <div className="w-full max-w-md flex flex-col items-center justify-around">
         {/* School Logo/Text */}
         <div className="bg-white px-8 py-3 rounded-xl shadow-sm">
           <span className="text-gray-600 text-lg">School Name</span>
@@ -42,8 +42,8 @@ const LandingPage = () => {
 
         {/* Get Started Button */}
         <Button 
-          onClick={() => navigate("/subjects")}
-          className="w-full max-w-xs bg-blue-500 hover:bg-blue-600 text-white py-6 text-lg"
+          onClick={() => navigate(`${loggedInUser ? "/subjects" : "/login"}`)}
+          className=" w-full fixed bottom-8 max-w-xs bg-blue-500 hover:bg-blue-600 text-white py-6 text-lg"
         >
           GET STARTED
         </Button>

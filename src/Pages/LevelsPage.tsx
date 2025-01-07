@@ -8,26 +8,15 @@ import { useMemo } from "react";
 import { useUsersTotalPoints } from "@/hooks/useUsersTotalPoints";
 import coins3DIcon from "../assets/3DCoinsIcon.png";
 
-
 const LevelsPage = () => {
   const navigate = useNavigate();
   const { subjectId } = useParams<{ subjectId: string }>();
   if (!subjectId) return <div>No subject selected</div>;
-  const {
-    totalPoints: usersTotalPoints,
-    isLoading: isUsersPointsLoading,
-    error: usersPointsError,
-  } = useUsersTotalPoints();
-  const {
-    subject,
-    error,
-    isLoading: isSubjectLoading,
-  } = useGetSubjectById(subjectId);
-  const {
-    completedLevels,
-    error: completedLevelsError,
-    isLoading: isCompletedLevelsLoading,
-  } = useCompletedLevelsBySubject(subjectId);
+  const { totalPoints: usersTotalPoints, isLoading: isUsersPointsLoading } =
+    useUsersTotalPoints();
+  const { subject, isLoading: isSubjectLoading } = useGetSubjectById(subjectId);
+  const { completedLevels, isLoading: isCompletedLevelsLoading } =
+    useCompletedLevelsBySubject(subjectId);
   const { levels, isLoading } = useLevelsBySubject(subjectId);
 
   // Organize levels by completion status
@@ -65,7 +54,7 @@ const LevelsPage = () => {
     );
   }
 
-  if (error || !subject || completedLevelsError || usersPointsError) {
+  if (!subject) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <p className="text-red-500">Subject not found</p>
@@ -78,7 +67,7 @@ const LevelsPage = () => {
     : completedLevels.length + 1;
 
   return (
-    <div className="min-h-screen bg-[#ecfbff]">
+    <div className="bg-[#ecfbff]">
       {/* Header */}
       <div className="p-6 flex items-center justify-between text-white bg-blue-500 mb-4">
         <h1 className="text-2xl font-bold">
@@ -96,7 +85,9 @@ const LevelsPage = () => {
           <span>Subjects</span>
         </button>
         <div className="bg-[#cbeff9] rounded-full px-4 py-1 flex items-center gap-2">
-          <span className="text-blue-600 font-semibold">{usersTotalPoints}</span>
+          <span className="text-blue-600 font-semibold">
+            {usersTotalPoints}
+          </span>
           <div className="bg-purple-500 rounded-full p-1">
             {" "}
             <img src={coins3DIcon} alt="" />{" "}
@@ -105,11 +96,11 @@ const LevelsPage = () => {
       </div>
 
       {/* Levels List */}
-      <div className= "rounded-t-3xl min-h-screen p-6 shadow-lg">
+      <div className="rounded-t-3xl  p-6 shadow-lg">
         {completedLevels.length !== 0 || uncompletedLevels.length !== 0 ? (
           <div className="max-w-md mx-auto space-y-8">
             {/* Completed Levels */}
-            {completedLevels.map((level,index) => (
+            {completedLevels.map((level, index) => (
               <LevelCard
                 index={index}
                 key={level.id}
@@ -121,7 +112,7 @@ const LevelsPage = () => {
             ))}
 
             {/* Uncompleted Levels */}
-            {uncompletedLevels.map((level,index) => (
+            {uncompletedLevels.map((level, index) => (
               <LevelCard
                 index={index + completedLevels.length}
                 key={level.id}
