@@ -95,12 +95,9 @@ export default function LevelPage() {
     if (!isInitialized) return;
 
     if (availableQuestions.length === 0 && !gameComplete && !currentQuestion) {
-      console.log("current question :- ", currentQuestion);
       setGameComplete(true);
       handleLevelCompletion();
     } else if (!currentQuestion && availableQuestions.length > 0) {
-      console.log("available:- ", availableQuestions);
-      console.log("picked question");
       pickQuestion();
     }
   }, [isInitialized, availableQuestions, currentQuestion, gameComplete]);
@@ -175,7 +172,6 @@ export default function LevelPage() {
   ) => {
     if (!currentQuestion) return;
     try {
-      console.log(responseTimeInSeconds);
       const response = await axios.post<{
         success: boolean;
         message: string;
@@ -191,7 +187,6 @@ export default function LevelPage() {
           withCredentials: true,
         }
       );
-      console.log(response);
       setTotalPointsInLevel(
         (prev) => prev + response.data.questionResponse.pointsEarned
       );

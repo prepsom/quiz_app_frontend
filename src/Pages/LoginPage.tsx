@@ -68,7 +68,6 @@ export default function LoginPage() {
           withCredentials: true,
         }
       );
-      console.log("Login successful:", response.data.user);
       setLoggedInUser(response.data.user);
       navigate("/");
     } catch (err) {
