@@ -116,8 +116,6 @@ export default function LevelPage() {
     }
   };
 
-  console.log(availableQuestions);
-
   const pickQuestion = () => {
     let questionsByDifficulty = availableQuestions.filter(
       (question) => question.difficulty === difficulty
