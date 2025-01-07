@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import { useUsersTotalPoints } from "@/hooks/useUsersTotalPoints";
 import coins3DIcon from "../assets/3DCoinsIcon.png";
 
+
 const LevelsPage = () => {
   const navigate = useNavigate();
   const { subjectId } = useParams<{ subjectId: string }>();
@@ -108,8 +109,9 @@ const LevelsPage = () => {
         {completedLevels.length !== 0 || uncompletedLevels.length !== 0 ? (
           <div className="max-w-md mx-auto space-y-8">
             {/* Completed Levels */}
-            {completedLevels.map((level) => (
+            {completedLevels.map((level,index) => (
               <LevelCard
+                index={index}
                 key={level.id}
                 level={level}
                 isLocked={false}
@@ -119,8 +121,9 @@ const LevelsPage = () => {
             ))}
 
             {/* Uncompleted Levels */}
-            {uncompletedLevels.map((level) => (
+            {uncompletedLevels.map((level,index) => (
               <LevelCard
+                index={index + completedLevels.length}
                 key={level.id}
                 level={level}
                 isLocked={level.id !== nextLevel?.id} // Only unlock the next level

@@ -106,9 +106,15 @@ export default function LevelPage() {
     }
   }
 
+  //  initial diff = "EASY"
+  // filter available questions by diff
+  // when a user does two questions correct consecutively -> move to next difficulty
+  // else stay on the same difficulty until the questions are exhausted
+
   const pickQuestion = () => {
-    let questionsByDifficulty = availableQuestions.filter((question) => question.difficulty === difficulty)
     
+    let questionsByDifficulty = availableQuestions.filter((question) => question.difficulty === difficulty)
+
     while (questionsByDifficulty.length === 0) {
       if (difficulty === "EASY") {
         setDifficulty("MEDIUM")

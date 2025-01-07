@@ -1,17 +1,18 @@
 import { LevelType } from "@/types"
-import { Lock, Star, Play, CheckCircle } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import {  Star, CheckCircle } from 'lucide-react'
 import { useNavigate } from "react-router-dom"
+import levelLocked3DIcon from "../assets/LevelLockedIcon.png"
+
 
 interface LevelCardProps {
   level: LevelType
   isLocked: boolean
   isCompleted: boolean
   currentLevel: number
+  index:number;
 }
 
-export function LevelCard({ level, isLocked, isCompleted, currentLevel }: LevelCardProps) {
+export function LevelCard({ level,isLocked,isCompleted,index}: LevelCardProps) {
   const navigate = useNavigate()
 
   return (
@@ -24,7 +25,9 @@ export function LevelCard({ level, isLocked, isCompleted, currentLevel }: LevelC
           {isCompleted ? (
             <CheckCircle className="w-6 h-6 text-green-500" />
           ) : isLocked ? (
-            <Lock className="w-6 h-6 text-gray-400" />
+            <>
+              <img src={levelLocked3DIcon} alt="" />
+            </>
           ) : (
             <Star className="w-6 h-6 text-white" />
           )}
@@ -32,9 +35,9 @@ export function LevelCard({ level, isLocked, isCompleted, currentLevel }: LevelC
 
         <div className="flex-1">
           <div className="text-sm text-blue-500 font-light uppercase">
-            LEVEL {level.position + 1}
+            LEVEL {index + 1}
           </div>
-          <h3 className="text-lg text-[#374151] font-bold">
+          <h3 className={`text-lg text-[#374151] font-bold ${isLocked ? 'text-[#9ca3af]':''} `}>
             {level.levelName}
           </h3>
           {level.levelDescription && (

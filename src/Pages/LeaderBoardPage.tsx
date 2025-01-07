@@ -10,7 +10,7 @@ import { AppContextType } from "@/types"
 import { Navigate } from "react-router-dom"
 import { SubjectCard } from "@/components/SubjectCard"
 
-const USERS_PER_PAGE = 5
+const USERS_PER_PAGE = 10
 
 const LeaderBoardPage = () => {
   const {loggedInUser} = useContext(AppContext) as AppContextType;
@@ -96,11 +96,8 @@ const LeaderBoardPage = () => {
                   </Avatar>
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold text-blue-600">
-                      {userWithPoints.user.name}
+                      {userWithPoints.user.name.split(" ")[0]}
                     </h3>
-                    <p className="text-sm text-gray-500">
-                      {userWithPoints.user.role.charAt(0) + userWithPoints.user.role.slice(1).toLowerCase()}
-                    </p>
                   </div>
                   <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm">
                     <span className="inline-block w-5 h-5">

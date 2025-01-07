@@ -28,8 +28,8 @@ export default function QuestionPage({
   currentQuestionNumber
 }: QuestionPageProps) {
   const { question: currentQuestion, isLoading: isQuestionWithAnswersLoading } = useQuestionWithAnswers(question.id)
-  const [selectedAnswer, setSelectedAnswer] = useState<string>("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedAnswer, setSelectedAnswer] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setSelectedAnswer("")

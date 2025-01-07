@@ -1,7 +1,7 @@
 import { SubjectType } from '@/types'
 import {Book, ComputerIcon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import scienceSubjectImage from "../assets/ScienceSubjectIcon.png"
+import scienceSubjectImage from "../assets/scienceSubjectIcon (2).png"
 import mathSubjectImage from "../assets/MathSubjectIcon.png"
 
 type Props = {
@@ -27,7 +27,7 @@ const SubjectsCarousel = ({ subjects }: Props) => {
               key={subject.id}
               className="flex flex-col items-center p-6 min-w-[160px] bg-[#ecfbff] rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group"
             >
-              <div className="mb-3 p-3 rounded-full bg-white shadow-sm group-hover:scale-110 transition-transform duration-200">
+              <div className="mb-3 p-3 group-hover:scale-110 transition-transform duration-200">
                 <div className="text-blue-600">
                   {typeof icon==="string" ? <> <img className='w-36 h-36' src={icon} alt="" /></> : icon}
                 </div>
