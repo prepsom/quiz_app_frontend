@@ -164,7 +164,7 @@ export default function QuestionPage({
       )}
 
       {/* Action Button */}
-      <div className="fixed bottom-4 left-0 right-0 flex justify-center p-4">
+      <div className="relative bottom-4 left-0 right-0 flex justify-center p-4">
         <div className="w-full max-w-md">
           {!questionResponse ? (
             <Button
