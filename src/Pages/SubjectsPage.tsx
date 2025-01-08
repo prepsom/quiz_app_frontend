@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { API_URL } from "@/App";
 import { toast } from "@/hooks/use-toast";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 export default function SubjectsPage() {
   const { loggedInUser, setLoggedInUser } = useContext(
@@ -46,7 +47,18 @@ export default function SubjectsPage() {
       <div className="p-4 flex flex-col justify-center gap-2">
         <div className="flex items-center justify-between">
           <div className="text-gray-500 mt-4">Hello {loggedInUser.name}!</div>
-          <Button onClick={handleLogout} variant="outline">Logout</Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline">Logout</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>Are you sure you want to logout?</AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="my-1">Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
         <div className="text-2xl text-gray-600 font-semibold">
           What would you like to learn today
