@@ -1,12 +1,10 @@
 import { API_URL } from "@/App";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useToast } from "./use-toast";
 
 export const useUsersTotalPoints = () => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { toast } = useToast();
 
   useEffect(() => {
     const fetchUsersTotalPoints = async () => {
