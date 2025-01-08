@@ -47,7 +47,7 @@ export default function LevelPage() {
 
   const [showExitAlert, setShowExitAlert] = useState<boolean>(false);
   const [gameComplete, setGameComplete] = useState(false);
-  const [totalPointsInLevel, setTotalPointsInLevel] = useState<number>(0);
+  const [totalPointsInLevel,setTotalPointsInLevel] = useState<number>(0);
   const [difficulty, setDifficulty] = useState<"EASY" | "MEDIUM" | "HARD">("EASY");
   const [currentQuestion, setCurrentQuestion] = useState<QuestionType | null>(null);
   const [completionStatus, setCompletionStatus] = useState<LevelCompletionResponse | null>(null);
@@ -74,7 +74,7 @@ export default function LevelPage() {
   useEffect(() => {
     if (!isInitialized) return;
 
-    if (availableQuestions.length === 0 && !gameComplete && !currentQuestion) {
+    if(availableQuestions.length === 0 && !gameComplete && !currentQuestion) {
       setGameComplete(true);
       handleLevelCompletion();
     } else if (!currentQuestion && availableQuestions.length > 0) {
@@ -306,3 +306,7 @@ export default function LevelPage() {
   );
 }
 
+
+// remarks 
+// back to levels button 
+// lock

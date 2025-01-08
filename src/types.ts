@@ -86,4 +86,5 @@ export type LevelCompletionResponse =  {
   strengths?:string[];
   weaknesses?:string[];
   recommendations?:string[];
+  remarks?:string;
 }

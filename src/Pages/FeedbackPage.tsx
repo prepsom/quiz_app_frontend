@@ -1,8 +1,8 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { AppContext } from '@/Context/AppContext';
 import { AppContextType, LevelCompletionResponse, LevelType } from '@/types'
 import  { useContext } from 'react'
-import { RxAvatar } from "react-icons/rx";
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
@@ -20,9 +20,25 @@ const FeedbackPage = ({levelCompletionData, level}: Props) => {
         </div>
 
         <div className='flex flex-col w-full px-4 max-w-3xl'>
-            <div className='flex items-center gap-4 my-4'>
-                <div className='text-6xl text-blue-500'><RxAvatar/></div>
-                <div className='text-blue-500 font-semibold text-xl'>{loggedInUser?.name}</div>
+            <div className='flex items-center gap-4 my-4 justify-between w-full'>
+                <div className='flex items-center gap-4'>
+                <Avatar className="h-12 w-12 ring-2 ring-blue-100 ring-offset-2">
+                  <AvatarImage
+                    src={`/avatars/${loggedInUser?.avatar.toLowerCase()}.png`}
+                    alt={loggedInUser?.name}
+                  />
+                  <AvatarFallback className="bg-blue-100 text-blue-600">
+                    {loggedInUser?.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                    <div className='text-blue-500 font-semibold text-xl'>{loggedInUser?.name}</div>
+                </div>
+                <div>
+                    <Button variant={"outline"} onClick={() => navigate(`/levels/${level.subjectId}`)}>Back to levels</Button>
+                </div>
             </div>
             <div className='flex items-center gap-2'>
                 <span className='tracking-wide text-blue-600'>LEVEL :</span>
@@ -44,7 +60,7 @@ const FeedbackPage = ({levelCompletionData, level}: Props) => {
                     </div>
                     <div className='text-[#6B72803]'>Remarks:</div>
                     <div className='flex flex-wrap text-[#4B5563]'>
-                        Great job, {loggedInUser?.name}! You've shown strong understanding of basic concepts. A little more focus on applying concepts creatively, and you'll ace the next level!
+                        {levelCompletionData.remarks}
                     </div>
                 </div>
 
@@ -73,9 +89,6 @@ const FeedbackPage = ({levelCompletionData, level}: Props) => {
                             <li className='text-[#4B5563]' key={index}>{recommendation}</li>
                         ))}
                     </ul>
-                </div>
-                <div className='flex items-center justify-end'>
-                    <Button variant="outline" onClick={() => navigate(`/levels/${level.subjectId}`)}>Back to levels</Button>
                 </div>
             </div>
         </div>
