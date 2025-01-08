@@ -96,7 +96,7 @@ const LevelsPage = () => {
       </div>
 
       {/* Levels List */}
-      <div className="rounded-t-3xl  p-6 shadow-lg">
+      <div className="rounded-t-3xl  p-6 shadow-lg h-screen">
         {completedLevels.length !== 0 || uncompletedLevels.length !== 0 ? (
           <div className="max-w-md mx-auto space-y-8">
             {/* Completed Levels */}

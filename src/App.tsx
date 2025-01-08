@@ -10,11 +10,11 @@ import LevelPage from "./Pages/LevelPage";
 import LeaderBoardPage from "./Pages/LeaderBoardPage";
 import ProfilePage from "./Pages/ProfilePage";
 
-export const API_URL = "http://localhost:3000";
+export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 function App() {
   return (
-    <div className="flex justify-center ">
+    <div className="flex justify-center">
       <div className="w-full max-w-md">
         <AppContextProvider>
           <Router>
