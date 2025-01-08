@@ -1,20 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Loader2, XCircle } from 'lucide-react';
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { API_URL } from "@/App";
 import QuestionPage from "./QuestionPage";
-import { QuestionResponseType, QuestionType } from "@/types";
+import { LevelCompletionResponse, QuestionResponseType, QuestionType } from "@/types";
 import { useGetLevelById } from "@/hooks/useGetLevelById";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useQuestionsByLevel } from "@/hooks/useQuestionsByLevel";
 import {
   AlertDialog,
@@ -28,15 +19,20 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useGetSubjectById } from "@/hooks/useGetSubjectById";
 import { Timer } from "@/components/Timer";
+import FeedbackPage from "./FeedbackPage";
+import { Navigation } from "@/components/Navigation";
 
-interface LevelCompletionResponse {
-  success: boolean;
-  message: string;
-  noOfCorrectQuestions?: number;
-  totalQuestions?: number;
-  percentage?: number;
-  isComplete?: boolean;
-}
+// const exampleCompletionData:LevelCompletionResponse = {
+//   success:true,
+//   message:"Level completed",
+//   isComplete:true,
+//   noOfCorrectQuestions:4,
+//   totalQuestions:8,
+//   percentage:50,
+//   recommendations:["recommended lorem ipsum asjdaklsjd asjdklajsd askdj","asldkjasldk  asjdlajsd asljkdalsd"],
+//   strengths:["asdasd asdasd asdasd", "asjdaklsd asdjlaksjd aasdja;sd"],
+//   weaknesses:["sjdaslkdja","sajd;kasjdasd","sajd;klasjdasd"],
+// }
 
 export default function LevelPage() {
   const navigate = useNavigate();
@@ -44,45 +40,30 @@ export default function LevelPage() {
   if (!levelId) return null;
 
   const { level, isLoading: isLevelLoading } = useGetLevelById(levelId);
-  const { questions, isLoading: isQuestionsLoading } =
-    useQuestionsByLevel(levelId);
+  const { questions, isLoading: isQuestionsLoading } = useQuestionsByLevel(levelId);
   const { subject, isLoading: isSubjectLoading } = useGetSubjectById(
     level?.subjectId ? level.subjectId : null
   );
 
   const [showExitAlert, setShowExitAlert] = useState<boolean>(false);
   const [gameComplete, setGameComplete] = useState(false);
-  const [totalPointsInLevel, setTotalPointsInLevel] = useState<number>(0);
-  const [difficulty, setDifficulty] = useState<"EASY" | "MEDIUM" | "HARD">(
-    "EASY"
-  );
-  const [currentQuestion, setCurrentQuestion] = useState<QuestionType | null>(
-    null
-  );
-  const [completionStatus, setCompletionStatus] =
-    useState<LevelCompletionResponse | null>(null);
+  const [totalPointsInLevel,setTotalPointsInLevel] = useState<number>(0);
+  const [difficulty, setDifficulty] = useState<"EASY" | "MEDIUM" | "HARD">("EASY");
+  const [currentQuestion, setCurrentQuestion] = useState<QuestionType | null>(null);
+  const [completionStatus, setCompletionStatus] = useState<LevelCompletionResponse | null>(null);
   const [isSubmittingCompletion, setIsSubmittingCompletion] = useState(false);
-  const [availableQuestions, setAvailableQuestions] = useState<QuestionType[]>(
-    []
-  );
+  const [availableQuestions, setAvailableQuestions] = useState<QuestionType[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [currentQuestionResponse, setCurrentQuestionResponse] =
-    useState<QuestionResponseType | null>(null);
-  const [questionTimerInSeconds, setQuestionTimerInSeconds] =
-    useState<number>(0);
+  const [currentQuestionResponse, setCurrentQuestionResponse] = useState<QuestionResponseType | null>(null);
+  const [questionTimerInSeconds, setQuestionTimerInSeconds] = useState<number>(0);
+  const [consecutiveCorrect, setConsecutiveCorrect] = useState<number>(0);
+  const [consecutiveIncorrect, setConsecutiveIncorrect] = useState<number>(0);
 
-  // current question number = current no of questions attempted
-  // total questions in level -> fixed
-  // available questions in level - > dynamic
-  // 4 -> answered , total -> 20
-  // available questions -> 16
-  // therefore answered -> total quesitons.length - available.quesitions.length
   const questionNumber = useMemo(
     () => questions.length - availableQuestions.length,
     [questions, availableQuestions]
   );
 
-  // Initialize available questions once when questions are loaded
   useEffect(() => {
     if (!isQuestionsLoading && questions.length > 0 && !isInitialized) {
       setAvailableQuestions(questions);
@@ -90,11 +71,10 @@ export default function LevelPage() {
     }
   }, [isQuestionsLoading, questions, isInitialized]);
 
-  // Handle game progression
   useEffect(() => {
     if (!isInitialized) return;
 
-    if (availableQuestions.length === 0 && !gameComplete && !currentQuestion) {
+    if(availableQuestions.length === 0 && !gameComplete && !currentQuestion) {
       setGameComplete(true);
       handleLevelCompletion();
     } else if (!currentQuestion && availableQuestions.length > 0) {
@@ -106,11 +86,11 @@ export default function LevelPage() {
     if (currentQuestion === null) return;
 
     setQuestionTimerInSeconds(0);
-    const intevnal = setInterval(() => {
+    const interval = setInterval(() => {
       setQuestionTimerInSeconds((prev) => prev + 1);
     }, 1000);
 
-    return () => clearInterval(intevnal);
+    return () => clearInterval(interval);
   }, [currentQuestion]);
 
   const handleLevelCompletion = async () => {
@@ -132,34 +112,45 @@ export default function LevelPage() {
     }
   };
 
-  //  initial diff = "EASY"
-  // filter available questions by diff
-  // when a user does two questions correct consecutively -> move to next difficulty
-  // else stay on the same difficulty until the questions are exhausted
-
   const pickQuestion = () => {
     let questionsByDifficulty = availableQuestions.filter(
       (question) => question.difficulty === difficulty
     );
 
-    while (questionsByDifficulty.length === 0) {
-      if (difficulty === "EASY") {
+    if (questionsByDifficulty.length === 0) {
+      if (
+        difficulty === "EASY" &&
+        availableQuestions.some((q) => q.difficulty === "MEDIUM")
+      ) {
         setDifficulty("MEDIUM");
-        questionsByDifficulty = availableQuestions.filter(
-          (question) => question.difficulty === "MEDIUM"
-        );
-      } else if (difficulty === "MEDIUM") {
+        questionsByDifficulty = availableQuestions.filter(q => q.difficulty === "MEDIUM");
+      } else if (
+        difficulty === "MEDIUM" &&
+        availableQuestions.some((q) => q.difficulty === "HARD")
+      ) {
         setDifficulty("HARD");
-        questionsByDifficulty = availableQuestions.filter(
-          (question) => question.difficulty === "HARD"
+        questionsByDifficulty = availableQuestions.filter(q => q.difficulty === "HARD");
+      } else if (availableQuestions.length > 0) {
+        // If there are still questions available, reset to the easiest available difficulty
+        const easiestAvailableDifficulty = ["EASY", "MEDIUM", "HARD"].find(
+          diff => availableQuestions.some(q => q.difficulty === diff)
         );
-      } else {
-        setGameComplete(true);
-        return;
+        if (easiestAvailableDifficulty) {
+          setDifficulty(easiestAvailableDifficulty as "EASY" | "MEDIUM" | "HARD");
+          questionsByDifficulty = availableQuestions.filter(q => q.difficulty === easiestAvailableDifficulty);
+        }
       }
     }
 
-    const nextQuestion = questionsByDifficulty[0];
+    if (questionsByDifficulty.length === 0) {
+      setGameComplete(true);
+      return;
+    }
+
+    const nextQuestion =
+      questionsByDifficulty[
+        Math.floor(Math.random() * questionsByDifficulty.length)
+      ];
     setCurrentQuestion(nextQuestion);
     setAvailableQuestions((prev) =>
       prev.filter((question) => question.id !== nextQuestion.id)
@@ -191,6 +182,22 @@ export default function LevelPage() {
         (prev) => prev + response.data.questionResponse.pointsEarned
       );
       setCurrentQuestionResponse(response.data.questionResponse);
+
+      if (response.data.questionResponse.isCorrect) {
+        setConsecutiveCorrect((prev) => prev + 1);
+        setConsecutiveIncorrect(0);
+        if (consecutiveCorrect === 1) {
+          if (difficulty === "EASY") setDifficulty("MEDIUM");
+          else if (difficulty === "MEDIUM") setDifficulty("HARD");
+        }
+      } else {
+        setConsecutiveIncorrect((prev) => prev + 1);
+        setConsecutiveCorrect(0);
+        if (consecutiveIncorrect === 1) {
+          if (difficulty === "HARD") setDifficulty("MEDIUM");
+          else if (difficulty === "MEDIUM") setDifficulty("EASY");
+        }
+      }
     } catch (error) {
       console.error(error);
     }
@@ -216,7 +223,8 @@ export default function LevelPage() {
     isSubjectLoading
   ) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
+      <div className="min-h-screen flex items-center justify-center gap-2 bg-gradient-to-b from-blue-100 to-white">
+        {isSubmittingCompletion && <div className="text-blue-500 font-semibold">Generating Report</div>}
         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
       </div>
     );
@@ -224,61 +232,11 @@ export default function LevelPage() {
 
   if (gameComplete && completionStatus) {
     return (
-      <div className="min-h-screen max-w-[430px] flex items-center justify-center bg-gradient-to-b from-blue-100 to-white p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {completionStatus.success ? (
-                <>
-                  <CheckCircle2 className="w-6 h-6 text-green-500" />
-                  Level Complete!
-                </>
-              ) : (
-                <>
-                  <XCircle className="w-6 h-6 text-red-500" />
-                  Level Not Complete
-                </>
-              )}
-            </CardTitle>
-            <CardDescription>{completionStatus.message}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {completionStatus.success && (
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-600">
-                    Correct Answers: {completionStatus.noOfCorrectQuestions} /{" "}
-                    {completionStatus.totalQuestions}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Success Rate: {completionStatus.percentage}%
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Points Earned: {totalPointsInLevel}
-                  </p>
-                </div>
-              )}
-              <div className="flex gap-4">
-                <Button asChild className="w-full">
-                  <Link to={`/levels/${level?.subjectId}`}>
-                    Return to Levels
-                  </Link>
-                </Button>
-                {!completionStatus.success && (
-                  <Button
-                    variant="outline"
-                    onClick={() => window.location.reload()}
-                    className="w-full"
-                  >
-                    Try Again
-                  </Button>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+      <>
+        <FeedbackPage levelCompletionData={completionStatus} level={level!}/>
+        <Navigation/>
+      </>
+    )
   }
 
   if (!currentQuestion && availableQuestions.length === 0) {
@@ -288,10 +246,10 @@ export default function LevelPage() {
       </div>
     );
   }
+
   return (
     <>
       <div className="min-h-screen bg-[#ecfbff]">
-        {/* Back Button */}
         <div className="flex p-4 items-center justify-between px-6">
           <div
             className="text-3xl text-gray-500 cursor-pointer hover:text-gray-700"
@@ -347,3 +305,8 @@ export default function LevelPage() {
     </>
   );
 }
+
+
+// remarks 
+// back to levels button 
+// lock

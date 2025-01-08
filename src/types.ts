@@ -75,3 +75,16 @@ export type LeaderBoardUsersType = {
   user: UserType;
   totalPoints: number;
 };
+
+export type LevelCompletionResponse =  {
+  success: boolean;
+  message: string;
+  noOfCorrectQuestions?: number;
+  totalQuestions?: number;
+  percentage?: number;
+  isComplete?: boolean;
+  strengths?:string[];
+  weaknesses?:string[];
+  recommendations?:string[];
+  remarks?:string;
+}
