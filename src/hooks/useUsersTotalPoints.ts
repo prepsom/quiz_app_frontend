@@ -16,11 +16,11 @@ export const useUsersTotalPoints = () => {
         });
         setTotalPoints(response.data.totalPoints);
       } catch (error) {
-        toast({
-          title: "failed to fetch user's points",
-          description: "check your network connection",
-          variant: "destructive",
-        });
+        // toast({
+        //   title: "failed to fetch user's points",
+        //   description: "check your network connection",
+        //   variant: "destructive",
+        // });
       } finally {
         setIsLoading(false);
       }

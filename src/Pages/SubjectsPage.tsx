@@ -42,7 +42,7 @@ export default function SubjectsPage() {
   }
 
   return (
-    <div className="bg-white border">
+    <div className="bg-white border h-screen">
       <div className="p-4 flex flex-col justify-center gap-2">
         <div className="flex items-center justify-between">
           <div className="text-gray-500 mt-4">Hello {loggedInUser.name}!</div>
