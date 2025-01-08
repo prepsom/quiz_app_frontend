@@ -67,7 +67,7 @@ const LevelsPage = () => {
     : completedLevels.length + 1;
 
   return (
-    <div className="bg-[#ecfbff]">
+    <div className="bg-[#ecfbff] min-h-screen">
       {/* Header */}
       <div className="p-6 flex items-center justify-between text-white bg-blue-500 mb-4">
         <h1 className="text-2xl font-bold">
@@ -96,7 +96,7 @@ const LevelsPage = () => {
       </div>
 
       {/* Levels List */}
-      <div className="rounded-t-3xl  p-6 shadow-lg h-screen">
+      <div className="rounded-t-3xl  p-6">
         {completedLevels.length !== 0 || uncompletedLevels.length !== 0 ? (
           <div className="max-w-md mx-auto space-y-8">
             {/* Completed Levels */}
