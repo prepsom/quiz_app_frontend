@@ -91,6 +91,9 @@ const FeedbackPage = ({levelCompletionData, level}: Props) => {
                     </ul>
                 </div>
             </div>
+            {levelCompletionData.isComplete && <div className='flex items-center justify-end'>
+                <Button variant="outline">Next Level</Button>
+            </div>}
         </div>
     </div>
   )

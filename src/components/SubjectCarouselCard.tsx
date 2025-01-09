@@ -11,10 +11,9 @@ type Props = {
 };
 
 const SubjectCarouselCard = ({ subject, icon }: Props) => {
-  const { isLoading: isTotalLevelsLoading, levels: totalLevels } =
-    useLevelsBySubject(subject.id);
-  const { completedLevels, isLoading: isCompletedLevelsLoading } =
-    useCompletedLevelsBySubject(subject.id);
+
+  const { isLoading: isTotalLevelsLoading, levels: totalLevels } = useLevelsBySubject(subject.id);
+  const { completedLevels, isLoading: isCompletedLevelsLoading } = useCompletedLevelsBySubject(subject.id);
   const navigate = useNavigate();
 
   if (isTotalLevelsLoading || isCompletedLevelsLoading) {
@@ -25,14 +24,13 @@ const SubjectCarouselCard = ({ subject, icon }: Props) => {
     );
   }
 
-  const progressPercentage =
-    (completedLevels.length / totalLevels.length) * 100;
+  const progressPercentage = (completedLevels.length / totalLevels.length) * 100;
 
   return (
     <div
-      onClick={() => navigate(`/levels/${subject.id}`)}
+      onClick={() => navigate(`${subject.subjectName!=="Science" ? '/subjects' : `/levels/${subject.id}`}`)}
       key={subject.id}
-      className="flex flex-col w-56 h-56 items-center justify-between p-6 bg-[#ecfbff] rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group"
+      className={`flex flex-col w-56 h-56 items-center justify-between p-6 ${subject.subjectName==="Science" ? 'bg-[#ecfbff]' : 'bg-gray-200'} rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group`}
     >
       <div className="group-hover:scale-110 transition-transform duration-200">
         <div className="text-blue-600">
