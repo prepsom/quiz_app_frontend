@@ -27,7 +27,7 @@ export function LevelCard({
       <div
         className={`w-12 h-12 rounded-full flex items-center justify-center ${
           isCompleted
-            ? "bg-green-100"
+            ? "bg-green-100 border-2 border-green-500"
             : isLocked
             ? "bg-gray-100"
             : "bg-blue-500"

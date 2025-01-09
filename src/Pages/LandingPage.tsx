@@ -35,10 +35,10 @@ const LandingPage = () => {
         </h1>
 
         {/* Description */}
-        <p className="text-gray-600 text-center max-w-sm">
+        {/* <p className="text-gray-600 text-center max-w-sm">
           Master concepts with interactive lessons, quick quizzes, and step-by-step solutions
           —tailored for your success!
-        </p>
+        </p> */}
 
         {/* Get Started Button */}
         <Button 
