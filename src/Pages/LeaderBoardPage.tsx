@@ -50,9 +50,9 @@ const LeaderBoardPage = () => {
   };
 
   return (
-    <div className=" bg-[#ecfbff]">
+    <div className="bg-[#ecfbff] min-h-screen">
       {/* Header */}
-      <div className="bg-blue-500 text-white p-10 shadow-md">
+      <div className="bg-blue-500 text-white p-8 shadow-md">
         <div className="container mx-auto">
           <h1 className="text-3xl font-bold text-center flex items-center justify-center gap-3">
             <Trophy className="h-8 w-8" />
@@ -62,26 +62,26 @@ const LeaderBoardPage = () => {
       </div>
 
       {/* Leaderboard Content */}
-      <div className="container mx-auto py-8 px-4 max-w-3xl">
+      <div className="container mx-auto py-6 px-4 max-w-2xl">
         {usersWithTotalPoints.map((userWithPoints, index) => {
           const rank = calculateRank(index);
           return (
             <div
               key={userWithPoints.user.id}
-              className="flex items-center gap-4 p-6  last:border-0 hover:bg-blue-50/50 transition-colors"
+              className="grid grid-cols-[48px_auto_100px] items-center py-4 px-6 hover:bg-blue-50/50 transition-colors rounded-lg"
             >
-              <div className="flex items-center gap-6 flex-1">
-                <div className="text-blue-600 font-semibold">{index + 1}</div>
-                <div className="w-12 flex justify-center">
-                  {rank <= 3 ? (
-                    <Medal className={`h-6 w-6 ${getMedalColor(rank)}`} />
-                  ) : (
-                    <span className="text-lg font-semibold text-gray-500">
-                      {rank}
-                    </span>
-                  )}
-                </div>
-                <Avatar className="h-12 w-12 ring-2 ring-blue-100 ring-offset-2">
+              {/* Rank/Medal Column */}
+              <div className="flex justify-center">
+                {rank <= 3 ? (
+                  <Medal className={`h-6 w-6 ${getMedalColor(rank)}`} />
+                ) : (
+                  <span className="text-blue-600 font-semibold">{rank}</span>
+                )}
+              </div>
+
+              {/* Avatar and Name Column */}
+              <div className="flex items-center gap-4">
+                <Avatar className="h-10 w-10 ring-2 ring-blue-100 ring-offset-2">
                   <AvatarImage
                     src={`/avatars/${userWithPoints.user.avatar.toLowerCase()}.png`}
                     alt={userWithPoints.user.name}
@@ -93,21 +93,22 @@ const LeaderBoardPage = () => {
                       .join("")}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-blue-600">
-                    {userWithPoints.user.name.split(" ")[0]}
-                  </h3>
-                </div>
-                <div className="flex items-center gap-2 rounded-full px-4 py-2">
-                  <img src={coins3DIcon} alt="" />
-                  <span className="text-lg font-bold text-gray-900">
-                    {userWithPoints.totalPoints}
-                  </span>
-                </div>
+                <h3 className="text-lg font-semibold text-blue-600">
+                  {userWithPoints.user.name.split(" ")[0]}
+                </h3>
+              </div>
+
+              {/* Points Column */}
+              <div className="flex items-center justify-end gap-2">
+                <img src={coins3DIcon} alt="" className="w-5 h-5" />
+                <span className="text-lg font-bold text-gray-900 min-w-[40px] text-right">
+                  {userWithPoints.totalPoints}
+                </span>
               </div>
             </div>
           );
         })}
+
         {/* Pagination */}
         <div className="mt-6">
           <Pagination
@@ -117,13 +118,17 @@ const LeaderBoardPage = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col p-4 gap-2">
+
+      {/* Subjects Section */}
+      <div className="container mx-auto px-4 max-w-2xl pb-8">
         <div className="text-gray-600 font-semibold text-xl mb-4">
           Learn more to get ahead
         </div>
-        {subjects.slice(0, 3).map((subject) => {
-          return <SubjectCard subject={subject} />;
-        })}
+        <div className="space-y-3">
+          {subjects.slice(0, 3).map((subject) => (
+            <SubjectCard key={subject.id} subject={subject} />
+          ))}
+        </div>
       </div>
     </div>
   );

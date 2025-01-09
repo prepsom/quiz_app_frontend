@@ -51,7 +51,7 @@ const FeedbackPage = ({levelCompletionData, level}: Props) => {
                     <div className='flex items-center flex-wrap gap-4'>
                         <div className='flex items-center gap-2'>
                             <span className='text-[#6B7280]'>Score Achieved</span>
-                            <span className='text-[#4B5563]'>{levelCompletionData.percentage}%</span>
+                            <span className='text-[#4B5563]'>{levelCompletionData.percentage?.toFixed(2)}%</span>
                         </div>
                         <div className='flex items-center gap-2'>
                             <span className='text-[#6B7280]'>Level Passed</span>
