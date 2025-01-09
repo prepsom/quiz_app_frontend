@@ -15,6 +15,7 @@ interface QuestionPageProps {
   onNext?: () => void;
   currentQuestionTimerInSeconds: number;
   currentQuestionNumber: number;
+  correctAnswerId:string | null;
 }
 
 export default function QuestionPage({
@@ -26,6 +27,7 @@ export default function QuestionPage({
   onNext,
   currentQuestionTimerInSeconds,
   currentQuestionNumber,
+  correctAnswerId
 }: QuestionPageProps) {
   const { question: currentQuestion, isLoading: isQuestionWithAnswersLoading } =
     useQuestionWithAnswers(question.id);
@@ -80,8 +82,10 @@ export default function QuestionPage({
                   : selectedAnswer === answer.id;
                 const showResult = questionResponse !== null;
                 const isChosenAnswer =
-                  questionResponse?.chosenAnswerId === answer.id;
-
+                  questionResponse?.chosenAnswerId === answer.id;        
+                
+                const isCorrectAnswer = correctAnswerId ? correctAnswerId===answer.id : false;
+                  
                 return (
                   <div
                     key={answer.id}
@@ -89,7 +93,7 @@ export default function QuestionPage({
                       relative flex items-center p-4 rounded-xl transition-colors
                       ${
                         showResult
-                          ? isChosenAnswer && questionResponse?.isCorrect
+                          ? isCorrectAnswer
                             ? "bg-green-100 border-green-200 border-2"
                             : isChosenAnswer && !questionResponse?.isCorrect
                             ? "bg-red-100 border-red-200 border-2"
@@ -117,19 +121,16 @@ export default function QuestionPage({
                       </label>
                     ) : (
                       <div className="flex items-center w-full">
-                        {isChosenAnswer &&
-                          (questionResponse?.isCorrect ? (
-                            <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                          ) : (
-                            <XCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
-                          ))}
-                        {!isChosenAnswer && (
+
+                        {isCorrectAnswer && <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />}
+                        {(isChosenAnswer && !questionResponse.isCorrect) && <XCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" /> }
+                        {!isChosenAnswer && !isCorrectAnswer && (
                           <div className="border-2 rounded-full mr-4 p-2"></div>
                         )}
                         <span
                           className={`
                             ${
-                              isChosenAnswer && questionResponse?.isCorrect
+                              isCorrectAnswer
                                 ? "text-green-700"
                                 : isChosenAnswer && !questionResponse?.isCorrect
                                 ? "text-red-700"
@@ -164,7 +165,7 @@ export default function QuestionPage({
       )}
 
       {/* Action Button */}
-      <div className="relative bottom-4 left-0 right-0 flex justify-center p-4">
+      <div className="relative bottom-4 left-0 right-0 flex justify-center p-4 my-4">
         <div className="w-full max-w-md">
           {!questionResponse ? (
             <Button

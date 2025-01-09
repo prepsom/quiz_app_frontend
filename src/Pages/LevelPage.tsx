@@ -21,6 +21,7 @@ import { useGetSubjectById } from "@/hooks/useGetSubjectById";
 import { Timer } from "@/components/Timer";
 import FeedbackPage from "./FeedbackPage";
 import { Navigation } from "@/components/Navigation";
+import { Button } from "@/components/ui/button";
 
 // const exampleCompletionData:LevelCompletionResponse = {
 //   success:true,
@@ -58,6 +59,7 @@ export default function LevelPage() {
   const [questionTimerInSeconds, setQuestionTimerInSeconds] = useState<number>(0);
   const [consecutiveCorrect, setConsecutiveCorrect] = useState<number>(0);
   const [consecutiveIncorrect, setConsecutiveIncorrect] = useState<number>(0);
+  const [correctAnswerId,setCorrectAnswerId] = useState<string | null>(null);
 
   const questionNumber = useMemo(
     () => questions.length - availableQuestions.length,
@@ -167,6 +169,7 @@ export default function LevelPage() {
         success: boolean;
         message: string;
         questionResponse: QuestionResponseType;
+        correctAnswerId:string;
       }>(
         `${API_URL}/question-response`,
         {
@@ -182,7 +185,7 @@ export default function LevelPage() {
         (prev) => prev + response.data.questionResponse.pointsEarned
       );
       setCurrentQuestionResponse(response.data.questionResponse);
-
+      setCorrectAnswerId(response.data.correctAnswerId);
       if (response.data.questionResponse.isCorrect) {
         setConsecutiveCorrect((prev) => prev + 1);
         setConsecutiveIncorrect(0);
@@ -206,6 +209,7 @@ export default function LevelPage() {
   const onNext = () => {
     setCurrentQuestion(null);
     setCurrentQuestionResponse(null);
+    setCorrectAnswerId(null);
   };
 
   const handleExit = () => {
@@ -241,8 +245,9 @@ export default function LevelPage() {
 
   if (!currentQuestion && availableQuestions.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-100 to-white">
+      <div className="min-h-screen flex flex-col gap-2 items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <p className="text-gray-600">No questions available</p>
+        <Button variant="outline" onClick={() => navigate(`/levels/${level?.subjectId}`)}>Back to levels</Button>
       </div>
     );
   }
@@ -278,6 +283,7 @@ export default function LevelPage() {
             onNext={onNext}
             currentQuestionTimerInSeconds={questionTimerInSeconds}
             currentQuestionNumber={questionNumber}
+            correctAnswerId={correctAnswerId}
           />
         )}
       </div>
