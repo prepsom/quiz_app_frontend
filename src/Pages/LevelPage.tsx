@@ -61,6 +61,10 @@ export default function LevelPage() {
   const [consecutiveIncorrect, setConsecutiveIncorrect] = useState<number>(0);
   const [correctAnswerId,setCorrectAnswerId] = useState<string | null>(null);
 
+  console.log(levelId);
+  console.log(gameComplete);
+  console.log(completionStatus);
+
   const questionNumber = useMemo(
     () => questions.length - availableQuestions.length,
     [questions, availableQuestions]
@@ -94,6 +98,21 @@ export default function LevelPage() {
 
     return () => clearInterval(interval);
   }, [currentQuestion]);
+
+  useEffect(() => {
+    // Reset states when levelId changes
+    setGameComplete(false);
+    setCompletionStatus(null);
+    setTotalPointsInLevel(0);
+    setCurrentQuestion(null);
+    setAvailableQuestions([]);
+    setIsInitialized(false);
+    setCurrentQuestionResponse(null);
+    setQuestionTimerInSeconds(0);
+    setConsecutiveCorrect(0);
+    setConsecutiveIncorrect(0);
+    setCorrectAnswerId(null);
+}, [levelId]);
 
   const handleLevelCompletion = async () => {
     setIsSubmittingCompletion(true);
@@ -237,7 +256,7 @@ export default function LevelPage() {
   if (gameComplete && completionStatus) {
     return (
       <>
-        <FeedbackPage levelCompletionData={completionStatus} level={level!}/>
+        <FeedbackPage setGameComplete={setGameComplete} setCompletionStatus={setCompletionStatus} levelCompletionData={completionStatus} level={level!}/>
         <Navigation/>
       </>
     )

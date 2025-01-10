@@ -1,17 +1,29 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { AppContext } from '@/Context/AppContext';
+import { useNextLevel } from '@/hooks/useNextLevel';
 import { AppContextType, LevelCompletionResponse, LevelType } from '@/types'
-import  { useContext } from 'react'
+import  {SetStateAction, useContext} from 'react'
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
     levelCompletionData:LevelCompletionResponse;
     level:LevelType;
+    setGameComplete:React.Dispatch<SetStateAction<boolean>>;
+    setCompletionStatus:React.Dispatch<SetStateAction<LevelCompletionResponse | null>>;
 }
-const FeedbackPage = ({levelCompletionData, level}: Props) => {
+const FeedbackPage = ({levelCompletionData, level,setCompletionStatus,setGameComplete}: Props) => {
     const navigate = useNavigate();
     const {loggedInUser} = useContext(AppContext) as AppContextType;
+    const {nextLevel,isLoading:isNextLevelLoading} = useNextLevel(level.id);
+
+
+    const handleNextLevel = () => {
+        if(nextLevel==null) return;
+        setGameComplete(false);
+        setCompletionStatus(null);
+        navigate(`/level/${nextLevel.id}`);        
+    }
 
     return (
     <div className='min-h-screen flex flex-col items-center'>
@@ -90,10 +102,10 @@ const FeedbackPage = ({levelCompletionData, level}: Props) => {
                         ))}
                     </ul>
                 </div>
+                {(levelCompletionData.isComplete && nextLevel!==null && !isNextLevelLoading) && <div className='flex items-center justify-end'>
+                    <Button onClick={handleNextLevel} variant="outline">Next Level</Button>
+                </div>}
             </div>
-            {levelCompletionData.isComplete && <div className='flex items-center justify-end'>
-                <Button variant="outline">Next Level</Button>
-            </div>}
         </div>
     </div>
   )
