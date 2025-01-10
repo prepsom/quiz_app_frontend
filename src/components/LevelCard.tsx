@@ -1,7 +1,8 @@
 import { LevelType } from "@/types";
-import { Star, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import levelLocked3DIcon from "../assets/LevelLockedIcon.png";
+import star3DIcon from "../assets/star3DIcon.png"
 
 interface LevelCardProps {
   level: LevelType;
@@ -25,12 +26,12 @@ export function LevelCard({
       className="flex items-center gap-4"
     >
       <div
-        className={`w-12 h-12 rounded-full flex items-center justify-center ${
+        className={`w-14 h-14 rounded-full flex items-center justify-center ${
           isCompleted
             ? "bg-green-100 border-2 border-green-500"
             : isLocked
             ? "bg-gray-100"
-            : "bg-blue-500"
+            : "bg-[#ecfbff]"
         }`}
       >
         {isCompleted ? (
@@ -40,7 +41,7 @@ export function LevelCard({
             <img src={levelLocked3DIcon} alt="" />
           </>
         ) : (
-          <Star className="w-6 h-6 text-white" />
+          <img src={star3DIcon} alt="" />
         )}
       </div>
 
