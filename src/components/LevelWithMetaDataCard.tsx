@@ -68,7 +68,6 @@ const LevelWithMetaDataCard = ({levelWithMetaData}:Props) => {
                             </ul>
                         </div>}
                     </div>
-                    
                 </DialogContent>
             </Dialog>
         </div>

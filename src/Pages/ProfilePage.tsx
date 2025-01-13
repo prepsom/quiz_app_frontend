@@ -166,7 +166,7 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col p-4 w-full bg-white border-2 rounded-lg shadow-md">
+        <div className="flex flex-col p-4 w-full bg-white border-2 rounded-lg shadow-md mb-40">
           <div className="text-gray-600 font-medium text-lg">Completed Levels</div>
           <UsersCompletedLevels/>
         </div>
