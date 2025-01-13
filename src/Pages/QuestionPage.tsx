@@ -5,7 +5,7 @@ import { useQuestionWithAnswers } from "@/hooks/useQuestionWithAnswers";
 import MCQQuestion from "@/components/MCQQuestion";
 import MatchingQuestion from "@/components/MatchingQuestion";
 import FillInBlankQuestion from "@/components/FillInBlankQuestion";
-
+import {motion} from "motion/react"
 
 interface QuestionPageProps {
   question: QuestionType;
@@ -99,7 +99,7 @@ export default function QuestionPage({
       <div className="flex justify-start items-center font-semibold my-2 text-[#36a7be]">
         Question {currentQuestionNumber} of {totalQuestions}
       </div>
-      <div className="flex flex-col items-center">
+      <motion.div className="flex flex-col items-center">
         <div className="w-full bg-white text-center flex items-center justify-center font-semibold text-lg text-gray-800 py-2 px-4 rounded-lg border-2 border-[#c4eff4]">
           {currentQuestion?.questionTitle}
         </div>
@@ -133,7 +133,7 @@ export default function QuestionPage({
             />
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Explanation */}
       {questionResponse && question.explanation !== "" && (

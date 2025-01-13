@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { QuestionResponseType } from "@/types";
 import { useEffect, useMemo } from "react";
+import {motion} from "motion/react"
 
 interface BlankSegment {
   id: string;
@@ -21,6 +22,22 @@ type BlankAnswer = {
   value: string;
 };
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, x: -20 },
+  show: { opacity: 1, x: 0 }
+};
+
+
 export default function FillInBlankQuestion({
   segments,
   answers,
@@ -31,7 +48,7 @@ export default function FillInBlankQuestion({
   // Pre-calculate blank indices to maintain stability
   const blankIndices = useMemo(() => {
     const indices: number[] = [];
-    segments.forEach((segment, index) => {
+    segments.forEach((segment, _) => {
       if (segment.isBlank) {
         indices.push(indices.length);
       }
@@ -75,15 +92,15 @@ export default function FillInBlankQuestion({
   };
 
   return (
-    <div className="space-y-6 max-w-lg mx-auto">
-      <div className="text-base sm:text-lg leading-relaxed flex flex-wrap gap-2 items-baseline">
+    <motion.div initial={{opacity:0}} animate={{opacity:1}} className="space-y-6 max-w-lg mx-auto">
+      <motion.div variants={container} initial="hidden" animate="show" className="text-base sm:text-lg leading-relaxed flex flex-wrap gap-2 items-baseline">
         {segments.map((segment,segmentIndex) => {
           const isBlank = segment.isBlank;
           const blankIndex = isBlank ? blankIndices[segments.slice(0, segmentIndex).filter(s => s.isBlank).length] : -1;
 
           if (isBlank) {
             return (
-              <div key={segment.id} className="relative inline-flex flex-col min-w-[120px] sm:min-w-[160px]">
+              <motion.div variants={item} whileHover={{scale:1.02}} key={segment.id} className="relative inline-flex flex-col min-w-[120px] sm:min-w-[160px]">
                 <Input
                   type="text"
                   value={answers.find(a => a.blankIndex === blankIndex)?.value || ''}
@@ -99,7 +116,10 @@ export default function FillInBlankQuestion({
                       : "bg-white focus:ring-2 focus:ring-blue-500/20"
                   }`}
                 />
-                <span 
+                <motion.span 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
                   className={`absolute -top-5 left-0 text-xs sm:text-sm ${
                     questionResponse
                       ? getInputStatus(blankIndex) === 'correct'
@@ -109,21 +129,27 @@ export default function FillInBlankQuestion({
                   }`}
                 >
                   Blank {blankIndex + 1}
-                </span>
-              </div>
+                </motion.span>
+              </motion.div>
             );
           }
 
           return (
-            <span key={segment.id} className="text-gray-700">
+            <motion.span
+              key={segment.id}
+              variants={item}
+              className="text-gray-700"
+            >
               {segment.text}
-            </span>
+            </motion.span>
           );
         })}
-      </div>
+      </motion.div>
       
       {questionResponse && correctAnswers && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <motion.div initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }} className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
           <h4 className="font-medium text-gray-900 mb-2">Correct Answers:</h4>
           <div className="space-y-2">
             {Object.entries(correctAnswers).map(([index, answers]) => (
@@ -133,9 +159,9 @@ export default function FillInBlankQuestion({
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

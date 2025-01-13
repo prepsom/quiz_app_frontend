@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeftRight, ArrowDown } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import { QuestionResponseType } from '@/types';
+import {AnimatePresence, motion} from "motion/react"
 
 interface MatchingPair {
   id: string;
@@ -15,6 +16,21 @@ interface MatchingQuestionProps {
   questionResponse: QuestionResponseType | null;
   correctPairs?: { leftItem: string; rightItem: string; }[];
 }
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
 
 export default function MatchingQuestion({
   pairs,
@@ -103,87 +119,132 @@ export default function MatchingQuestion({
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto space-y-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="w-full max-w-lg mx-auto space-y-6"
+    >
       {/* Left items column */}
-      <div className="space-y-3">
+      <motion.div 
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="space-y-3"
+      >
         {pairs.map((pair, index) => {
           const colorIndex = index % colors.length;
           const isMatched = matches.has(pair.leftItem);
           return (
-            <Button
+            <motion.div
               key={pair.id}
-              onClick={() => handleItemClick(pair.leftItem, true)}
-              className={`w-full justify-start p-3 text-sm transition-all duration-200 ${
-                selectedLeft === pair.leftItem
-                  ? `ring-2 ${colors[colorIndex].ring} ${colors[colorIndex].bg}`
-                  : isMatched
-                  ? questionResponse
-                    ? getItemStatus(pair.leftItem, true) === 'correct'
-                      ? 'bg-green-50 border-green-200'
-                      : 'bg-red-50 border-red-200'
-                    : `${colors[colorIndex].bg} ${colors[colorIndex].border}`
-                  : 'hover:bg-gray-50'
-              }`}
-              variant="outline"
+              variants={item}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              {pair.leftItem}
-            </Button>
+              <Button
+                onClick={() => handleItemClick(pair.leftItem, true)}
+                className={`w-full justify-start p-3 text-sm transition-all duration-200 ${
+                  selectedLeft === pair.leftItem
+                    ? `ring-2 ${colors[colorIndex].ring} ${colors[colorIndex].bg}`
+                    : isMatched
+                    ? questionResponse
+                      ? getItemStatus(pair.leftItem, true) === 'correct'
+                        ? 'bg-green-50 border-green-200'
+                        : 'bg-red-50 border-red-200'
+                      : `${colors[colorIndex].bg} ${colors[colorIndex].border}`
+                    : 'hover:bg-gray-50'
+                }`}
+                variant="outline"
+              >
+                {pair.leftItem}
+              </Button>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Arrow separator */}
-      <div className="flex justify-center py-2">
+      <motion.div 
+        className="flex justify-center py-2"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3 }}
+      >
         <ArrowDown className="w-6 h-6 text-gray-400" />
-      </div>
+      </motion.div>
 
       {/* Right items column */}
-      <div className="space-y-3">
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="space-y-3"
+      >
         {rightItems.map((rightItem) => {
           const matchIndex = getMatchColorByRight(rightItem);
           const colorIndex = matchIndex % colors.length;
           const isMatched = Array.from(matches.values()).includes(rightItem);
           return (
-            <Button
+            <motion.div
               key={rightItem}
-              onClick={() => handleItemClick(rightItem, false)}
-              className={`w-full justify-start p-3 text-sm transition-all duration-200 ${
-                isMatched
-                  ? questionResponse
-                    ? getItemStatus(rightItem, false) === 'correct'
-                      ? 'bg-green-50 border-green-200'
-                      : 'bg-red-50 border-red-200'
-                    : `${colors[colorIndex].bg} ${colors[colorIndex].border}`
-                  : selectedLeft
-                  ? 'hover:bg-gray-50 hover:ring-2 hover:ring-gray-200'
-                  : 'hover:bg-gray-50'
-              }`}
-              variant="outline"
+              variants={item}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              {rightItem}
-            </Button>
+              <Button
+                onClick={() => handleItemClick(rightItem, false)}
+                className={`w-full justify-start p-3 text-sm transition-all duration-200 ${
+                  isMatched
+                    ? questionResponse
+                      ? getItemStatus(rightItem, false) === 'correct'
+                        ? 'bg-green-50 border-green-200'
+                        : 'bg-red-50 border-red-200'
+                      : `${colors[colorIndex].bg} ${colors[colorIndex].border}`
+                    : selectedLeft
+                    ? 'hover:bg-gray-50 hover:ring-2 hover:ring-gray-200'
+                    : 'hover:bg-gray-50'
+                }`}
+                variant="outline"
+              >
+                {rightItem}
+              </Button>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Feedback section */}
-      {questionResponse && !questionResponse.isCorrect && correctPairs && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <h4 className="font-medium text-gray-900 mb-2">Correct Matches:</h4>
-          <div className="space-y-2">
-            {correctPairs.map((pair, index) => (
-              <div key={index} className="grid grid-cols-1 gap-2">
-                <div className="p-2 bg-green-50 rounded border border-green-100">
-                  {pair.leftItem}
-                </div>
-                <div className="p-2 bg-green-50 rounded border border-green-100">
-                  {pair.rightItem}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+      <AnimatePresence>
+        {questionResponse && !questionResponse.isCorrect && correctPairs && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ delay: 0.5 }}
+            className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200"
+          >
+            <h4 className="font-medium text-gray-900 mb-2">Correct Matches:</h4>
+            <div className="space-y-2">
+              {correctPairs.map((pair, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 + index * 0.1 }}
+                  className="grid grid-cols-1 gap-2"
+                >
+                  <div className="p-2 bg-green-50 rounded border border-green-100">
+                    {pair.leftItem}
+                  </div>
+                  <div className="p-2 bg-green-50 rounded border border-green-100">
+                    {pair.rightItem}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

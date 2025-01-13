@@ -1,6 +1,7 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { QuestionResponseType } from "@/types";
+import { motion } from "framer-motion";
 
 interface MCQQuestionProps {
   question: any;
@@ -9,6 +10,30 @@ interface MCQQuestionProps {
   questionResponse: QuestionResponseType | null;
   correctAnswerId: string | null;
 }
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3
+    }
+  }
+};
+
+const item = {
+  hidden: { x: -100, opacity: 0 },
+  show: { 
+    x: 0, 
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 12
+    }
+  }
+};
 
 export default function MCQQuestion({
   question,
@@ -19,7 +44,12 @@ export default function MCQQuestion({
 }: MCQQuestionProps) {
   return (
     <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer}>
-      <div className="space-y-3">
+      <motion.div 
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="space-y-3"
+      >
         {question?.MCQAnswers?.map((answer: any) => {
           const isSelected = questionResponse
             ? questionResponse.chosenAnswerId === answer.id
@@ -29,8 +59,11 @@ export default function MCQQuestion({
           const isCorrectAnswer = correctAnswerId ? correctAnswerId === answer.id : false;
 
           return (
-            <div
+            <motion.div
+              variants={item}
               key={answer.id}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               className={`
                 relative flex items-center p-4 rounded-xl transition-colors
                 ${
@@ -58,12 +91,29 @@ export default function MCQQuestion({
                   </span>
                 </label>
               ) : (
-                <div className="flex items-center w-full">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="flex items-center w-full"
+                >
                   {isCorrectAnswer && (
-                    <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                    >
+                      <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                    </motion.div>
                   )}
                   {isChosenAnswer && !questionResponse.isCorrect && (
-                    <XCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                    >
+                      <XCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
+                    </motion.div>
                   )}
                   {!isChosenAnswer && !isCorrectAnswer && (
                     <div className="border-2 rounded-full mr-4 p-2"></div>
@@ -81,13 +131,12 @@ export default function MCQQuestion({
                   >
                     {answer.value}
                   </span>
-                </div>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </RadioGroup>
   );
 }
-
