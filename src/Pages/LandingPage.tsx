@@ -1,18 +1,17 @@
-import { Button } from "@/components/ui/button"
-import { Navigate, useNavigate } from 'react-router-dom'
-import owlMascotImage from "../assets/owl_image.png"
-import { useContext } from "react"
-import { AppContext } from "@/Context/AppContext"
-import { AppContextType } from "@/types"
+import { Button } from "@/components/ui/button";
+import { Navigate, useNavigate } from "react-router-dom";
+import owlMascotImage from "../assets/owl_image.png";
+import { useContext } from "react";
+import { AppContext } from "@/Context/AppContext";
+import { AppContextType } from "@/types";
 
 const LandingPage = () => {
-    const {loggedInUser} = useContext(AppContext) as AppContextType;
-    const navigate = useNavigate();
-  
-  
-    if(loggedInUser!==null) return <Navigate to="/subjects"/>
+  const { loggedInUser } = useContext(AppContext) as AppContextType;
+  const navigate = useNavigate();
 
-    return (
+  if (loggedInUser !== null) return <Navigate to="/subjects" />;
+
+  return (
     <div className="min-h-screen bg-[#EEF6FF] flex flex-col items-center justify-center p-2">
       <div className="w-full max-w-md flex flex-col items-center justify-around">
         {/* School Logo/Text */}
@@ -41,7 +40,7 @@ const LandingPage = () => {
         </p> */}
 
         {/* Get Started Button */}
-        <Button 
+        <Button
           onClick={() => navigate(`${loggedInUser ? "/subjects" : "/login"}`)}
           className=" w-full fixed bottom-8 max-w-xs bg-blue-500 hover:bg-blue-600 text-white py-6 text-lg"
         >
@@ -49,9 +48,7 @@ const LandingPage = () => {
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default LandingPage;
-
-

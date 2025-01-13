@@ -17,8 +17,11 @@ type Props = {
 };
 
 const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
-  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState<boolean>(false);
-  const { questions, isLoading: isQuestionsLoading } = useQuestionsByLevel(levelWithMetaData.id);
+  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] =
+    useState<boolean>(false);
+  const { questions, isLoading: isQuestionsLoading } = useQuestionsByLevel(
+    levelWithMetaData.id
+  );
 
   return (
     <>
@@ -44,7 +47,7 @@ const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
           </div>
           <div className="flex items-center gap-1">
             <Check className="text-green-500" />
-            {(!isQuestionsLoading)? (
+            {!isQuestionsLoading ? (
               <span className="text-gray-600 font-semibold">
                 {levelWithMetaData.noOfCorrectQuestions} / {questions.length}
               </span>
@@ -55,8 +58,13 @@ const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Percent/>
-            <span className="text-gray-700 font-semibold">{((levelWithMetaData.noOfCorrectQuestions / questions.length) * 100).toFixed(2)}</span>
+            <Percent />
+            <span className="text-gray-700 font-semibold">
+              {(
+                (levelWithMetaData.noOfCorrectQuestions / questions.length) *
+                100
+              ).toFixed(2)}
+            </span>
           </div>
         </div>
         <div className="flex items-center justify-start mt-4">

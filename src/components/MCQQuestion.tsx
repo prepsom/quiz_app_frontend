@@ -1,5 +1,5 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle } from "lucide-react";
 import { QuestionResponseType } from "@/types";
 import { motion } from "framer-motion";
 
@@ -17,22 +17,22 @@ const container = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.3
-    }
-  }
+      delayChildren: 0.3,
+    },
+  },
 };
 
 const item = {
   hidden: { x: -100, opacity: 0 },
-  show: { 
-    x: 0, 
+  show: {
+    x: 0,
     opacity: 1,
     transition: {
       type: "spring",
       stiffness: 100,
-      damping: 12
-    }
-  }
+      damping: 12,
+    },
+  },
 };
 
 export default function MCQQuestion({
@@ -44,7 +44,7 @@ export default function MCQQuestion({
 }: MCQQuestionProps) {
   return (
     <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer}>
-      <motion.div 
+      <motion.div
         variants={container}
         initial="hidden"
         animate="show"
@@ -56,7 +56,9 @@ export default function MCQQuestion({
             : selectedAnswer === answer.id;
           const showResult = questionResponse !== null;
           const isChosenAnswer = questionResponse?.chosenAnswerId === answer.id;
-          const isCorrectAnswer = correctAnswerId ? correctAnswerId === answer.id : false;
+          const isCorrectAnswer = correctAnswerId
+            ? correctAnswerId === answer.id
+            : false;
 
           return (
             <motion.div
@@ -86,12 +88,16 @@ export default function MCQQuestion({
                     id={answer.id}
                     className="border-2 border-gray-300 text-blue-500"
                   />
-                  <span className={`${isSelected ? "text-blue-500" : "text-gray-700"}`}>
+                  <span
+                    className={`${
+                      isSelected ? "text-blue-500" : "text-gray-700"
+                    }`}
+                  >
                     {answer.value}
                   </span>
                 </label>
               ) : (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
@@ -101,7 +107,11 @@ export default function MCQQuestion({
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 10,
+                      }}
                     >
                       <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
                     </motion.div>
@@ -110,7 +120,11 @@ export default function MCQQuestion({
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 10,
+                      }}
                     >
                       <XCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
                     </motion.div>

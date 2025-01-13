@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { LevelType, QuestionResponseType, QuestionType, QuestionResponseRequestBody, QuestionResponseData } from "@/types";
+import {
+  LevelType,
+  QuestionResponseType,
+  QuestionType,
+  QuestionResponseRequestBody,
+  QuestionResponseData,
+} from "@/types";
 import { useQuestionWithAnswers } from "@/hooks/useQuestionWithAnswers";
 import MCQQuestion from "@/components/MCQQuestion";
 import MatchingQuestion from "@/components/MatchingQuestion";
 import FillInBlankQuestion from "@/components/FillInBlankQuestion";
-import {motion} from "motion/react"
+import { motion } from "motion/react";
 
 interface QuestionPageProps {
   question: QuestionType;
@@ -17,7 +23,7 @@ interface QuestionPageProps {
   onNext?: () => void;
   currentQuestionTimerInSeconds: number;
   currentQuestionNumber: number;
-  correctAnswerData: QuestionResponseData['correctData'] | null;
+  correctAnswerData: QuestionResponseData["correctData"] | null;
 }
 
 export default function QuestionPage({
@@ -31,7 +37,8 @@ export default function QuestionPage({
   currentQuestionNumber,
   correctAnswerData,
 }: QuestionPageProps) {
-  const { question: currentQuestion, isLoading: isQuestionWithAnswersLoading } = useQuestionWithAnswers(question.id);
+  const { question: currentQuestion, isLoading: isQuestionWithAnswersLoading } =
+    useQuestionWithAnswers(question.id);
   const [answer, setAnswer] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -42,36 +49,36 @@ export default function QuestionPage({
   const handleSubmit = async () => {
     if (!answer || !currentQuestion) return;
     setIsSubmitting(true);
-    
+
     let responseBody: QuestionResponseRequestBody;
-    
+
     switch (currentQuestion.questionType) {
-      case 'MCQ':
+      case "MCQ":
         responseBody = {
-          type: 'MCQ',
+          type: "MCQ",
           questionId: currentQuestion.id,
           timeTaken: currentQuestionTimerInSeconds,
-          selectedAnswerId: answer
+          selectedAnswerId: answer,
         };
         break;
-      case 'FILL_IN_BLANK':
+      case "FILL_IN_BLANK":
         responseBody = {
-          type: 'FILL_IN_BLANK',
+          type: "FILL_IN_BLANK",
           questionId: currentQuestion.id,
           timeTaken: currentQuestionTimerInSeconds,
-          answers: answer
+          answers: answer,
         };
         break;
-      case 'MATCHING':
+      case "MATCHING":
         responseBody = {
-          type: 'MATCHING',
+          type: "MATCHING",
           questionId: currentQuestion.id,
           timeTaken: currentQuestionTimerInSeconds,
-          pairs: answer
+          pairs: answer,
         };
         break;
       default:
-        throw new Error('Unsupported question type');
+        throw new Error("Unsupported question type");
     }
 
     await onSubmit(responseBody);
@@ -106,7 +113,7 @@ export default function QuestionPage({
 
         {/* Question Content */}
         <div className="rounded-3x my-8 w-full">
-          {currentQuestion?.questionType === 'MCQ' && (
+          {currentQuestion?.questionType === "MCQ" && (
             <MCQQuestion
               question={currentQuestion}
               selectedAnswer={answer}
@@ -115,7 +122,7 @@ export default function QuestionPage({
               correctAnswerId={correctAnswerData?.correctAnswerId || null}
             />
           )}
-          {currentQuestion?.questionType === 'MATCHING' && (
+          {currentQuestion?.questionType === "MATCHING" && (
             <MatchingQuestion
               pairs={currentQuestion.MatchingPairs || []}
               onMatch={setAnswer}
@@ -123,7 +130,7 @@ export default function QuestionPage({
               correctPairs={correctAnswerData?.correctPairs || []}
             />
           )}
-          {currentQuestion?.questionType === 'FILL_IN_BLANK' && (
+          {currentQuestion?.questionType === "FILL_IN_BLANK" && (
             <FillInBlankQuestion
               segments={currentQuestion.BlankSegments || []}
               answers={answer || []}
@@ -178,4 +185,3 @@ export default function QuestionPage({
     </div>
   );
 }
-

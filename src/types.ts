@@ -40,21 +40,21 @@ export type LevelType = {
   levelDescription: string | null;
   position: number;
   subjectId: string;
-  passingQuestions:number;
+  passingQuestions: number;
 };
 
-export type LevelWithMetaData = LevelType &  {
-  subject:SubjectType,
-  totalPoints:number;
-  noOfCorrectQuestions:number;
-  strengths:string[];
-  recommendations:string[];
-  weaknesses:string[];
-}
+export type LevelWithMetaData = LevelType & {
+  subject: SubjectType;
+  totalPoints: number;
+  noOfCorrectQuestions: number;
+  strengths: string[];
+  recommendations: string[];
+  weaknesses: string[];
+};
 
 export type QuestionType = {
   id: string;
-  questionType: 'MCQ' | 'MATCHING' | 'FILL_IN_BLANK';
+  questionType: "MCQ" | "MATCHING" | "FILL_IN_BLANK";
   questionTitle: string;
   questionHint: string | null;
   difficulty: "EASY" | "MEDIUM" | "HARD";
@@ -123,22 +123,24 @@ export type BaseQuestionResponse = {
 };
 
 export type MCQResponse = BaseQuestionResponse & {
-  type: 'MCQ';
+  type: "MCQ";
   selectedAnswerId: string;
 };
 
 export type FillInBlankResponse = BaseQuestionResponse & {
-  type: 'FILL_IN_BLANK';
-  answers: { blankIndex: number; value: string; }[];
+  type: "FILL_IN_BLANK";
+  answers: { blankIndex: number; value: string }[];
 };
 
 export type MatchingResponse = BaseQuestionResponse & {
-  type: 'MATCHING';
-  pairs: { leftItem: string; rightItem: string; }[];
+  type: "MATCHING";
+  pairs: { leftItem: string; rightItem: string }[];
 };
 
-export type QuestionResponseRequestBody = MCQResponse | FillInBlankResponse | MatchingResponse;
-
+export type QuestionResponseRequestBody =
+  | MCQResponse
+  | FillInBlankResponse
+  | MatchingResponse;
 
 export type QuestionResponseData = {
   success: boolean;
@@ -147,7 +149,6 @@ export type QuestionResponseData = {
   correctData: {
     correctAnswerId?: string;
     correctAnswers?: Record<number, string[]>;
-    correctPairs?: { leftItem: string; rightItem: string; }[];
+    correctPairs?: { leftItem: string; rightItem: string }[];
   };
 };
-

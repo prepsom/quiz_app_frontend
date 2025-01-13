@@ -22,7 +22,13 @@ const SubjectsCarousel = ({ subjects }: Props) => {
           const icon = subjectImages[
             subject.subjectName as keyof typeof subjectImages
           ] || <Book className="w-6 h-6" />;
-          return <SubjectCarouselCard key={subject.id} icon={icon} subject={subject} />;
+          return (
+            <SubjectCarouselCard
+              key={subject.id}
+              icon={icon}
+              subject={subject}
+            />
+          );
         })}
       </div>
     </div>

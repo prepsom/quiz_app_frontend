@@ -2,7 +2,7 @@ import { LevelType } from "@/types";
 import { CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import levelLocked3DIcon from "../assets/LevelLockedIcon.png";
-import star3DIcon from "../assets/star3DIcon.png"
+import star3DIcon from "../assets/star3DIcon.png";
 
 interface LevelCardProps {
   level: LevelType;
