@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppContext } from "@/Context/AppContext";
 import { AppContextType, UserType } from "@/types";
-import { EyeClosed, EyeIcon, EyeOffIcon, User } from "lucide-react";
+import {EyeIcon, EyeOffIcon, User } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import femaleAvatar from "../assets/FemaleAvatar.jpeg"
 import maleAvatar from "../assets/MaleAvatar.jpeg"
@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const ProfilePage = () => {
   const {toast} = useToast();
-  const {loggedInUser,usersTotalPoints,setLoggedInUser} = useContext(AppContext) as AppContextType;
+  const {loggedInUser,setLoggedInUser} = useContext(AppContext) as AppContextType;
   const [newName,setNewName] = useState<string>(loggedInUser?.name || "");
   const [newPassword,setNewPassword] = useState<string>("");
   const [currentPassword,setCurrentPassword] = useState<string>("");
@@ -120,7 +120,7 @@ const ProfilePage = () => {
         <h1 className="font-semibold text-xl">Profile</h1>
       </div>
       <div className="flex flex-col items-center bg-[#ecfbff] px-4 w-full">
-        <div className="flex flex-col border-2 shadow-md p-4 w-full mt-14 bg-white">
+        <div className="flex flex-col border-2 shadow-md p-4 w-full mt-14 bg-white rounded-lg">
           <div className="flex items-center justify-end">
             <DropdownMenu>
               <DropdownMenuTrigger>

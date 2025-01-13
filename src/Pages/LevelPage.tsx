@@ -59,12 +59,7 @@ export default function LevelPage() {
   const [questionTimerInSeconds, setQuestionTimerInSeconds] = useState<number>(0);
   const [consecutiveCorrect, setConsecutiveCorrect] = useState<number>(0);
   const [consecutiveIncorrect, setConsecutiveIncorrect] = useState<number>(0);
-  const [correctAnswerId,setCorrectAnswerId] = useState<string | null>(null);
   const [correctAnswerData,setCorrectAnswerData] = useState<QuestionResponseData['correctData']>();
-
-  console.log(levelId);
-  console.log(gameComplete);
-  console.log(completionStatus);
 
   const questionNumber = useMemo(
     () => questions.length - availableQuestions.length,
@@ -112,7 +107,7 @@ export default function LevelPage() {
     setQuestionTimerInSeconds(0);
     setConsecutiveCorrect(0);
     setConsecutiveIncorrect(0);
-    setCorrectAnswerId(null);
+    setCorrectAnswerData(undefined);
 }, [levelId]);
 
   const handleLevelCompletion = async () => {
@@ -221,7 +216,7 @@ export default function LevelPage() {
   const onNext = () => {
     setCurrentQuestion(null);
     setCurrentQuestionResponse(null);
-    setCorrectAnswerId(null);
+    setCorrectAnswerData(undefined);
   };
 
   const handleExit = () => {
