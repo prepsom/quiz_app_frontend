@@ -15,11 +15,12 @@ import axios from "axios";
 import { API_URL } from "@/App";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useToast } from "@/hooks/use-toast";
-
+import coin3DIcon from "../assets/3DCoinsIcon.png"
+import UsersCompletedLevels from "@/components/UsersCompletedLevels";
 
 const ProfilePage = () => {
   const {toast} = useToast();
-  const {loggedInUser,setLoggedInUser} = useContext(AppContext) as AppContextType;
+  const {loggedInUser,setLoggedInUser,usersTotalPoints} = useContext(AppContext) as AppContextType;
   const [newName,setNewName] = useState<string>(loggedInUser?.name || "");
   const [newPassword,setNewPassword] = useState<string>("");
   const [currentPassword,setCurrentPassword] = useState<string>("");
@@ -31,6 +32,7 @@ const ProfilePage = () => {
   const debouncedPassword = useDebounce(currentPassword,500);
   const [isUpdatingName,setIsUpdatingName] = useState<boolean>(false);
   const [isUpdatingPassword,setIsUpdatingPassword] = useState<boolean>(false);
+  
 
 
 
@@ -119,7 +121,7 @@ const ProfilePage = () => {
         <User/>
         <h1 className="font-semibold text-xl">Profile</h1>
       </div>
-      <div className="flex flex-col items-center bg-[#ecfbff] px-4 w-full">
+      <div className="flex flex-col items-center bg-[#ecfbff] px-4 w-full gap-8">
         <div className="flex flex-col border-2 shadow-md p-4 w-full mt-14 bg-white rounded-lg">
           <div className="flex items-center justify-end">
             <DropdownMenu>
@@ -156,6 +158,17 @@ const ProfilePage = () => {
               <span className="text-gray-400 font-normal text-lg">{loggedInUser?.email}</span>
             </div>
           </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-md text-gray-600 font-medium px-2">Total score</span>
+            <div className="flex items-center gap-2">
+              <img className="w-6 h-6" src={coin3DIcon} alt=""/>
+              <span className="font-semibold">{usersTotalPoints}</span>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col p-4 w-full bg-white border-2 rounded-lg shadow-md">
+          <div className="text-gray-600 font-medium text-lg">Completed Levels</div>
+          <UsersCompletedLevels/>
         </div>
       </div>
       <Dialog open={isEditNameDialogOpen} onOpenChange={setIsEditNameDialogOpen}>

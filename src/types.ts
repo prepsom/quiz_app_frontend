@@ -40,7 +40,17 @@ export type LevelType = {
   levelDescription: string | null;
   position: number;
   subjectId: string;
+  passingQuestions:number;
 };
+
+export type LevelWithMetaData = LevelType &  {
+  subject:SubjectType,
+  totalPoints:number;
+  noOfCorrectQuestions:number;
+  strengths:string[];
+  recommendations:string[];
+  weaknesses:string[];
+}
 
 export type QuestionType = {
   id: string;
