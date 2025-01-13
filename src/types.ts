@@ -9,7 +9,7 @@ export type AppContextType = {
 
 export type UserType = {
   id: string;
-  emai: string;
+  email: string;
   name: string;
   password: string;
   role: "TEACHER" | "STUDENT" | "ADMIN";
@@ -44,6 +44,7 @@ export type LevelType = {
 
 export type QuestionType = {
   id: string;
+  questionType: 'MCQ' | 'MATCHING' | 'FILL_IN_BLANK';
   questionTitle: string;
   questionHint: string | null;
   difficulty: "EASY" | "MEDIUM" | "HARD";
@@ -51,6 +52,8 @@ export type QuestionType = {
   explanation: string;
   ready: boolean;
   Answers?: AnswerType[];
+  MatchingPairs?: MatchingPairType[];
+  BlankSegments?: BlankSegmentType[];
 };
 
 export type AnswerType = {
@@ -60,14 +63,27 @@ export type AnswerType = {
   isCorrect: boolean;
 };
 
+export type MatchingPairType = {
+  id: string;
+  leftItem: string;
+  rightItem: string;
+};
+
+export type BlankSegmentType = {
+  id: string;
+  text: string;
+  isBlank: boolean;
+};
+
 export type QuestionResponseType = {
   id: string;
+  isCorrect: boolean;
+  pointsEarned: number;
+  responseTime: number;
+  chosenAnswerId: string | null;
+  responseData: any | null;
   questionId: string;
   responderId: string;
-  chosenAnswerId: string;
-  pointsEarned: number;
-  isCorrect: boolean;
-  responseTime: number;
   createdAt: string;
 };
 
@@ -76,15 +92,52 @@ export type LeaderBoardUsersType = {
   totalPoints: number;
 };
 
-export type LevelCompletionResponse =  {
+export type LevelCompletionResponse = {
   success: boolean;
   message: string;
   noOfCorrectQuestions?: number;
   totalQuestions?: number;
   percentage?: number;
   isComplete?: boolean;
-  strengths?:string[];
-  weaknesses?:string[];
-  recommendations?:string[];
-  remarks?:string;
-}
+  strengths?: string[];
+  weaknesses?: string[];
+  recommendations?: string[];
+  remarks?: string;
+};
+
+// New types for question response request body
+
+export type BaseQuestionResponse = {
+  questionId: string;
+  timeTaken: number;
+};
+
+export type MCQResponse = BaseQuestionResponse & {
+  type: 'MCQ';
+  selectedAnswerId: string;
+};
+
+export type FillInBlankResponse = BaseQuestionResponse & {
+  type: 'FILL_IN_BLANK';
+  answers: { blankIndex: number; value: string; }[];
+};
+
+export type MatchingResponse = BaseQuestionResponse & {
+  type: 'MATCHING';
+  pairs: { leftItem: string; rightItem: string; }[];
+};
+
+export type QuestionResponseRequestBody = MCQResponse | FillInBlankResponse | MatchingResponse;
+
+
+export type QuestionResponseData = {
+  success: boolean;
+  message: string;
+  questionResponse: QuestionResponseType;
+  correctData: {
+    correctAnswerId?: string;
+    correctAnswers?: Record<number, string[]>;
+    correctPairs?: { leftItem: string; rightItem: string; }[];
+  };
+};
+

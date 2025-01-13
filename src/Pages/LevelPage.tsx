@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { API_URL } from "@/App";
 import QuestionPage from "./QuestionPage";
-import { LevelCompletionResponse, QuestionResponseType, QuestionType } from "@/types";
+import { LevelCompletionResponse, QuestionResponseData, QuestionResponseRequestBody, QuestionResponseType, QuestionType } from "@/types";
 import { useGetLevelById } from "@/hooks/useGetLevelById";
 import { useQuestionsByLevel } from "@/hooks/useQuestionsByLevel";
 import {
@@ -60,6 +60,7 @@ export default function LevelPage() {
   const [consecutiveCorrect, setConsecutiveCorrect] = useState<number>(0);
   const [consecutiveIncorrect, setConsecutiveIncorrect] = useState<number>(0);
   const [correctAnswerId,setCorrectAnswerId] = useState<string | null>(null);
+  const [correctAnswerData,setCorrectAnswerData] = useState<QuestionResponseData['correctData']>();
 
   console.log(levelId);
   console.log(gameComplete);
@@ -178,34 +179,23 @@ export default function LevelPage() {
     );
   };
 
-  const handleAnswerSubmit = async (
-    answerId: string,
-    responseTimeInSeconds: number
-  ) => {
+  const handleAnswerSubmit = async (responseData: QuestionResponseRequestBody) => {
     if (!currentQuestion) return;
     try {
-      const response = await axios.post<{
-        success: boolean;
-        message: string;
-        questionResponse: QuestionResponseType;
-        correctAnswerId:string;
-      }>(
+      const response = await axios.post<QuestionResponseData>(
         `${API_URL}/question-response`,
-        {
-          questionId: currentQuestion.id,
-          selectedAnswerId: answerId,
-          timeTaken: responseTimeInSeconds,
-        },
+        responseData,
         {
           withCredentials: true,
         }
       );
-      setTotalPointsInLevel(
-        (prev) => prev + response.data.questionResponse.pointsEarned
-      );
-      setCurrentQuestionResponse(response.data.questionResponse);
-      setCorrectAnswerId(response.data.correctAnswerId);
-      if (response.data.questionResponse.isCorrect) {
+      
+      const { questionResponse, correctData } = response.data;
+      
+      setTotalPointsInLevel((prev) => prev + questionResponse.pointsEarned);
+      setCurrentQuestionResponse(questionResponse);
+      
+      if (questionResponse.isCorrect) {
         setConsecutiveCorrect((prev) => prev + 1);
         setConsecutiveIncorrect(0);
         if (consecutiveCorrect === 1) {
@@ -220,6 +210,9 @@ export default function LevelPage() {
           else if (difficulty === "MEDIUM") setDifficulty("EASY");
         }
       }
+      
+      // Pass correctData to QuestionPage
+      setCorrectAnswerData(correctData);
     } catch (error) {
       console.error(error);
     }
@@ -302,8 +295,8 @@ export default function LevelPage() {
             onNext={onNext}
             currentQuestionTimerInSeconds={questionTimerInSeconds}
             currentQuestionNumber={questionNumber}
-            correctAnswerId={correctAnswerId}
-          />
+            correctAnswerData={correctAnswerData || null}
+            />
         )}
       </div>
 
@@ -330,8 +323,3 @@ export default function LevelPage() {
     </>
   );
 }
-
-
-// remarks 
-// back to levels button 
-// lock
