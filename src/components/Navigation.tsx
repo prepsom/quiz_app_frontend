@@ -1,4 +1,4 @@
-import { Home, Trophy } from "lucide-react";
+import { Home, Trophy, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 export function Navigation() {
@@ -30,7 +30,7 @@ export function Navigation() {
             <Trophy className="w-6 h-6" />
             <span className="text-xs">Leaderboard</span>
           </Link>
-          {/* <Link 
+          <Link 
             to="/profile"
             className={`flex flex-col items-center gap-1 ${
               location.pathname === '/profile' ? 'text-blue-500' : 'text-gray-500'
@@ -38,7 +38,7 @@ export function Navigation() {
           >
             <User className="w-6 h-6" />
             <span className="text-xs">Profile</span>
-          </Link> */}
+          </Link>
         </div>
       </nav>
     </div>
