@@ -31,6 +31,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useToast } from "@/hooks/use-toast";
 import coin3DIcon from "../assets/3DCoinsIcon.png";
 import UsersCompletedLevels from "@/components/UsersCompletedLevels";
+import UsersSubjectProgression from "@/components/UsersSubjectProgression";
 
 const ProfilePage = () => {
   const { toast } = useToast();
@@ -209,6 +210,12 @@ const ProfilePage = () => {
                 <span className="font-semibold">{usersTotalPoints}</span>
               </div>
             </div>
+          </div>
+          <div className="flex flex-col p-4 w-full bg-white border-2 rounded-lg shadow-md">
+            <div className="text-gray-600 font-medium text-lg mb-4">
+              Subjects Progression
+            </div>
+            <UsersSubjectProgression />
           </div>
           <div className="flex flex-col p-4 w-full bg-white border-2 rounded-lg shadow-md mb-40">
             <div className="text-gray-600 font-medium text-lg">

@@ -18,8 +18,13 @@ const UsersCompletedLevels = () => {
   return (
     <>
       <div className="flex flex-col gap-4">
-        {completedLevelsWithMetaData.map((completedLevel, _) => {
-          return <LevelWithMetaDataCard levelWithMetaData={completedLevel} />;
+        {completedLevelsWithMetaData.map((completedLevel) => {
+          return (
+            <LevelWithMetaDataCard
+              key={completedLevel.id}
+              levelWithMetaData={completedLevel}
+            />
+          );
         })}
       </div>
     </>

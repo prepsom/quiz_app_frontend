@@ -8,7 +8,6 @@ interface LevelCardProps {
   level: LevelType;
   isLocked: boolean;
   isCompleted: boolean;
-  currentLevel: number;
   index: number;
 }
 
@@ -20,10 +19,17 @@ export function LevelCard({
 }: LevelCardProps) {
   const navigate = useNavigate();
 
+  const handleNavigate = () => {
+    if (isLocked) {
+      return;
+    }
+    navigate(`/level/${level.id}`);
+  };
+
   return (
     <div
-      onClick={() => navigate(`/level/${level.id}`)}
-      className="flex items-center gap-4"
+      onClick={handleNavigate}
+      className="flex items-center gap-4 cursor-pointer hover:shadow-md hover:duration-300 px-4 py-2 rounded-lg"
     >
       <div
         className={`w-14 h-14 rounded-full flex items-center justify-center ${

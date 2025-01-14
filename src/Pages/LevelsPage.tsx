@@ -107,7 +107,6 @@ const LevelsPage = () => {
                 level={level}
                 isLocked={false}
                 isCompleted={true}
-                currentLevel={currentLevel}
               />
             ))}
 
@@ -119,7 +118,6 @@ const LevelsPage = () => {
                 level={level}
                 isLocked={level.id !== nextLevel?.id} // Only unlock the next level
                 isCompleted={false}
-                currentLevel={currentLevel}
               />
             ))}
           </div>
