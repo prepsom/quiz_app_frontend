@@ -4,10 +4,15 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useToast } from "./use-toast";
 
-export const useCompletedLevelsWithMetaDataInSubject = (subjectId: string) => {
+export const useCompletedLevelsWithMetaDataInSubject = (
+  subjectId: string,
+  page: number,
+  limit: number
+) => {
   const [completedLevelsWithMetaData, setCompletedLevelsWithMetaData] =
     useState<LevelWithMetaData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [noOfPages, setNoOfPages] = useState<number>(1);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -17,11 +22,16 @@ export const useCompletedLevelsWithMetaDataInSubject = (subjectId: string) => {
         const response = await axios.get<{
           success: boolean;
           completedLevelsInSubject: LevelWithMetaData[];
-        }>(`${API_URL}/level/levels-with-metadata/${subjectId}/completed`, {
-          withCredentials: true,
-        });
+          noOfPages: number;
+        }>(
+          `${API_URL}/level/levels-with-metadata/${subjectId}/completed?page=${page}&limit=${limit}`,
+          {
+            withCredentials: true,
+          }
+        );
         console.log(response);
         setCompletedLevelsWithMetaData(response.data.completedLevelsInSubject);
+        setNoOfPages(response.data.noOfPages);
       } catch (error) {
         console.log(error);
         toast({
@@ -37,5 +47,5 @@ export const useCompletedLevelsWithMetaDataInSubject = (subjectId: string) => {
     fetchCompletedLevelsWithMetaDataInSubject();
   }, [subjectId]);
 
-  return { completedLevelsWithMetaData, isLoading };
+  return { completedLevelsWithMetaData, isLoading, noOfPages };
 };

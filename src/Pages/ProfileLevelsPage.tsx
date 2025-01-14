@@ -1,22 +1,32 @@
 import { LevelCard } from "@/components/LevelCard";
 import LevelWithMetaDataCard from "@/components/LevelWithMetaDataCard";
+import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { useCompletedLevelsWithMetaDataInSubject } from "@/hooks/useCompletedLevelWithMetaDataInSubject";
 import { useGetSubjectById } from "@/hooks/useGetSubjectById";
 import { useLevelsBySubject } from "@/hooks/useLevelsBySubject";
 import { LevelType } from "@/types";
 import { ArrowLeft, Loader } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ProfileLevelsPage = () => {
+  const COMPLETED_LEVELS_PER_PAGE = 10;
   const navigate = useNavigate();
   const { subjectId } = useParams<{ subjectId: string }>();
   const { subject, isLoading: isSubjectLoading } = useGetSubjectById(
     subjectId!
   );
-  const { completedLevelsWithMetaData, isLoading: isCompletedLevelsLoading } =
-    useCompletedLevelsWithMetaDataInSubject(subjectId!);
+  const [page, setPage] = useState<number>(1);
+  const {
+    completedLevelsWithMetaData,
+    isLoading: isCompletedLevelsLoading,
+    noOfPages,
+  } = useCompletedLevelsWithMetaDataInSubject(
+    subjectId!,
+    page,
+    COMPLETED_LEVELS_PER_PAGE
+  );
   const { levels: totalLevels, isLoading: isTotalLevelsLoading } =
     useLevelsBySubject(subjectId!);
 
@@ -70,7 +80,7 @@ const ProfileLevelsPage = () => {
             Back to profile
           </Button>
         </div>
-        <div className="flex flex-col gap-4 px-4">
+        <div className="flex flex-col gap-4 px-4 mb-4">
           <div className="text-blue-600 font-semibold text-xl">
             Completed Levels
           </div>
@@ -82,6 +92,11 @@ const ProfileLevelsPage = () => {
               />
             );
           })}
+          <Pagination
+            noOfPages={noOfPages}
+            currentPage={page}
+            setCurrentPage={setPage}
+          />
         </div>
         <div className="flex flex-col gap-4 px-4">
           <div className="text-blue-600 font-semibold text-xl">

@@ -4,10 +4,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useToast } from "./use-toast";
 
-export const useCompletedLevels = () => {
+export const useCompletedLevels = (page: number, limit: number) => {
   const [completedLevelsWithMetaData, setCompletedLevelsWithMetaData] =
     useState<LevelWithMetaData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [noOfPages, setNoOfPages] = useState<number>(1);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -17,11 +18,13 @@ export const useCompletedLevels = () => {
         const response = await axios.get<{
           success: true;
           completedLevels: LevelWithMetaData[];
-        }>(`${API_URL}/level/levels/completed`, {
+          noOfPages: number;
+        }>(`${API_URL}/level/levels/completed?page=${page}&limit=${limit}`, {
           withCredentials: true,
         });
         console.log(response);
         setCompletedLevelsWithMetaData(response.data.completedLevels);
+        setNoOfPages(response.data.noOfPages);
       } catch (error) {
         console.log(error);
         toast({
@@ -35,7 +38,7 @@ export const useCompletedLevels = () => {
     };
 
     fetchAllCompletedLevelsByUser();
-  }, []);
+  }, [page, limit]);
 
-  return { completedLevelsWithMetaData, isLoading };
+  return { completedLevelsWithMetaData, isLoading, noOfPages };
 };
