@@ -41,6 +41,7 @@ export default function QuestionPage({
     useQuestionWithAnswers(question.id);
   const [answer, setAnswer] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [allOptionsMatched, setAllOptionsMatched] = useState(false);
 
   useEffect(() => {
     setAnswer(null);
@@ -85,6 +86,12 @@ export default function QuestionPage({
     setIsSubmitting(false);
   };
 
+  const allBlanksFilled = () => {
+    if (currentQuestion?.questionType !== "FILL_IN_BLANK" || !answer)
+      return true;
+    return answer.every((a: any) => a.value.trim() !== "");
+  };
+
   if (isQuestionWithAnswersLoading) {
     return (
       <div className="w-full max-w-md mx-auto px-4 flex justify-center">
@@ -125,7 +132,12 @@ export default function QuestionPage({
           {currentQuestion?.questionType === "MATCHING" && (
             <MatchingQuestion
               pairs={currentQuestion.MatchingPairs || []}
-              onMatch={setAnswer}
+              onMatch={(matches) => {
+                setAnswer(matches);
+                setAllOptionsMatched(
+                  matches.length === currentQuestion.MatchingPairs?.length
+                );
+              }}
               questionResponse={questionResponse}
               correctPairs={correctAnswerData?.correctPairs || []}
             />
@@ -160,7 +172,14 @@ export default function QuestionPage({
           {!questionResponse ? (
             <Button
               onClick={handleSubmit}
-              disabled={!answer || isSubmitting}
+              disabled={
+                !answer ||
+                isSubmitting ||
+                (currentQuestion?.questionType === "MATCHING" &&
+                  !allOptionsMatched) ||
+                (currentQuestion?.questionType === "FILL_IN_BLANK" &&
+                  !allBlanksFilled())
+              }
               className="w-full py-6 text-lg font-medium bg-[#1e8bf1] hover:bg-blue-600 text-white rounded-xl"
             >
               {isSubmitting ? (

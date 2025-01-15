@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ArrowRight } from "lucide-react";
 import { QuestionResponseType } from "@/types";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -109,7 +109,7 @@ export default function MatchingQuestion({
       rightItem: right,
     }));
     onMatch(matchArray);
-  }, [matches, onMatch]);
+  }, [matches, onMatch, pairs.length]);
 
   const handleItemClick = (item: string, isLeft: boolean) => {
     if (questionResponse) return;
@@ -266,22 +266,25 @@ export default function MatchingQuestion({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ delay: 0.5 }}
-            className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200"
+            className="mt-6 p-6 bg-white rounded-lg shadow-md border border-gray-200"
           >
-            <h4 className="font-medium text-gray-900 mb-2">Correct Matches:</h4>
-            <div className="space-y-2">
+            <h4 className="font-semibold text-lg text-gray-800 mb-4">
+              Correct Matches
+            </h4>
+            <div className="space-y-4">
               {correctPairs.map((pair, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.7 + index * 0.1 }}
-                  className="grid grid-cols-1 gap-2"
+                  className="flex items-center space-x-4"
                 >
-                  <div className="p-2 bg-green-50 rounded border border-green-100">
+                  <div className="flex-1 p-3 bg-blue-50 rounded-md border border-blue-200 text-blue-700">
                     {pair.leftItem}
                   </div>
-                  <div className="p-2 bg-green-50 rounded border border-green-100">
+                  <ArrowRight className="w-6 h-6 text-gray-400" />
+                  <div className="flex-1 p-3 bg-green-50 rounded-md border border-green-200 text-green-700">
                     {pair.rightItem}
                   </div>
                 </motion.div>
