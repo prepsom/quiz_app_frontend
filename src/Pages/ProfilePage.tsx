@@ -32,6 +32,14 @@ import { useToast } from "@/hooks/use-toast";
 import coin3DIcon from "../assets/3DCoinsIcon.png";
 import UsersCompletedLevels from "@/components/UsersCompletedLevels";
 import UsersSubjectProgression from "@/components/UsersSubjectProgression";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 const ProfilePage = () => {
   const { toast } = useToast();
@@ -43,7 +51,11 @@ const ProfilePage = () => {
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [isEditNameDialogOpen, setIsEditNameDialogOpen] =
     useState<boolean>(false);
+  const [isEditNameSheetOpen, setIsEditNameSheetOpen] =
+    useState<boolean>(false);
   const [isEditPasswordDialogOpen, setIsEditPasswordDialogOpen] =
+    useState<boolean>(false);
+  const [isEditPasswordSheetOpen, setIsEditPasswordSheetOpen] =
     useState<boolean>(false);
   const [isPasswordCorrect, setIsPasswordCorrect] = useState<boolean>(true);
   const [isShowCurrentPassword, setIsShowCurrentPassword] =
@@ -161,11 +173,25 @@ const ProfilePage = () => {
                   <DropdownMenuLabel>Profile changes</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
+                    className="md:hidden"
+                    onClick={() => setIsEditNameSheetOpen(true)}
+                  >
+                    Edit name
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="hidden md:flex"
                     onClick={() => setIsEditNameDialogOpen(true)}
                   >
                     Edit name
                   </DropdownMenuItem>
                   <DropdownMenuItem
+                    onClick={() => setIsEditPasswordSheetOpen(true)}
+                    className="md:hidden"
+                  >
+                    Edit password
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="hidden md:flex"
                     onClick={() => setIsEditPasswordDialogOpen(true)}
                   >
                     Edit password
@@ -224,6 +250,38 @@ const ProfilePage = () => {
             <UsersCompletedLevels />
           </div>
         </div>
+        <Sheet open={isEditNameSheetOpen} onOpenChange={setIsEditNameSheetOpen}>
+          <SheetContent side={"bottom"}>
+            <SheetHeader>
+              <SheetTitle>Edit Name</SheetTitle>
+              <SheetDescription>Edit your profile name</SheetDescription>
+            </SheetHeader>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="newName">Edit Name</Label>
+                <Input
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  type="text"
+                  name="newName"
+                  id="newName"
+                />
+              </div>
+            </div>
+            <SheetFooter className="gap-1 mt-4">
+              <Button
+                disabled={isUpdatingName}
+                variant={"destructive"}
+                onClick={() => setIsEditNameSheetOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button disabled={isUpdatingName} onClick={handleUpdateName}>
+                Save Changes
+              </Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
         <Dialog
           open={isEditNameDialogOpen}
           onOpenChange={setIsEditNameDialogOpen}
@@ -259,6 +317,74 @@ const ProfilePage = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        <Sheet
+          open={isEditPasswordSheetOpen}
+          onOpenChange={setIsEditPasswordSheetOpen}
+        >
+          <SheetContent side={"bottom"}>
+            <SheetHeader>
+              <SheetTitle>Edit Password</SheetTitle>
+              <SheetDescription>
+                Edit user's current password with new password
+              </SheetDescription>
+            </SheetHeader>
+            <div className="flex flex-col gap-4 ">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="currentPassword">Current Password</Label>
+                  <button
+                    onClick={() =>
+                      setIsShowCurrentPassword(!isShowCurrentPassword)
+                    }
+                  >
+                    {isShowCurrentPassword ? <EyeIcon /> : <EyeOffIcon />}
+                  </button>
+                </div>
+                <Input
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  type={isShowCurrentPassword ? "text" : "password"}
+                  name="currentPassword"
+                  id="currentPassword"
+                />
+              </div>
+              {isPasswordCorrect && (
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="newPassword">New Password</Label>
+                    <button
+                      onClick={() => setIsShowNewPassword(!isShowNewPassword)}
+                    >
+                      {isShowNewPassword ? <EyeIcon /> : <EyeOffIcon />}
+                    </button>
+                  </div>
+                  <Input
+                    type={isShowNewPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    name="newPassword"
+                    id="newPassword"
+                  />
+                </div>
+              )}
+            </div>
+            <SheetFooter className="gap-1 mt-4">
+              <Button
+                disabled={isUpdatingPassword}
+                variant={"destructive"}
+                onClick={() => setIsEditPasswordSheetOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpdatePassword}
+                disabled={isUpdatingPassword}
+              >
+                Save changes
+              </Button>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
         <Dialog
           open={isEditPasswordDialogOpen}
           onOpenChange={setIsEditPasswordDialogOpen}
