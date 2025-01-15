@@ -4,14 +4,13 @@ import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, EyeIcon, EyeOffIcon } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AppContextType, LoginRequest, LoginResponse } from "@/types";
 import { API_URL } from "@/App";
 import { AppContext } from "@/Context/AppContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Checkbox } from "@/components/ui/checkbox";
 import owlMascot from "../assets/owl_image.png";
 
 export default function LoginPage() {
@@ -139,35 +138,29 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2">
-            <Input
-              type={isShowPassword ? "text" : "password"}
-              placeholder="Password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, password: e.target.value }))
-              }
-              required
-              className="w-full bg-white/80 border-blue-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
-            />
+            <div className="relative">
+              <Input
+                type={isShowPassword ? "text" : "password"}
+                placeholder="Password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, password: e.target.value }))
+                }
+                required
+                className="w-full bg-white/80 border-blue-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
+              />
+              <button
+                className="absolute right-0 top-0  h-full px-3 hover:bg-transparent"
+                onClick={() => setIsShowPassword(!isShowPassword)}
+              >
+                {isShowPassword ? <EyeIcon /> : <EyeOffIcon />}
+              </button>
+            </div>
             {fieldErrors.password && (
               <p className="text-sm text-red-500 font-medium animate-slideDown">
                 {fieldErrors.password}
               </p>
             )}
-            <div className="flex items-center gap-2 text-blue-600">
-              <Checkbox
-                id="showPassword"
-                checked={isShowPassword}
-                onCheckedChange={() => setIsShowPassword(!isShowPassword)}
-                className="border-blue-200 data-[state=checked]:bg-blue-500 transition-colors duration-300"
-              />
-              <label
-                htmlFor="showPassword"
-                className="text-sm cursor-pointer hover:text-blue-700 transition-colors duration-300"
-              >
-                {isShowPassword ? "Hide password" : "Show password"}
-              </label>
-            </div>
           </div>
 
           <Button

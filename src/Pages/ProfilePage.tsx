@@ -27,7 +27,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { API_URL } from "@/App";
-import { useDebounce } from "@/hooks/useDebounce";
 import { useToast } from "@/hooks/use-toast";
 import coin3DIcon from "../assets/3DCoinsIcon.png";
 import UsersCompletedLevels from "@/components/UsersCompletedLevels";
@@ -57,11 +56,9 @@ const ProfilePage = () => {
     useState<boolean>(false);
   const [isEditPasswordSheetOpen, setIsEditPasswordSheetOpen] =
     useState<boolean>(false);
-  const [isPasswordCorrect, setIsPasswordCorrect] = useState<boolean>(true);
   const [isShowCurrentPassword, setIsShowCurrentPassword] =
     useState<boolean>(false);
   const [isShowNewPassword, setIsShowNewPassword] = useState<boolean>(false);
-  const debouncedPassword = useDebounce(currentPassword, 500);
   const [isUpdatingName, setIsUpdatingName] = useState<boolean>(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState<boolean>(false);
 
@@ -69,27 +66,6 @@ const ProfilePage = () => {
     if (loggedInUser === null) return;
     setNewName(loggedInUser.name);
   }, [loggedInUser]);
-
-  useEffect(() => {
-    const checkPassword = async () => {
-      try {
-        const response = await axios.post<{
-          success: boolean;
-          isPasswordCorrect: boolean;
-        }>(
-          `${API_URL}/user/check-password`,
-          { password: currentPassword },
-          { withCredentials: true }
-        );
-        console.log(response);
-        setIsPasswordCorrect(response.data.isPasswordCorrect);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    checkPassword();
-  }, [debouncedPassword]);
 
   const handleUpdateName = async () => {
     try {
@@ -121,12 +97,18 @@ const ProfilePage = () => {
 
   const handleUpdatePassword = async () => {
     try {
-      if (newPassword.trim().length === 0)
+      if (
+        newPassword.trim().length === 0 ||
+        currentPassword.trim().length === 0
+      ) {
         toast({ title: "password cannot be empty" });
+        return;
+      }
       setIsUpdatingPassword(true);
       const response = await axios.put<{ success: boolean; message: string }>(
         `${API_URL}/user/password`,
         {
+          currentPassword: currentPassword,
           newPassword: newPassword,
         },
         {
@@ -139,7 +121,6 @@ const ProfilePage = () => {
         title: "Password updated successfully",
         variant: "default",
       });
-      setIsPasswordCorrect(false);
       setCurrentPassword("");
       setNewPassword("");
     } catch (error: any) {
@@ -252,7 +233,7 @@ const ProfilePage = () => {
         </div>
         <Sheet open={isEditNameSheetOpen} onOpenChange={setIsEditNameSheetOpen}>
           <SheetContent side={"bottom"}>
-            <SheetHeader>
+            <SheetHeader className="mb-4">
               <SheetTitle>Edit Name</SheetTitle>
               <SheetDescription>Edit your profile name</SheetDescription>
             </SheetHeader>
@@ -322,7 +303,7 @@ const ProfilePage = () => {
           onOpenChange={setIsEditPasswordSheetOpen}
         >
           <SheetContent side={"bottom"}>
-            <SheetHeader>
+            <SheetHeader className="mb-8">
               <SheetTitle>Edit Password</SheetTitle>
               <SheetDescription>
                 Edit user's current password with new password
@@ -332,7 +313,17 @@ const ProfilePage = () => {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="currentPassword">Current Password</Label>
+                </div>
+                <div className="relative">
+                  <Input
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    type={isShowCurrentPassword ? "text" : "password"}
+                    name="currentPassword"
+                    id="currentPassword"
+                  />
                   <button
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() =>
                       setIsShowCurrentPassword(!isShowCurrentPassword)
                     }
@@ -340,24 +331,12 @@ const ProfilePage = () => {
                     {isShowCurrentPassword ? <EyeIcon /> : <EyeOffIcon />}
                   </button>
                 </div>
-                <Input
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  type={isShowCurrentPassword ? "text" : "password"}
-                  name="currentPassword"
-                  id="currentPassword"
-                />
               </div>
-              {isPasswordCorrect && (
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor="newPassword">New Password</Label>
-                    <button
-                      onClick={() => setIsShowNewPassword(!isShowNewPassword)}
-                    >
-                      {isShowNewPassword ? <EyeIcon /> : <EyeOffIcon />}
-                    </button>
-                  </div>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="newPassword">New Password</Label>
+                </div>
+                <div className="relative">
                   <Input
                     type={isShowNewPassword ? "text" : "password"}
                     value={newPassword}
@@ -365,8 +344,14 @@ const ProfilePage = () => {
                     name="newPassword"
                     id="newPassword"
                   />
+                  <button
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setIsShowNewPassword(!isShowNewPassword)}
+                  >
+                    {isShowNewPassword ? <EyeIcon /> : <EyeOffIcon />}
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
             <SheetFooter className="gap-1 mt-4">
               <Button
@@ -400,7 +385,17 @@ const ProfilePage = () => {
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <Label htmlFor="currentPassword">Current Password</Label>
+                </div>
+                <div className="relative">
+                  <Input
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    type={isShowCurrentPassword ? "text" : "password"}
+                    name="currentPassword"
+                    id="currentPassword"
+                  />
                   <button
+                    className="absolute right-0 top-0 h-full px-2 hover:bg-transparent"
                     onClick={() =>
                       setIsShowCurrentPassword(!isShowCurrentPassword)
                     }
@@ -408,24 +403,12 @@ const ProfilePage = () => {
                     {isShowCurrentPassword ? <EyeIcon /> : <EyeOffIcon />}
                   </button>
                 </div>
-                <Input
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  type={isShowCurrentPassword ? "text" : "password"}
-                  name="currentPassword"
-                  id="currentPassword"
-                />
               </div>
-              {isPasswordCorrect && (
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <Label htmlFor="newPassword">New Password</Label>
-                    <button
-                      onClick={() => setIsShowNewPassword(!isShowNewPassword)}
-                    >
-                      {isShowNewPassword ? <EyeIcon /> : <EyeOffIcon />}
-                    </button>
-                  </div>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="newPassword">New Password</Label>
+                </div>
+                <div className="relative">
                   <Input
                     type={isShowNewPassword ? "text" : "password"}
                     value={newPassword}
@@ -433,8 +416,14 @@ const ProfilePage = () => {
                     name="newPassword"
                     id="newPassword"
                   />
+                  <button
+                    className="absolute right-0 top-0 h-full px-2 hover:bg-transparent"
+                    onClick={() => setIsShowNewPassword(!isShowNewPassword)}
+                  >
+                    {isShowNewPassword ? <EyeIcon /> : <EyeOffIcon />}
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
             <DialogFooter className="gap-1">
               <Button
