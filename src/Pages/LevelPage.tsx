@@ -1,10 +1,16 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader2, XCircle } from 'lucide-react';
+import { Loader2, XCircle } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { API_URL } from "@/App";
 import QuestionPage from "./QuestionPage";
-import { LevelCompletionResponse, QuestionResponseType, QuestionType } from "@/types";
+import {
+  LevelCompletionResponse,
+  QuestionResponseData,
+  QuestionResponseRequestBody,
+  QuestionResponseType,
+  QuestionType,
+} from "@/types";
 import { useGetLevelById } from "@/hooks/useGetLevelById";
 import { useQuestionsByLevel } from "@/hooks/useQuestionsByLevel";
 import {
@@ -22,6 +28,7 @@ import { Timer } from "@/components/Timer";
 import FeedbackPage from "./FeedbackPage";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 // const exampleCompletionData:LevelCompletionResponse = {
 //   success:true,
@@ -36,34 +43,42 @@ import { Button } from "@/components/ui/button";
 // }
 
 export default function LevelPage() {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const { levelId } = useParams<{ levelId: string }>();
   if (!levelId) return null;
 
   const { level, isLoading: isLevelLoading } = useGetLevelById(levelId);
-  const { questions, isLoading: isQuestionsLoading } = useQuestionsByLevel(levelId);
+  const { questions, isLoading: isQuestionsLoading } =
+    useQuestionsByLevel(levelId);
   const { subject, isLoading: isSubjectLoading } = useGetSubjectById(
     level?.subjectId ? level.subjectId : null
   );
 
   const [showExitAlert, setShowExitAlert] = useState<boolean>(false);
   const [gameComplete, setGameComplete] = useState(false);
-  const [totalPointsInLevel,setTotalPointsInLevel] = useState<number>(0);
-  const [difficulty, setDifficulty] = useState<"EASY" | "MEDIUM" | "HARD">("EASY");
-  const [currentQuestion, setCurrentQuestion] = useState<QuestionType | null>(null);
-  const [completionStatus, setCompletionStatus] = useState<LevelCompletionResponse | null>(null);
+  const [totalPointsInLevel, setTotalPointsInLevel] = useState<number>(0);
+  const [difficulty, setDifficulty] = useState<"EASY" | "MEDIUM" | "HARD">(
+    "EASY"
+  );
+  const [currentQuestion, setCurrentQuestion] = useState<QuestionType | null>(
+    null
+  );
+  const [completionStatus, setCompletionStatus] =
+    useState<LevelCompletionResponse | null>(null);
   const [isSubmittingCompletion, setIsSubmittingCompletion] = useState(false);
-  const [availableQuestions, setAvailableQuestions] = useState<QuestionType[]>([]);
+  const [availableQuestions, setAvailableQuestions] = useState<QuestionType[]>(
+    []
+  );
   const [isInitialized, setIsInitialized] = useState(false);
-  const [currentQuestionResponse, setCurrentQuestionResponse] = useState<QuestionResponseType | null>(null);
-  const [questionTimerInSeconds, setQuestionTimerInSeconds] = useState<number>(0);
+  const [currentQuestionResponse, setCurrentQuestionResponse] =
+    useState<QuestionResponseType | null>(null);
+  const [questionTimerInSeconds, setQuestionTimerInSeconds] =
+    useState<number>(0);
   const [consecutiveCorrect, setConsecutiveCorrect] = useState<number>(0);
   const [consecutiveIncorrect, setConsecutiveIncorrect] = useState<number>(0);
-  const [correctAnswerId,setCorrectAnswerId] = useState<string | null>(null);
-
-  console.log(levelId);
-  console.log(gameComplete);
-  console.log(completionStatus);
+  const [correctAnswerData, setCorrectAnswerData] =
+    useState<QuestionResponseData["correctData"]>();
 
   const questionNumber = useMemo(
     () => questions.length - availableQuestions.length,
@@ -80,7 +95,7 @@ export default function LevelPage() {
   useEffect(() => {
     if (!isInitialized) return;
 
-    if(availableQuestions.length === 0 && !gameComplete && !currentQuestion) {
+    if (availableQuestions.length === 0 && !gameComplete && !currentQuestion) {
       setGameComplete(true);
       handleLevelCompletion();
     } else if (!currentQuestion && availableQuestions.length > 0) {
@@ -111,8 +126,8 @@ export default function LevelPage() {
     setQuestionTimerInSeconds(0);
     setConsecutiveCorrect(0);
     setConsecutiveIncorrect(0);
-    setCorrectAnswerId(null);
-}, [levelId]);
+    setCorrectAnswerData(undefined);
+  }, [levelId]);
 
   const handleLevelCompletion = async () => {
     setIsSubmittingCompletion(true);
@@ -144,21 +159,29 @@ export default function LevelPage() {
         availableQuestions.some((q) => q.difficulty === "MEDIUM")
       ) {
         setDifficulty("MEDIUM");
-        questionsByDifficulty = availableQuestions.filter(q => q.difficulty === "MEDIUM");
+        questionsByDifficulty = availableQuestions.filter(
+          (q) => q.difficulty === "MEDIUM"
+        );
       } else if (
         difficulty === "MEDIUM" &&
         availableQuestions.some((q) => q.difficulty === "HARD")
       ) {
         setDifficulty("HARD");
-        questionsByDifficulty = availableQuestions.filter(q => q.difficulty === "HARD");
+        questionsByDifficulty = availableQuestions.filter(
+          (q) => q.difficulty === "HARD"
+        );
       } else if (availableQuestions.length > 0) {
         // If there are still questions available, reset to the easiest available difficulty
         const easiestAvailableDifficulty = ["EASY", "MEDIUM", "HARD"].find(
-          diff => availableQuestions.some(q => q.difficulty === diff)
+          (diff) => availableQuestions.some((q) => q.difficulty === diff)
         );
         if (easiestAvailableDifficulty) {
-          setDifficulty(easiestAvailableDifficulty as "EASY" | "MEDIUM" | "HARD");
-          questionsByDifficulty = availableQuestions.filter(q => q.difficulty === easiestAvailableDifficulty);
+          setDifficulty(
+            easiestAvailableDifficulty as "EASY" | "MEDIUM" | "HARD"
+          );
+          questionsByDifficulty = availableQuestions.filter(
+            (q) => q.difficulty === easiestAvailableDifficulty
+          );
         }
       }
     }
@@ -179,33 +202,24 @@ export default function LevelPage() {
   };
 
   const handleAnswerSubmit = async (
-    answerId: string,
-    responseTimeInSeconds: number
+    responseData: QuestionResponseRequestBody
   ) => {
     if (!currentQuestion) return;
     try {
-      const response = await axios.post<{
-        success: boolean;
-        message: string;
-        questionResponse: QuestionResponseType;
-        correctAnswerId:string;
-      }>(
+      const response = await axios.post<QuestionResponseData>(
         `${API_URL}/question-response`,
-        {
-          questionId: currentQuestion.id,
-          selectedAnswerId: answerId,
-          timeTaken: responseTimeInSeconds,
-        },
+        responseData,
         {
           withCredentials: true,
         }
       );
-      setTotalPointsInLevel(
-        (prev) => prev + response.data.questionResponse.pointsEarned
-      );
-      setCurrentQuestionResponse(response.data.questionResponse);
-      setCorrectAnswerId(response.data.correctAnswerId);
-      if (response.data.questionResponse.isCorrect) {
+
+      const { questionResponse, correctData } = response.data;
+
+      setTotalPointsInLevel((prev) => prev + questionResponse.pointsEarned);
+      setCurrentQuestionResponse(questionResponse);
+
+      if (questionResponse.isCorrect) {
         setConsecutiveCorrect((prev) => prev + 1);
         setConsecutiveIncorrect(0);
         if (consecutiveCorrect === 1) {
@@ -220,15 +234,22 @@ export default function LevelPage() {
           else if (difficulty === "MEDIUM") setDifficulty("EASY");
         }
       }
+
+      // Pass correctData to QuestionPage
+      setCorrectAnswerData(correctData);
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Error when answering question",
+        description: "Please check your network connection",
+        variant: "destructive",
+      });
     }
   };
 
   const onNext = () => {
     setCurrentQuestion(null);
     setCurrentQuestionResponse(null);
-    setCorrectAnswerId(null);
+    setCorrectAnswerData(undefined);
   };
 
   const handleExit = () => {
@@ -247,7 +268,9 @@ export default function LevelPage() {
   ) {
     return (
       <div className="min-h-screen flex items-center justify-center gap-2 bg-gradient-to-b from-blue-100 to-white">
-        {isSubmittingCompletion && <div className="text-blue-500 font-semibold">Generating Report</div>}
+        {isSubmittingCompletion && (
+          <div className="text-blue-500 font-semibold">Generating Report</div>
+        )}
         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
       </div>
     );
@@ -256,17 +279,27 @@ export default function LevelPage() {
   if (gameComplete && completionStatus) {
     return (
       <>
-        <FeedbackPage setGameComplete={setGameComplete} setCompletionStatus={setCompletionStatus} levelCompletionData={completionStatus} level={level!}/>
-        <Navigation/>
+        <FeedbackPage
+          setGameComplete={setGameComplete}
+          setCompletionStatus={setCompletionStatus}
+          levelCompletionData={completionStatus}
+          level={level!}
+        />
+        <Navigation />
       </>
-    )
+    );
   }
 
   if (!currentQuestion && availableQuestions.length === 0) {
     return (
       <div className="min-h-screen flex flex-col gap-2 items-center justify-center bg-gradient-to-b from-blue-100 to-white">
         <p className="text-gray-600">No questions available</p>
-        <Button variant="outline" onClick={() => navigate(`/levels/${level?.subjectId}`)}>Back to levels</Button>
+        <Button
+          variant="outline"
+          onClick={() => navigate(`/levels/${level?.subjectId}`)}
+        >
+          Back to levels
+        </Button>
       </div>
     );
   }
@@ -302,7 +335,7 @@ export default function LevelPage() {
             onNext={onNext}
             currentQuestionTimerInSeconds={questionTimerInSeconds}
             currentQuestionNumber={questionNumber}
-            correctAnswerId={correctAnswerId}
+            correctAnswerData={correctAnswerData || null}
           />
         )}
       </div>
@@ -330,8 +363,3 @@ export default function LevelPage() {
     </>
   );
 }
-
-
-// remarks 
-// back to levels button 
-// lock

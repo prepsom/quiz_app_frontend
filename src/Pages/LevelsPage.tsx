@@ -38,7 +38,7 @@ const LevelsPage = () => {
     // Next level is the first uncompleted level
     const nextLevel = uncompleted[0] || null;
 
-    return {uncompletedLevels:uncompleted,nextLevel };
+    return { uncompletedLevels: uncompleted, nextLevel };
   }, [levels, completedLevels]);
 
   if (
@@ -107,7 +107,6 @@ const LevelsPage = () => {
                 level={level}
                 isLocked={false}
                 isCompleted={true}
-                currentLevel={currentLevel} 
               />
             ))}
 
@@ -119,7 +118,6 @@ const LevelsPage = () => {
                 level={level}
                 isLocked={level.id !== nextLevel?.id} // Only unlock the next level
                 isCompleted={false}
-                currentLevel={currentLevel}
               />
             ))}
           </div>

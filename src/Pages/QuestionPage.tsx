@@ -1,13 +1,21 @@
-import { LevelType, QuestionResponseType, QuestionType } from "@/types";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  LevelType,
+  QuestionResponseType,
+  QuestionType,
+  QuestionResponseRequestBody,
+  QuestionResponseData,
+} from "@/types";
 import { useQuestionWithAnswers } from "@/hooks/useQuestionWithAnswers";
-import { CheckCircle2, XCircle } from "lucide-react";
+import MCQQuestion from "@/components/MCQQuestion";
+import MatchingQuestion from "@/components/MatchingQuestion";
+import FillInBlankQuestion from "@/components/FillInBlankQuestion";
+import { motion } from "motion/react";
 
 interface QuestionPageProps {
   question: QuestionType;
-  onSubmit: (answerId: string, responseTimeInSeconds: number) => Promise<void>;
+  onSubmit: (answer: QuestionResponseRequestBody) => Promise<void>;
   totalQuestions: number;
   currentLevel: LevelType | null;
   currentPointsInLevel: number;
@@ -15,7 +23,7 @@ interface QuestionPageProps {
   onNext?: () => void;
   currentQuestionTimerInSeconds: number;
   currentQuestionNumber: number;
-  correctAnswerId:string | null;
+  correctAnswerData: QuestionResponseData["correctData"] | null;
 }
 
 export default function QuestionPage({
@@ -27,22 +35,61 @@ export default function QuestionPage({
   onNext,
   currentQuestionTimerInSeconds,
   currentQuestionNumber,
-  correctAnswerId
+  correctAnswerData,
 }: QuestionPageProps) {
   const { question: currentQuestion, isLoading: isQuestionWithAnswersLoading } =
     useQuestionWithAnswers(question.id);
-  const [selectedAnswer, setSelectedAnswer] = useState<string>("");
+  const [answer, setAnswer] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [allOptionsMatched, setAllOptionsMatched] = useState(false);
 
   useEffect(() => {
-    setSelectedAnswer("");
+    setAnswer(null);
   }, [question]);
 
-  const handleSubmit = async (responseTimeInSeconds: number) => {
-    if (!selectedAnswer) return;
+  const handleSubmit = async () => {
+    if (!answer || !currentQuestion) return;
     setIsSubmitting(true);
-    await onSubmit(selectedAnswer, responseTimeInSeconds);
+
+    let responseBody: QuestionResponseRequestBody;
+
+    switch (currentQuestion.questionType) {
+      case "MCQ":
+        responseBody = {
+          type: "MCQ",
+          questionId: currentQuestion.id,
+          timeTaken: currentQuestionTimerInSeconds,
+          selectedAnswerId: answer,
+        };
+        break;
+      case "FILL_IN_BLANK":
+        responseBody = {
+          type: "FILL_IN_BLANK",
+          questionId: currentQuestion.id,
+          timeTaken: currentQuestionTimerInSeconds,
+          answers: answer,
+        };
+        break;
+      case "MATCHING":
+        responseBody = {
+          type: "MATCHING",
+          questionId: currentQuestion.id,
+          timeTaken: currentQuestionTimerInSeconds,
+          pairs: answer,
+        };
+        break;
+      default:
+        throw new Error("Unsupported question type");
+    }
+
+    await onSubmit(responseBody);
     setIsSubmitting(false);
+  };
+
+  const allBlanksFilled = () => {
+    if (currentQuestion?.questionType !== "FILL_IN_BLANK" || !answer)
+      return true;
+    return answer.every((a: any) => a.value.trim() !== "");
   };
 
   if (isQuestionWithAnswersLoading) {
@@ -56,7 +103,6 @@ export default function QuestionPage({
   return (
     <div className="w-full max-w-md mx-auto px-4">
       {/* Header Section */}
-
       <div className="flex items-center justify-center gap-2 mb-12">
         <div className="font-semibold text-blue-400 text-xl">
           LEVEL {currentLevel?.position ? currentLevel.position + 1 : 1}:
@@ -67,101 +113,57 @@ export default function QuestionPage({
       <div className="flex justify-start items-center font-semibold my-2 text-[#36a7be]">
         Question {currentQuestionNumber} of {totalQuestions}
       </div>
-      <div className="flex flex-col items-center">
+      <motion.div className="flex flex-col items-center">
         <div className="w-full bg-white text-center flex items-center justify-center font-semibold text-lg text-gray-800 py-2 px-4 rounded-lg border-2 border-[#c4eff4]">
           {currentQuestion?.questionTitle}
         </div>
 
-        {/* Question Card */}
-        <div className="rounded-3x my-8 w-full ">
-          <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer}>
-            <div className="space-y-3">
-              {currentQuestion?.Answers?.map((answer) => {
-                const isSelected = questionResponse
-                  ? questionResponse.chosenAnswerId === answer.id
-                  : selectedAnswer === answer.id;
-                const showResult = questionResponse !== null;
-                const isChosenAnswer =
-                  questionResponse?.chosenAnswerId === answer.id;        
-                
-                const isCorrectAnswer = correctAnswerId ? correctAnswerId===answer.id : false;
-                  
-                return (
-                  <div
-                    key={answer.id}
-                    className={`
-                      relative flex items-center p-4 rounded-xl transition-colors
-                      ${
-                        showResult
-                          ? isCorrectAnswer
-                            ? "bg-green-100 border-green-200 border-2"
-                            : isChosenAnswer && !questionResponse?.isCorrect
-                            ? "bg-red-100 border-red-200 border-2"
-                            : "bg-gray-50"
-                          : isSelected
-                          ? "bg-blue-50 border-blue-200 border-2"
-                          : "bg-white shadow-sm hover:bg-gray-100"
-                      }
-                    `}
-                  >
-                    {!showResult ? (
-                      <label className="flex items-center space-x-3 cursor-pointer w-full">
-                        <RadioGroupItem
-                          value={answer.id}
-                          id={answer.id}
-                          className="border-2 border-gray-300 text-blue-500"
-                        />
-                        <span
-                          className={`${
-                            isSelected ? "text-blue-500" : "text-gray-700"
-                          }`}
-                        >
-                          {answer.value}
-                        </span>
-                      </label>
-                    ) : (
-                      <div className="flex items-center w-full">
-
-                        {isCorrectAnswer && <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />}
-                        {(isChosenAnswer && !questionResponse.isCorrect) && <XCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" /> }
-                        {!isChosenAnswer && !isCorrectAnswer && (
-                          <div className="border-2 rounded-full mr-4 p-2"></div>
-                        )}
-                        <span
-                          className={`
-                            ${
-                              isCorrectAnswer
-                                ? "text-green-700"
-                                : isChosenAnswer && !questionResponse?.isCorrect
-                                ? "text-red-700"
-                                : "text-gray-700"
-                            }
-                          `}
-                        >
-                          {answer.value}
-                        </span>
-                      </div>
-                    )}
-                  </div>
+        {/* Question Content */}
+        <div className="rounded-3x my-8 w-full">
+          {currentQuestion?.questionType === "MCQ" && (
+            <MCQQuestion
+              question={currentQuestion}
+              selectedAnswer={answer}
+              setSelectedAnswer={setAnswer}
+              questionResponse={questionResponse}
+              correctAnswerId={correctAnswerData?.correctAnswerId || null}
+            />
+          )}
+          {currentQuestion?.questionType === "MATCHING" && (
+            <MatchingQuestion
+              pairs={currentQuestion.MatchingPairs || []}
+              onMatch={(matches) => {
+                setAnswer(matches);
+                setAllOptionsMatched(
+                  matches.length === currentQuestion.MatchingPairs?.length
                 );
-              })}
-            </div>
-          </RadioGroup>
+              }}
+              questionResponse={questionResponse}
+              correctPairs={correctAnswerData?.correctPairs || []}
+            />
+          )}
+          {currentQuestion?.questionType === "FILL_IN_BLANK" && (
+            <FillInBlankQuestion
+              segments={currentQuestion.BlankSegments || []}
+              answers={answer || []}
+              setAnswers={setAnswer}
+              questionResponse={questionResponse}
+              correctAnswers={correctAnswerData?.correctAnswers}
+            />
+          )}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Result Display */}
+      {/* Explanation */}
       {questionResponse && question.explanation !== "" && (
-        <>
-          <div className="flex flex-col gap-2 my-4">
-            <h2 className="text-blue-500  font-bold">EXPLANATION</h2>
-            <p className="text-lg text-gray-500 font-semibold">
-              {question.explanation.length > 300
-                ? question.explanation.slice(0, 300)[0] + "..."
-                : question.explanation}
-            </p>
-          </div>
-        </>
+        <div className="flex flex-col gap-2 my-4">
+          <h2 className="text-blue-500 font-bold">EXPLANATION</h2>
+          <p className="text-lg text-gray-500 font-semibold">
+            {question.explanation.length > 300
+              ? question.explanation.slice(0, 300) + "..."
+              : question.explanation}
+          </p>
+        </div>
       )}
 
       {/* Action Button */}
@@ -169,8 +171,15 @@ export default function QuestionPage({
         <div className="w-full max-w-md">
           {!questionResponse ? (
             <Button
-              onClick={() => handleSubmit(currentQuestionTimerInSeconds)}
-              disabled={!selectedAnswer || isSubmitting}
+              onClick={handleSubmit}
+              disabled={
+                !answer ||
+                isSubmitting ||
+                (currentQuestion?.questionType === "MATCHING" &&
+                  !allOptionsMatched) ||
+                (currentQuestion?.questionType === "FILL_IN_BLANK" &&
+                  !allBlanksFilled())
+              }
               className="w-full py-6 text-lg font-medium bg-[#1e8bf1] hover:bg-blue-600 text-white rounded-xl"
             >
               {isSubmitting ? (

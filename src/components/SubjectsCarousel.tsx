@@ -17,12 +17,18 @@ const subjectImages = {
 const SubjectsCarousel = ({ subjects }: Props) => {
   return (
     <div className="w-full max-w-4xl mx-auto px-4">
-      <div className="grid grid-flow-col auto-cols-max gap-2 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+      <div className="grid grid-flow-col auto-cols-max gap-2 overflow-x-auto pb-4">
         {subjects.map((subject: SubjectType) => {
           const icon = subjectImages[
             subject.subjectName as keyof typeof subjectImages
           ] || <Book className="w-6 h-6" />;
-          return <SubjectCarouselCard key={subject.id} icon={icon} subject={subject} />;
+          return (
+            <SubjectCarouselCard
+              key={subject.id}
+              icon={icon}
+              subject={subject}
+            />
+          );
         })}
       </div>
     </div>

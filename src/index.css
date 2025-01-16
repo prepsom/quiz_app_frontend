@@ -117,3 +117,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Add this CSS for hiding the scrollbar */
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For IE and Edge */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+  }
+}

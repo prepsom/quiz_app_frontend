@@ -10,7 +10,15 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { API_URL } from "@/App";
 import { toast } from "@/hooks/use-toast";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function SubjectsPage() {
   const { loggedInUser, setLoggedInUser } = useContext(
@@ -52,10 +60,14 @@ export default function SubjectsPage() {
               <Button variant="outline">Logout</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
-              <AlertDialogHeader>Are you sure you want to logout?</AlertDialogHeader>
+              <AlertDialogHeader>
+                Are you sure you want to logout?
+              </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel className="my-1">Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
+                <AlertDialogAction onClick={handleLogout}>
+                  Logout
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

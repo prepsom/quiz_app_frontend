@@ -9,6 +9,7 @@ import LevelsPage from "./Pages/LevelsPage";
 import LevelPage from "./Pages/LevelPage";
 import LeaderBoardPage from "./Pages/LeaderBoardPage";
 import ProfilePage from "./Pages/ProfilePage";
+import ProfileLevelsPage from "./Pages/ProfileLevelsPage";
 
 export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -24,6 +25,10 @@ function App() {
               <Route path="/" element={<ProtectedRoute />}>
                 <Route path="/" element={<Layout />}>
                   <Route path="profile" element={<ProfilePage />} />
+                  <Route
+                    path="profile/:subjectId"
+                    element={<ProfileLevelsPage />}
+                  />
                   <Route path="subjects" element={<SubjectsPage />} />
                   <Route path="leaderboard" element={<LeaderBoardPage />} />
                   <Route path="levels/:subjectId" element={<LevelsPage />} />
