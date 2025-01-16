@@ -150,12 +150,12 @@ export default function LoginPage() {
                 required
                 className="w-full bg-white/80 border-blue-100 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300"
               />
-              <button
+              <div
                 className="absolute right-0 top-0  h-full px-3 hover:bg-transparent"
                 onClick={() => setIsShowPassword(!isShowPassword)}
               >
                 {isShowPassword ? <EyeIcon /> : <EyeOffIcon />}
-              </button>
+              </div>
             </div>
             {fieldErrors.password && (
               <p className="text-sm text-red-500 font-medium animate-slideDown">
