@@ -52,8 +52,6 @@ const ProfileLevelsPage = () => {
     [sortedIncompleteLevels]
   );
 
-  console.log(completedLevelsWithMetaData);
-
   if (isCompletedLevelsLoading || isTotalLevelsLoading || isSubjectLoading) {
     return (
       <>

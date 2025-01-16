@@ -28,6 +28,7 @@ import { Timer } from "@/components/Timer";
 import FeedbackPage from "./FeedbackPage";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 // const exampleCompletionData:LevelCompletionResponse = {
 //   success:true,
@@ -42,6 +43,7 @@ import { Button } from "@/components/ui/button";
 // }
 
 export default function LevelPage() {
+  const { toast } = useToast();
   const navigate = useNavigate();
   const { levelId } = useParams<{ levelId: string }>();
   if (!levelId) return null;
@@ -236,7 +238,11 @@ export default function LevelPage() {
       // Pass correctData to QuestionPage
       setCorrectAnswerData(correctData);
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Error when answering question",
+        description: "Please check your network connection",
+        variant: "destructive",
+      });
     }
   };
 

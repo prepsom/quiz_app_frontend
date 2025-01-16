@@ -29,11 +29,9 @@ export const useCompletedLevelsWithMetaDataInSubject = (
             withCredentials: true,
           }
         );
-        console.log(response);
         setCompletedLevelsWithMetaData(response.data.completedLevelsInSubject);
         setNoOfPages(response.data.noOfPages);
       } catch (error) {
-        console.log(error);
         toast({
           title: "error fetching completed levels in subject",
           description: "please check your network connection",

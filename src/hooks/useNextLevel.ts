@@ -19,10 +19,8 @@ export const useNextLevel = (levelId: string) => {
         }>(`${API_URL}/level/next-level/${levelId}`, {
           withCredentials: true,
         });
-        console.log(response);
         setNextLevel(response.data.nextLevel);
       } catch (error) {
-        console.log(error);
         toast({
           title: "failed to get next level",
           description: "check your network connection",
