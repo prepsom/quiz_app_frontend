@@ -42,6 +42,8 @@ import { useToast } from "@/hooks/use-toast";
 //   weaknesses:["sjdaslkdja","sajd;kasjdasd","sajd;klasjdasd"],
 // }
 
+const MAX_QUESTIONS_PER_LEVEL = 15;
+
 export default function LevelPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -79,6 +81,9 @@ export default function LevelPage() {
   const [consecutiveIncorrect, setConsecutiveIncorrect] = useState<number>(0);
   const [correctAnswerData, setCorrectAnswerData] =
     useState<QuestionResponseData["correctData"]>();
+  const [questionsPickedCounter, setQuestionsPickedCounter] =
+    useState<number>(0);
+  const [pickedQuestions, setPickedQuestions] = useState<QuestionType[]>([]);
 
   const questionNumber = useMemo(
     () => questions.length - availableQuestions.length,
@@ -92,14 +97,31 @@ export default function LevelPage() {
     }
   }, [isQuestionsLoading, questions, isInitialized]);
 
+  console.log(questionsPickedCounter);
+
   useEffect(() => {
     if (!isInitialized) return;
 
-    if (availableQuestions.length === 0 && !gameComplete && !currentQuestion) {
+    if (
+      questionsPickedCounter === MAX_QUESTIONS_PER_LEVEL &&
+      !currentQuestion
+    ) {
       setGameComplete(true);
       handleLevelCompletion();
-    } else if (!currentQuestion && availableQuestions.length > 0) {
+    } else if (
+      availableQuestions.length === 0 &&
+      !gameComplete &&
+      !currentQuestion
+    ) {
+      setGameComplete(true);
+      handleLevelCompletion();
+    } else if (
+      !currentQuestion &&
+      availableQuestions.length > 0 &&
+      questionsPickedCounter <= MAX_QUESTIONS_PER_LEVEL
+    ) {
       pickQuestion();
+      setQuestionsPickedCounter((prev) => prev + 1);
     }
   }, [isInitialized, availableQuestions, currentQuestion, gameComplete]);
 
@@ -127,6 +149,8 @@ export default function LevelPage() {
     setConsecutiveCorrect(0);
     setConsecutiveIncorrect(0);
     setCorrectAnswerData(undefined);
+    setQuestionsPickedCounter(0);
+    setPickedQuestions([]);
   }, [levelId]);
 
   const handleLevelCompletion = async () => {
@@ -134,7 +158,11 @@ export default function LevelPage() {
     try {
       const response = await axios.post<LevelCompletionResponse>(
         `${API_URL}/level/${levelId}/complete`,
-        {},
+        {
+          answeredQuestionsInLevel: pickedQuestions.map(
+            (pickedQuestion) => pickedQuestion.id
+          ),
+        },
         { withCredentials: true }
       );
       setCompletionStatus(response.data);
@@ -196,6 +224,7 @@ export default function LevelPage() {
         Math.floor(Math.random() * questionsByDifficulty.length)
       ];
     setCurrentQuestion(nextQuestion);
+    setPickedQuestions((prev) => [...prev, nextQuestion]);
     setAvailableQuestions((prev) =>
       prev.filter((question) => question.id !== nextQuestion.id)
     );
@@ -328,7 +357,7 @@ export default function LevelPage() {
           <QuestionPage
             question={currentQuestion}
             onSubmit={handleAnswerSubmit}
-            totalQuestions={questions.length}
+            totalQuestions={MAX_QUESTIONS_PER_LEVEL}
             currentLevel={level}
             currentPointsInLevel={totalPointsInLevel}
             questionResponse={currentQuestionResponse}

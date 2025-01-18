@@ -1,16 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Navigate, useNavigate } from "react-router-dom";
 import owlMascotImage from "../assets/owl_image.png";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "@/Context/AppContext";
 import { AppContextType } from "@/types";
-// import RkInstitute from "../assets/RK Institute (1).png";
 import { useGetSchoolNameByGrade } from "@/hooks/useGetSchoolName";
 import { Loader } from "lucide-react";
+import RkInstitute from "../assets/RKInstituteLogo.png";
 
-// const schoolIconMap = new Map<string, string>([
-//   ["Radha Krishna Educational Institute", RkInstitute],
-// ]);
+const schoolIconMap = new Map<string, string>([
+  ["Radha Krishna Educational Institute", RkInstitute],
+]);
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -19,12 +19,12 @@ const LandingPage = () => {
   const { isLoading: isSchoolNameLoading, schoolName } =
     useGetSchoolNameByGrade(loggedInUser?.gradeId);
 
-  // const schoolIconImage = useMemo(() => {
-  //   if (schoolName === "" || isSchoolNameLoading) return;
-  //   return schoolName !== "" && !isSchoolNameLoading
-  //     ? schoolIconMap.get(schoolName)
-  //     : "";
-  // }, [schoolName]);
+  const schoolIconImage = useMemo(() => {
+    if (schoolName === "" || isSchoolNameLoading) return;
+    return schoolName !== "" && !isSchoolNameLoading
+      ? schoolIconMap.get(schoolName)
+      : "";
+  }, [schoolName]);
 
   useEffect(() => {
     const firstTime =
@@ -45,12 +45,6 @@ const LandingPage = () => {
     <div className="min-h-screen bg-[#EEF6FF] flex flex-col items-center justify-center p-2">
       <div className="w-full max-w-md flex flex-col items-center justify-around">
         {/* School Logo/Text*/}
-        {/* <div className="mb-4 flex w-full px-4 py-2">
-          <img
-            src={schoolIconImage !== undefined ? schoolIconImage : ""}
-            className="w-full aspect-auto"
-          />
-        </div> */}
         {isSchoolNameLoading ? (
           <>
             <div className="flex items-center justify-center">
@@ -58,25 +52,24 @@ const LandingPage = () => {
             </div>
           </>
         ) : (
-          <>
-            <div className="bg-white px-8 py-3 rounded-xl shadow-sm">
-              <span className="text-gray-600 text-lg">{schoolName}</span>
-            </div>
-          </>
+          <></>
         )}
 
         {/* Owl Mascot */}
-        <div className="w-56 h-56 relative">
-          <img
-            src={owlMascotImage}
-            alt="Owl mascot with graduation cap"
-            className="w-full h-full object-contain"
-          />
+        <div className="relative">
+          <div className="mb-4 flex w-full px-4 py-2">
+            <img
+              src={
+                schoolIconImage !== undefined ? schoolIconImage : owlMascotImage
+              }
+              className="w-full aspect-auto"
+            />
+          </div>
         </div>
 
         {/* Welcome Text */}
-        <h1 className="text-blue-500 text-2xl font-bold">
-          Welcome to PrepSOM!
+        <h1 className="text-blue-500 text-2xl font-bold text-center">
+          Welcome to {schoolName}
         </h1>
 
         {/* Description */}
