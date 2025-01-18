@@ -16,9 +16,7 @@ export const useGetSchoolNameByGrade = (gradeId: string | undefined) => {
         const response = await axios.get<{
           success: boolean;
           schoolName: string;
-        }>(`${API_URL}/school/school-name/${gradeId}`, {
-          withCredentials: true,
-        });
+        }>(`${API_URL}/school/school-name/${gradeId}`);
         setSchoolName(response.data.schoolName);
       } catch (error) {
         console.log(error);

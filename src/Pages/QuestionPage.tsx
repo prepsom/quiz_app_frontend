@@ -110,8 +110,11 @@ export default function QuestionPage({
         <div className="font-semibold text-md">{currentLevel?.levelName}</div>
       </div>
 
-      <div className="flex justify-start items-center font-semibold my-2 text-[#36a7be]">
-        Question {currentQuestionNumber} of {totalQuestions}
+      <div className="flex justify-between items-center font-semibold my-2 text-[#36a7be]">
+        <div>
+          Question {currentQuestionNumber} of {totalQuestions}
+        </div>
+        <div>{question.difficulty}</div>
       </div>
       <motion.div className="flex flex-col items-center">
         <div className="w-full bg-white text-center flex items-center justify-center font-semibold text-lg text-gray-800 py-2 px-4 rounded-lg border-2 border-[#c4eff4]">
