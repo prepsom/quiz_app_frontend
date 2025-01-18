@@ -54,8 +54,16 @@ export function SubjectCard({ subject }: SubjectCardProps) {
 
   return (
     <Card
-      className="p-4 hover:shadow-md transition-shadow bg-white rounded-xl cursor-pointer"
-      onClick={() => navigate(`/levels/${subject.id}`)}
+      className={`${
+        subject.subjectName !== "Science" ? "grayscale" : ""
+      } p-4 hover:shadow-md transition-shadow bg-white rounded-xl cursor-pointer`}
+      onClick={() => {
+        if (subject.subjectName === "Science") {
+          navigate(`/levels/${subject.id}`);
+        } else {
+          navigate(`/subjects`);
+        }
+      }}
     >
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">

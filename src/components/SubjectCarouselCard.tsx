@@ -30,26 +30,26 @@ const SubjectCarouselCard = ({ subject, icon }: Props) => {
 
   return (
     <div
-      onClick={() =>
-        navigate(
-          `${
-            subject.subjectName !== "Science"
-              ? "/subjects"
-              : `/levels/${subject.id}`
-          }`
-        )
-      }
+      onClick={() => {
+        if (subject.subjectName === "Science") {
+          navigate(`/levels/${subject.id}`);
+        } else {
+          navigate(`/subjects`);
+        }
+      }}
       key={subject.id}
-      className={`flex flex-col w-56 h-56 items-center justify-between p-6 ${
-        subject.subjectName === "Science" ? "bg-[#ecfbff]" : "bg-gray-200"
-      } rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group`}
+      className={`${
+        subject.subjectName! !== "Science" ? "grayscale" : "bg-[#ecfbff]"
+      } flex flex-col w-56 h-56 items-center justify-between p-6 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group`}
     >
-      <div className="group-hover:scale-110 transition-transform duration-200">
+      <div className="group-hover:scale-110 transition-transform duration-200 flex w-full h-full justify-center items-center">
         <div className="text-blue-600">
           {typeof icon === "string" ? (
             <img className="w-32 h-32 object-contain" src={icon} alt="" />
           ) : (
-            icon
+            <>
+              <div className="flex w-full h-full">{icon}</div>
+            </>
           )}
         </div>
       </div>

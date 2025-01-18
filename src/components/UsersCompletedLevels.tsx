@@ -20,6 +20,16 @@ const UsersCompletedLevels = () => {
     );
   }
 
+  if (completedLevelsWithMetaData.length === 0) {
+    return (
+      <>
+        <div className="mt-8 font-medium flex items-center justify-center">
+          No completed levels
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -31,11 +41,13 @@ const UsersCompletedLevels = () => {
             />
           );
         })}
-        <Pagination
-          noOfPages={noOfPages}
-          currentPage={page}
-          setCurrentPage={setPage}
-        />
+        {noOfPages > 1 && (
+          <Pagination
+            noOfPages={noOfPages}
+            currentPage={page}
+            setCurrentPage={setPage}
+          />
+        )}
       </div>
     </>
   );
