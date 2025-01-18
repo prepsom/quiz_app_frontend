@@ -93,10 +93,6 @@ export default function LoginPage() {
 
       <Card className="w-full max-w-md p-8 space-y-8 bg-white/80 shadow-2xl rounded-2xl border border-blue-100/50 transition-all duration-300 hover:shadow-blue-200/50">
         <div className="flex flex-col items-center space-y-6">
-          <div className="w-32 h-12 bg-gradient-to-r from-blue-600 to-blue-500 flex items-center justify-center rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
-            <span className="text-white font-medium">School Logo</span>
-          </div>
-
           <div className="w-44 h-44 relative group">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full group-hover:scale-110 transition-transform duration-300" />
             <img
