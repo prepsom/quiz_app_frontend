@@ -21,8 +21,8 @@ function App() {
           <Router>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
-              <Route index element={<LandingPage />} />
               <Route path="/" element={<ProtectedRoute />}>
+                <Route index element={<LandingPage />} />
                 <Route path="/" element={<Layout />}>
                   <Route path="profile" element={<ProfilePage />} />
                   <Route

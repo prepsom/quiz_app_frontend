@@ -68,6 +68,11 @@ export default function LoginPage() {
           withCredentials: true,
         }
       );
+
+      if (localStorage.getItem("firstTimeLogin") === null) {
+        localStorage.setItem("firstTimeLogin", "true");
+      }
+
       setLoggedInUser(response.data.user);
       navigate("/");
     } catch (err) {
