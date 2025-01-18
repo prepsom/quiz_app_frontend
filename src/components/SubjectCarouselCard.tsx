@@ -55,7 +55,7 @@ const SubjectCarouselCard = ({ subject, icon }: Props) => {
       </div>
       <div className="w-full">
         <div className="text-lg font-normal text-[#46557B] group-hover:text-blue-600 transition-colors duration-200">
-          {subject.subjectName} Quiz
+          {subject.subjectName}
         </div>
         <div className="flex items-center justify-between text-sm">
           <div className="font-semibold text-[#C6C1E0]">
