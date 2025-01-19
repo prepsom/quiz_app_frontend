@@ -15,10 +15,13 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { BsQuestion } from "react-icons/bs";
 
 export default function SubjectsPage() {
   const { loggedInUser, setLoggedInUser } = useContext(
@@ -53,6 +56,32 @@ export default function SubjectsPage() {
   return (
     <div className="bg-white border min-h-screen">
       <div className="p-4 flex flex-col justify-center gap-2">
+        <div className="flex items-center justify-end">
+          <div className="text-gray-600 border-gray-700">
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <BsQuestion />
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Contact information for feedback
+                  </AlertDialogTitle>
+                  <AlertDialogDescription></AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="flex items-center justify-start gap-2">
+                  <span className="text-gray-600 font-semibold">
+                    Contact Email:-
+                  </span>
+                  <span>contact@prepsom.com</span>
+                </div>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Close</AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </div>
         <div className="flex items-center justify-between">
           <div className="text-gray-500 mt-4">Hello {loggedInUser.name}!</div>
           <AlertDialog>
@@ -61,7 +90,10 @@ export default function SubjectsPage() {
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                Are you sure you want to logout?
+                <AlertDialogTitle>
+                  Are you sure you want to logout?
+                </AlertDialogTitle>
+                <AlertDialogDescription></AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel className="my-1">Cancel</AlertDialogCancel>

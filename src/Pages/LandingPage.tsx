@@ -69,7 +69,7 @@ const LandingPage = () => {
 
         {/* Welcome Text */}
         <h1 className="text-blue-500 text-2xl font-bold text-center">
-          Welcome to {schoolName}
+          Welcome to {schoolName !== "" ? schoolName : "PrepSOM"}
         </h1>
 
         {/* Description */}
