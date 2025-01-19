@@ -1,7 +1,7 @@
 import { AppContext } from "@/Context/AppContext";
 import { useSubjectsByGrade } from "@/hooks/useSubjectsByGrade";
 import { AppContextType } from "@/types";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { SubjectCard } from "@/components/SubjectCard";
@@ -29,6 +29,7 @@ export default function SubjectsPage() {
   ) as AppContextType;
   if (loggedInUser === null) return <Navigate to="/login" />;
   const { subjects, isLoading } = useSubjectsByGrade(loggedInUser?.gradeId);
+  const [isContactInfoOpen, setIsContactInfoOpen] = useState<boolean>(false);
 
   const handleLogout = async () => {
     try {
@@ -56,32 +57,6 @@ export default function SubjectsPage() {
   return (
     <div className="bg-white border min-h-screen">
       <div className="p-4 flex flex-col justify-center gap-2">
-        <div className="flex items-center justify-end">
-          <div className="text-gray-600 border-gray-700">
-            <AlertDialog>
-              <AlertDialogTrigger>
-                <BsQuestion />
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Contact information for feedback
-                  </AlertDialogTitle>
-                  <AlertDialogDescription></AlertDialogDescription>
-                </AlertDialogHeader>
-                <div className="flex items-center justify-start gap-2">
-                  <span className="text-gray-600 font-semibold">
-                    Contact Email:-
-                  </span>
-                  <span>contact@prepsom.com</span>
-                </div>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Close</AlertDialogCancel>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        </div>
         <div className="flex items-center justify-between">
           <div className="text-gray-500 mt-4">Hello {loggedInUser.name}!</div>
           <AlertDialog>
@@ -104,8 +79,14 @@ export default function SubjectsPage() {
             </AlertDialogContent>
           </AlertDialog>
         </div>
-        <div className="text-2xl text-gray-600 font-semibold">
-          What would you like to learn today
+        <div className="flex flex-wrap items-center gap-4">
+          <span className="text-2xl text-gray-600 font-semibold ">
+            {" "}
+            What would you like to learn today{" "}
+          </span>
+          <div className="text-gray-600 border-2 border-gray-700 rounded-full">
+            <BsQuestion onClick={() => setIsContactInfoOpen(true)} />
+          </div>
         </div>
       </div>
 
@@ -119,6 +100,23 @@ export default function SubjectsPage() {
           <SubjectCard key={subject.id} subject={subject} />
         ))}
       </div>
+      <AlertDialog open={isContactInfoOpen} onOpenChange={setIsContactInfoOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Contact information for feedback
+            </AlertDialogTitle>
+            <AlertDialogDescription></AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex items-center justify-start gap-2">
+            <span className="text-gray-600 font-semibold">Contact Email:-</span>
+            <span>contact@prepsom.com</span>
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Close</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
