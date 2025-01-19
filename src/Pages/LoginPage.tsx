@@ -12,7 +12,7 @@ import { AppContext } from "@/Context/AppContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import owlMascot from "../assets/owl_image.png";
-import circleLoaderSvg from "../../public/circleLoader.svg";
+import circleLoaderSvg from "../assets/circleLoader.svg";
 
 export default function LoginPage() {
   const navigate = useNavigate();

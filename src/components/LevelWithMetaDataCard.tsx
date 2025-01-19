@@ -11,12 +11,14 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { useQuestionsByLevel } from "@/hooks/useQuestionsByLevel";
+import { MAX_QUESTIONS_PER_LEVEL } from "@/Pages/LevelPage";
 
 type Props = {
   levelWithMetaData: LevelWithMetaData;
 };
 
 const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
+  console.log(levelWithMetaData);
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] =
     useState<boolean>(false);
   const { questions, isLoading: isQuestionsLoading } = useQuestionsByLevel(
@@ -47,24 +49,30 @@ const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
           </div>
           <div className="flex items-center gap-1">
             <Check className="text-green-500" />
+            <span className="text-gray-600 font-semibold">
+              {levelWithMetaData.noOfCorrectQuestions} /{" "}
+              {questions.length < MAX_QUESTIONS_PER_LEVEL
+                ? questions.length
+                : MAX_QUESTIONS_PER_LEVEL}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Percent />
             {!isQuestionsLoading ? (
-              <span className="text-gray-600 font-semibold">
-                {levelWithMetaData.noOfCorrectQuestions} / {questions.length}
+              <span className="text-gray-700 font-semibold">
+                {(
+                  (levelWithMetaData.noOfCorrectQuestions /
+                    (questions.length < MAX_QUESTIONS_PER_LEVEL
+                      ? questions.length
+                      : MAX_QUESTIONS_PER_LEVEL)) *
+                  100
+                ).toFixed(2)}
               </span>
             ) : (
               <>
                 <Loader />
               </>
             )}
-          </div>
-          <div className="flex items-center gap-2">
-            <Percent />
-            <span className="text-gray-700 font-semibold">
-              {(
-                (levelWithMetaData.noOfCorrectQuestions / questions.length) *
-                100
-              ).toFixed(2)}
-            </span>
           </div>
         </div>
         <div className="flex items-center justify-start mt-4">

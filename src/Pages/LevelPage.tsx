@@ -42,7 +42,7 @@ import { useToast } from "@/hooks/use-toast";
 //   weaknesses:["sjdaslkdja","sajd;kasjdasd","sajd;klasjdasd"],
 // }
 
-const MAX_QUESTIONS_PER_LEVEL = 15;
+export const MAX_QUESTIONS_PER_LEVEL = 15;
 
 export default function LevelPage() {
   const { toast } = useToast();
@@ -250,15 +250,19 @@ export default function LevelPage() {
 
       if (questionResponse.isCorrect) {
         setConsecutiveCorrect((prev) => prev + 1);
+        console.log("Consecutive correct:- ", consecutiveCorrect);
         setConsecutiveIncorrect(0);
         if (consecutiveCorrect === 1) {
+          setConsecutiveCorrect(0);
           if (difficulty === "EASY") setDifficulty("MEDIUM");
           else if (difficulty === "MEDIUM") setDifficulty("HARD");
         }
       } else {
         setConsecutiveIncorrect((prev) => prev + 1);
+        console.log("consecutive incorrect :- ", consecutiveIncorrect);
         setConsecutiveCorrect(0);
         if (consecutiveIncorrect === 1) {
+          setConsecutiveIncorrect(0);
           if (difficulty === "HARD") setDifficulty("MEDIUM");
           else if (difficulty === "MEDIUM") setDifficulty("EASY");
         }
@@ -274,6 +278,8 @@ export default function LevelPage() {
       });
     }
   };
+
+  console.log("Total points in level gained :- ", totalPointsInLevel);
 
   const onNext = () => {
     setCurrentQuestion(null);
