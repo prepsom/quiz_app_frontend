@@ -44,26 +44,26 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-[#EEF6FF] flex flex-col items-center justify-center p-2">
       <div className="w-full max-w-md flex flex-col items-center justify-around">
-        {/* School Logo/Text*/}
-        {isSchoolNameLoading ? (
-          <>
-            <div className="flex items-center justify-center">
-              <Loader />
-            </div>
-          </>
-        ) : (
-          <></>
-        )}
-
-        {/* Owl Mascot */}
         <div className="relative">
           <div className="mb-4 flex w-full px-4 py-2">
-            <img
-              src={
-                schoolIconImage !== undefined ? schoolIconImage : owlMascotImage
-              }
-              className="w-full aspect-auto"
-            />
+            {isSchoolNameLoading ? (
+              <>
+                <div className="flex items-center">
+                  <Loader />
+                </div>
+              </>
+            ) : (
+              <>
+                <img
+                  src={
+                    schoolIconImage !== undefined
+                      ? schoolIconImage
+                      : owlMascotImage
+                  }
+                  className="w-full aspect-auto"
+                />
+              </>
+            )}
           </div>
         </div>
 
