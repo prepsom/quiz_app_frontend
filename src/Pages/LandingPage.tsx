@@ -7,9 +7,11 @@ import { AppContextType } from "@/types";
 import { useGetSchoolNameByGrade } from "@/hooks/useGetSchoolName";
 import { Loader } from "lucide-react";
 import RkInstitute from "../assets/RKInstituteLogo.png";
+import RadiantInstitute from "../assets/RadiantInstituteLogo.png";
 
 const schoolIconMap = new Map<string, string>([
   ["Radha Krishna Educational Institute", RkInstitute],
+  ["Radiant group tuitions", RadiantInstitute],
 ]);
 
 const LandingPage = () => {
