@@ -6,7 +6,7 @@ const capitalizeEachWord = (str: string): string => {
   const words = str.split(" ");
   for (const word of words) {
     const firstLetterCapitalizedWord = word[0].toUpperCase() + word.slice(1);
-    result = result + firstLetterCapitalizedWord;
+    result = result + " " + firstLetterCapitalizedWord;
   }
 
   return result;
