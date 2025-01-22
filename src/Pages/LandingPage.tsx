@@ -8,6 +8,7 @@ import { useGetSchoolNameByGrade } from "@/hooks/useGetSchoolName";
 import { Loader } from "lucide-react";
 import RkInstitute from "../assets/RKInstituteLogo.png";
 import RadiantInstitute from "../assets/RadiantInstituteLogo.png";
+import { capitalizeEachWord } from "@/utils";
 
 const schoolIconMap = new Map<string, string>([
   ["Radha Krishna Educational Institute", RkInstitute],
@@ -71,7 +72,8 @@ const LandingPage = () => {
 
         {/* Welcome Text */}
         <h1 className="text-blue-500 text-2xl font-bold text-center">
-          Welcome to {schoolName !== "" ? schoolName : "PrepSOM"}
+          Welcome to{" "}
+          {schoolName !== "" ? capitalizeEachWord(schoolName) : "PrepSOM"}
         </h1>
 
         {/* Description */}
