@@ -12,7 +12,6 @@ export const useQuestionWithAnswers = (questionId: string) => {
   useEffect(() => {
     const fetchQuestionWithAnswers = async () => {
       if (questionId === "") return;
-      console.log("fetching a question with id :- ", questionId);
       try {
         setIsLoading(true);
         const response = await axios.get<{

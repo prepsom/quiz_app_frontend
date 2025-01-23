@@ -99,8 +99,6 @@ export default function LevelPage() {
     }
   }, [isQuestionsLoading, questions, isInitialized]);
 
-  console.log(questionsPickedCounter);
-
   useEffect(() => {
     if (!isInitialized) return;
 
@@ -223,13 +221,25 @@ export default function LevelPage() {
     }
 
     // once questions are filtered by difficulty , and its the levels first question then pick a mcq type question
-    let nextQuestion = isFirstQuestionOfLevel
-      ? questionsByDifficulty.find((question) => {
-          question.questionType === "MCQ";
-        })
-      : questionsByDifficulty[
+    questionsByDifficulty
+      .filter((question) => question.questionType === "MCQ")
+      .map((question) => question.id);
+
+    let nextQuestion: QuestionType | undefined;
+
+    if (isFirstQuestionOfLevel) {
+      const firstMcqQuestionsInLevel = questionsByDifficulty.filter(
+        (question) => question.questionType === "MCQ"
+      );
+      nextQuestion = questionsByDifficulty.find(
+        (question) => question.id === firstMcqQuestionsInLevel[0].id
+      );
+    } else {
+      nextQuestion =
+        questionsByDifficulty[
           Math.floor(Math.random() * questionsByDifficulty.length)
         ];
+    }
 
     if (isFirstQuestionOfLevel && nextQuestion === undefined) {
       nextQuestion =
@@ -267,7 +277,6 @@ export default function LevelPage() {
 
       if (questionResponse.isCorrect) {
         setConsecutiveCorrect((prev) => prev + 1);
-        console.log("Consecutive correct:- ", consecutiveCorrect);
         setConsecutiveIncorrect(0);
         if (consecutiveCorrect === 1) {
           setConsecutiveCorrect(0);
@@ -276,7 +285,6 @@ export default function LevelPage() {
         }
       } else {
         setConsecutiveIncorrect((prev) => prev + 1);
-        console.log("consecutive incorrect :- ", consecutiveIncorrect);
         setConsecutiveCorrect(0);
         if (consecutiveIncorrect === 1) {
           setConsecutiveIncorrect(0);
@@ -295,8 +303,6 @@ export default function LevelPage() {
       });
     }
   };
-
-  console.log("Total points in level gained :- ", totalPointsInLevel);
 
   const onNext = () => {
     setCurrentQuestion(null);
