@@ -1,5 +1,3 @@
-"use client";
-
 import { useContext, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AppContextType, LoginRequest, LoginResponse } from "@/types";
 import { API_URL } from "@/App";
 import { AppContext } from "@/Context/AppContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import owlMascot from "../assets/owl_image.png";
 import circleLoaderSvg from "../assets/circleLoader.svg";
@@ -164,7 +162,15 @@ export default function LoginPage() {
               </p>
             )}
           </div>
-
+          <div className="flex items-center gap-1">
+            <span className="text-blue-600">Don't have an account?</span>
+            <Link
+              className="text-blue-600 font-semibold hover:underline hover:underline-offset-2"
+              to="/register"
+            >
+              Click here
+            </Link>
+          </div>
           <Button
             type="submit"
             className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-6 text-lg font-medium rounded-xl shadow-lg shadow-blue-500/25 transform hover:scale-[1.02] transition-all duration-300"

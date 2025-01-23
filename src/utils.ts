@@ -12,4 +12,50 @@ const capitalizeEachWord = (str: string): string => {
   return result;
 };
 
-export { capitalizeEachWord };
+const validatePassword = (password: string): boolean => {
+  // for a password to be valid -> strong
+  // 1. length should not be less than 6 chars
+  // 2. should contain atleast 1 special char
+  // 3. should contain atleast 1 numerical char
+  // 4. should contain atleast 1 uppercase char
+  if (password.length < 6) return false;
+
+  const specialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+  const numbers = "0123456789";
+  const uppercasechars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  let hasSpecial = false;
+  let hasNumber = false;
+  let hasUppercase = false;
+
+  for (const specialChar of specialChars) {
+    if (password.includes(specialChar)) {
+      hasSpecial = true;
+      break;
+    }
+  }
+
+  if (!hasSpecial) return false;
+
+  for (const number of numbers) {
+    if (password.includes(number)) {
+      hasNumber = true;
+      break;
+    }
+  }
+
+  if (!hasNumber) return false;
+
+  for (const uppercase of uppercasechars) {
+    if (password.includes(uppercase)) {
+      hasUppercase = true;
+      break;
+    }
+  }
+
+  if (!hasUppercase) return false;
+
+  return true;
+};
+
+export { capitalizeEachWord, validatePassword };

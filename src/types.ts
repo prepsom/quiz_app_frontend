@@ -23,6 +23,11 @@ export type LoginResponse = {
   user: UserType;
 };
 
+export type RegisterResponse = {
+  success: boolean;
+  user: UserType;
+};
+
 export type LoginRequest = {
   email: string;
   password: string;
