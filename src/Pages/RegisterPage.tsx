@@ -190,6 +190,7 @@ const RegisterPage: React.FC = () => {
                       {GRADES.map((gradeNumber: number) => {
                         return (
                           <SelectItem
+                            disabled={gradeNumber !== 10}
                             value={`${gradeNumber}`}
                             key={gradeNumber}
                           >
