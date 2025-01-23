@@ -84,6 +84,8 @@ export default function LevelPage() {
   const [questionsPickedCounter, setQuestionsPickedCounter] =
     useState<number>(0);
   const [pickedQuestions, setPickedQuestions] = useState<QuestionType[]>([]);
+  const [isFirstQuestionOfLevel, setIsFirstQuestionOfLevel] =
+    useState<boolean>(true);
 
   const questionNumber = useMemo(
     () => questions.length - availableQuestions.length,
@@ -151,6 +153,7 @@ export default function LevelPage() {
     setCorrectAnswerData(undefined);
     setQuestionsPickedCounter(0);
     setPickedQuestions([]);
+    setIsFirstQuestionOfLevel(true);
   }, [levelId]);
 
   const handleLevelCompletion = async () => {
@@ -219,15 +222,29 @@ export default function LevelPage() {
       return;
     }
 
-    const nextQuestion =
-      questionsByDifficulty[
-        Math.floor(Math.random() * questionsByDifficulty.length)
-      ];
-    setCurrentQuestion(nextQuestion);
-    setPickedQuestions((prev) => [...prev, nextQuestion]);
+    // once questions are filtered by difficulty , and its the levels first question then pick a mcq type question
+    let nextQuestion = isFirstQuestionOfLevel
+      ? questionsByDifficulty.find((question) => {
+          question.questionType === "MCQ";
+        })
+      : questionsByDifficulty[
+          Math.floor(Math.random() * questionsByDifficulty.length)
+        ];
+
+    if (isFirstQuestionOfLevel && nextQuestion === undefined) {
+      nextQuestion =
+        questionsByDifficulty[
+          Math.floor(Math.random() * questionsByDifficulty.length)
+        ];
+    }
+
+    // if nextQuestion is undefined and it was the first question of level
+    setCurrentQuestion(nextQuestion!);
+    setPickedQuestions((prev) => [...prev, nextQuestion!]);
     setAvailableQuestions((prev) =>
-      prev.filter((question) => question.id !== nextQuestion.id)
+      prev.filter((question) => question.id !== nextQuestion!.id)
     );
+    isFirstQuestionOfLevel && setIsFirstQuestionOfLevel(false);
   };
 
   const handleAnswerSubmit = async (
