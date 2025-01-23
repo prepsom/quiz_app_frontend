@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppContext } from "@/Context/AppContext";
 import { AppContextType, UserType } from "@/types";
-import { EyeIcon, EyeOffIcon, User } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader, User } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import femaleAvatar from "../assets/FemaleAvatar.jpeg";
 import maleAvatar from "../assets/MaleAvatar.jpeg";
@@ -39,12 +39,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useUsersTotalPoints } from "@/hooks/useUsersTotalPoints";
 
 const ProfilePage = () => {
   const { toast } = useToast();
-  const { loggedInUser, setLoggedInUser, usersTotalPoints } = useContext(
+  const { loggedInUser, setLoggedInUser } = useContext(
     AppContext
   ) as AppContextType;
+  const { totalPoints, isLoading: isUsersTotalPointsLoading } =
+    useUsersTotalPoints();
   const [newName, setNewName] = useState<string>(loggedInUser?.name || "");
   const [newPassword, setNewPassword] = useState<string>("");
   const [currentPassword, setCurrentPassword] = useState<string>("");
@@ -214,7 +217,15 @@ const ProfilePage = () => {
               </span>
               <div className="flex items-center gap-2">
                 <img className="w-6 h-6" src={coin3DIcon} alt="" />
-                <span className="font-semibold">{usersTotalPoints}</span>
+                {isUsersTotalPointsLoading ? (
+                  <>
+                    <Loader />
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold">{totalPoints}</span>
+                  </>
+                )}
               </div>
             </div>
           </div>

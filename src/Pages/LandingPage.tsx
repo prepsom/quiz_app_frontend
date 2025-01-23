@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import owlMascotImage from "../assets/owl_image.png";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo } from "react";
 import { AppContext } from "@/Context/AppContext";
 import { AppContextType } from "@/types";
 import { useGetSchoolNameByGrade } from "@/hooks/useGetSchoolName";
@@ -13,11 +13,11 @@ import { capitalizeEachWord } from "@/utils";
 const schoolIconMap = new Map<string, string>([
   ["Radha Krishna Educational Institute", RkInstitute],
   ["Radiant group tuitions", RadiantInstitute],
+  ["PrepSOM School", owlMascotImage],
 ]);
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const [isFirstTimeLogin, setIsFirstTimeLogin] = useState<boolean>(true);
   const { loggedInUser } = useContext(AppContext) as AppContextType;
   const { isLoading: isSchoolNameLoading, schoolName } =
     useGetSchoolNameByGrade(loggedInUser?.gradeId);
@@ -28,21 +28,6 @@ const LandingPage = () => {
       ? schoolIconMap.get(schoolName)
       : "";
   }, [schoolName]);
-
-  useEffect(() => {
-    const firstTime =
-      localStorage.getItem("firstTimeLogin") === "true" ? true : false;
-    setIsFirstTimeLogin(firstTime);
-  }, []);
-
-  const handleNavigateToSubjects = () => {
-    localStorage.setItem("firstTimeLogin", "false");
-    navigate(`${loggedInUser ? "/subjects" : "/login"}`);
-  };
-
-  if (!isFirstTimeLogin) {
-    return <Navigate to="/subjects" />;
-  }
 
   return (
     <div className="min-h-screen bg-[#EEF6FF] flex flex-col items-center justify-center p-2">
@@ -84,7 +69,7 @@ const LandingPage = () => {
 
         {/* Get Started Button */}
         <Button
-          onClick={handleNavigateToSubjects}
+          onClick={() => navigate(`${loggedInUser ? "/subjects" : "/login"}`)}
           className=" w-full fixed bottom-8 max-w-xs bg-blue-500 hover:bg-blue-600 text-white py-6 text-lg"
         >
           GET STARTED

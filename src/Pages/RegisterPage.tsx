@@ -96,10 +96,6 @@ const RegisterPage: React.FC = () => {
       );
       console.log(response);
       setLoggedInUser(response.data.user);
-
-      if (localStorage.getItem("firstTimeLogin") === null) {
-        localStorage.setItem("firstTimeLogin", "true");
-      }
       navigate("/");
     } catch (error: any) {
       console.log(error);
