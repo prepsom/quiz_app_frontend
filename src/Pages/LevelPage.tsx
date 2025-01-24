@@ -30,17 +30,21 @@ import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-// const exampleCompletionData:LevelCompletionResponse = {
-//   success:true,
-//   message:"Level completed",
-//   isComplete:true,
-//   noOfCorrectQuestions:4,
-//   totalQuestions:8,
-//   percentage:50,
-//   recommendations:["recommended lorem ipsum asjdaklsjd asjdklajsd askdj","asldkjasldk  asjdlajsd asljkdalsd"],
-//   strengths:["asdasd asdasd asdasd", "asjdaklsd asdjlaksjd aasdja;sd"],
-//   weaknesses:["sjdaslkdja","sajd;kasjdasd","sajd;klasjdasd"],
-// }
+// const exampleCompletionData: LevelCompletionResponse = {
+//   success: true,
+//   message: "Level completed",
+//   isComplete: true,
+//   noOfCorrectQuestions: 4,
+//   totalQuestions: 8,
+//   percentage: 50,
+//   totalPointsEarnedInLevel: 80,
+//   recommendations: [
+//     "recommended lorem ipsum asjdaklsjd asjdklajsd askdj",
+//     "asldkjasldk  asjdlajsd asljkdalsd",
+//   ],
+//   strengths: ["asdasd asdasd asdasd", "asjdaklsd asdjlaksjd aasdja;sd"],
+//   weaknesses: ["sjdaslkdja", "sajd;kasjdasd", "sajd;klasjdasd"],
+// };
 
 export const MAX_QUESTIONS_PER_LEVEL = 15;
 
@@ -58,7 +62,7 @@ export default function LevelPage() {
   );
 
   const [showExitAlert, setShowExitAlert] = useState<boolean>(false);
-  const [gameComplete, setGameComplete] = useState(false);
+  const [gameComplete, setGameComplete] = useState<boolean>(false);
   const [totalPointsInLevel, setTotalPointsInLevel] = useState<number>(0);
   const [difficulty, setDifficulty] = useState<"EASY" | "MEDIUM" | "HARD">(
     "EASY"
@@ -138,7 +142,6 @@ export default function LevelPage() {
 
   useEffect(() => {
     // Reset states when levelId changes
-    setGameComplete(false);
     setCompletionStatus(null);
     setTotalPointsInLevel(0);
     setCurrentQuestion(null);
