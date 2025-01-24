@@ -56,7 +56,7 @@ const RegisterFormSchema = z
 type RegisterFormType = z.infer<typeof RegisterFormSchema>;
 
 const GRADES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-const AVAILABLE_GRADES = [8, 10];
+const AVAILABLE_GRADES = [8, 9, 10];
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
