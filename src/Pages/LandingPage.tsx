@@ -33,7 +33,7 @@ const LandingPage = () => {
     <div className="min-h-screen bg-[#EEF6FF] flex flex-col items-center justify-center p-2">
       <div className="w-full max-w-md flex flex-col items-center justify-around">
         <div className="relative">
-          <div className="mb-4 flex w-full px-4 py-2">
+          <div className="mb-4 flex w-3/5 mx-auto px-4 py-2">
             {isSchoolNameLoading ? (
               <>
                 <div className="flex items-center">
