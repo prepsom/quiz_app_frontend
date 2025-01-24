@@ -41,6 +41,12 @@ const RegisterFormSchema = z
     grade: z.string().refine((grade) => GRADES.includes(Number(grade)), {
       message: "select a valid grade",
     }),
+    schoolName: z.string().min(1, "school name required"),
+    phoneNumber: z
+      .number()
+      .refine((phoneNumber) => phoneNumber.toString().length === 10, {
+        message: "phone number should be of length 10",
+      }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -79,7 +85,7 @@ const RegisterPage: React.FC = () => {
   const onSubmit = async (data: RegisterFormType) => {
     setIsLoading(true);
     setError("");
-    const { email, grade, password, name } = data;
+    const { email, grade, password, name, schoolName, phoneNumber } = data;
     const gradeNumber = parseInt(grade);
     try {
       const response = await axios.post<RegisterResponse>(
@@ -89,6 +95,8 @@ const RegisterPage: React.FC = () => {
           password,
           name,
           grade: gradeNumber,
+          phoneNumber,
+          schoolName,
         },
         {
           withCredentials: true,
@@ -210,7 +218,28 @@ const RegisterPage: React.FC = () => {
               </p>
             )}
           </div>
-
+          <div className="space-y-2">
+            <Input
+              type="text"
+              id="schoolName"
+              {...register("schoolName")}
+              placeholder="Enter school name"
+            />
+            {errors.schoolName && (
+              <p className="text-red-500">{errors.schoolName.message}</p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <Input
+              type="number"
+              id="phoneNumber"
+              {...register("phoneNumber", { valueAsNumber: true })}
+              placeholder="eg: 9136875390"
+            />
+            {errors.phoneNumber && (
+              <p className="text-red-500">{errors.phoneNumber.message}</p>
+            )}
+          </div>
           <div className="space-y-2">
             <div className="relative">
               <Input
