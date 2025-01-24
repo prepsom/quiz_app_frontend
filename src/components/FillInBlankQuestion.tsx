@@ -135,7 +135,7 @@ export default function FillInBlankQuestion({
                   className={`w-full p-1 sm:p-2 text-base transition-all duration-200 ${
                     questionResponse
                       ? getInputStatus(blankIndex) === "correct"
-                        ? "bg-green-50 border-green-200 text-green-900"
+                        ? "bg-green-200 border-green-300 text-green-600"
                         : "bg-red-50 border-red-200 text-red-900"
                       : "bg-white focus:ring-2 focus:ring-blue-500/20"
                   }`}

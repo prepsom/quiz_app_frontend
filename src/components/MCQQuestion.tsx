@@ -71,7 +71,7 @@ export default function MCQQuestion({
                 ${
                   showResult
                     ? isCorrectAnswer
-                      ? "bg-green-100 border-green-200 border-2"
+                      ? "bg-green-200 border-green-300 border-2"
                       : isChosenAnswer && !questionResponse?.isCorrect
                       ? "bg-red-100 border-red-200 border-2"
                       : "bg-gray-50"
