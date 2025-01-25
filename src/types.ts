@@ -118,6 +118,7 @@ export type LevelCompletionResponse = {
   weaknesses?: string[];
   recommendations?: string[];
   remarks?: string;
+  totalPointsEarnedInLevel?: number;
 };
 
 // New types for question response request body
