@@ -27,6 +27,7 @@ const FeedbackPage = ({
   const [showLevelCompletedPage, setShowLevelCompletedPage] = useState<boolean>(
     levelCompletionData.isComplete!
   );
+  // game complete status , completionStatus
 
   const handleNextLevel = () => {
     if (nextLevel == null) return;
@@ -41,6 +42,8 @@ const FeedbackPage = ({
         setShowLevelCompletedPage={setShowLevelCompletedPage}
         levelCompletionData={levelCompletionData}
         level={level}
+        setGameComplete={setGameComplete}
+        setCompletionStatus={setCompletionStatus}
       />
     );
   }
