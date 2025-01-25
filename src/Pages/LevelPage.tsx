@@ -142,6 +142,7 @@ export default function LevelPage() {
 
   useEffect(() => {
     // Reset states when levelId changes
+    setGameComplete(false);
     setCompletionStatus(null);
     setTotalPointsInLevel(0);
     setCurrentQuestion(null);
