@@ -2,11 +2,10 @@ import type React from "react";
 import { type SetStateAction, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { LevelCompletionResponse, LevelType } from "@/types";
-import { CheckCircle, Percent, Award, RotateCcw } from "lucide-react";
+import { CheckCircle, Percent, Award } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import coin3DIcon from "../assets/3DCoinsIcon.png";
 import { motion } from "motion/react";
-import { useNavigate } from "react-router-dom";
 
 type Props = {
   setShowLevelCompletedPage: React.Dispatch<SetStateAction<boolean>>;
@@ -22,10 +21,7 @@ const LevelCompletedPage = ({
   setShowLevelCompletedPage,
   levelCompletionData,
   level,
-  setGameComplete,
-  setCompletionStatus,
 }: Props) => {
-  const navigate = useNavigate();
   const [currentTotalPoints, setCurrentTotalPoints] = useState<number>(0);
   const pointsEarnedInLevel = levelCompletionData.totalPointsEarnedInLevel!;
 
@@ -42,12 +38,6 @@ const LevelCompletedPage = ({
 
     return () => clearInterval(interval);
   }, []);
-
-  const handleLevelReattempt = () => {
-    setGameComplete(false);
-    setCompletionStatus(null);
-    navigate(`/level/${level.id}`);
-  };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 p-6">
@@ -98,15 +88,6 @@ const LevelCompletedPage = ({
             value={pointsEarnedInLevel}
             label="Points Earned"
           />
-        </div>
-        <div className="flex items-center mt-4 justify-end">
-          <Button
-            onClick={handleLevelReattempt}
-            className="bg-blue-600 text-white hover:bg-blue-700 hover:duration-300"
-          >
-            <RotateCcw />
-            Reattempt
-          </Button>
         </div>
       </div>
     </div>

@@ -141,6 +141,7 @@ export default function LevelPage() {
   }, [currentQuestion]);
 
   useEffect(() => {
+    console.log("resetting states");
     // Reset states when levelId changes
     setGameComplete(false);
     setCompletionStatus(null);
@@ -235,9 +236,10 @@ export default function LevelPage() {
       const firstMcqQuestionsInLevel = questionsByDifficulty.filter(
         (question) => question.questionType === "MCQ"
       );
-      nextQuestion = questionsByDifficulty.find(
-        (question) => question.id === firstMcqQuestionsInLevel[0].id
+      const randomMcqQuestionIndex = Math.floor(
+        Math.random() * firstMcqQuestionsInLevel.length
       );
+      nextQuestion = firstMcqQuestionsInLevel[randomMcqQuestionIndex];
     } else {
       nextQuestion =
         questionsByDifficulty[
