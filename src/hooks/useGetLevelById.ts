@@ -4,13 +4,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useToast } from "./use-toast";
 
-export const useGetLevelById = (levelId: string) => {
+export const useGetLevelById = (levelId: string | undefined) => {
   const [level, setLevel] = useState<LevelType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchLevelById = async () => {
+      if (!levelId) return;
       try {
         const response = await axios.get<{
           success: boolean;

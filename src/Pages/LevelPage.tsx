@@ -52,8 +52,6 @@ export default function LevelPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { levelId } = useParams<{ levelId: string }>();
-  if (!levelId) return null;
-
   const { level, isLoading: isLevelLoading } = useGetLevelById(levelId);
   const { questions, isLoading: isQuestionsLoading } =
     useQuestionsByLevel(levelId);
@@ -90,11 +88,6 @@ export default function LevelPage() {
   const [pickedQuestions, setPickedQuestions] = useState<QuestionType[]>([]);
   const [isFirstQuestionOfLevel, setIsFirstQuestionOfLevel] =
     useState<boolean>(true);
-
-  const questionNumber = useMemo(
-    () => questions.length - availableQuestions.length,
-    [questions, availableQuestions]
-  );
 
   useEffect(() => {
     if (!isQuestionsLoading && questions.length > 0 && !isInitialized) {
@@ -158,6 +151,12 @@ export default function LevelPage() {
     setPickedQuestions([]);
     setIsFirstQuestionOfLevel(true);
   }, [levelId]);
+
+  const questionNumber = useMemo(
+    () => questions.length - availableQuestions.length,
+    [questions, availableQuestions]
+  );
+  if (!levelId) return null;
 
   const handleLevelCompletion = async () => {
     setIsSubmittingCompletion(true);
