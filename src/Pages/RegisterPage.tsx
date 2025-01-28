@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { AlertCircle, EyeIcon, EyeOffIcon } from "lucide-react";
+import { AlertCircle, EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { AppContextType, RegisterResponse } from "@/types";
 import { API_URL } from "@/App";
@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useGetSchool } from "@/hooks/useGetSchool";
 
 const RegisterFormSchema = z
   .object({
@@ -57,9 +58,12 @@ type RegisterFormType = z.infer<typeof RegisterFormSchema>;
 
 const GRADES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const AVAILABLE_GRADES = [8, 9, 10];
+const DEFAULT_SCHOOL_NAME = "PrepSOM School";
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+  const { school, isLoading: isSchoolLoading } =
+    useGetSchool(DEFAULT_SCHOOL_NAME);
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] =
     useState<boolean>(false);
@@ -88,6 +92,7 @@ const RegisterPage: React.FC = () => {
     const { email, grade, password, name, schoolName, phoneNumber } = data;
     const gradeNumber = parseInt(grade);
     try {
+      if (!school) return;
       const response = await axios.post<RegisterResponse>(
         `${API_URL}/auth/register`,
         {
@@ -97,6 +102,7 @@ const RegisterPage: React.FC = () => {
           grade: gradeNumber,
           phoneNumber,
           schoolName,
+          schoolId: school.id,
         },
         {
           withCredentials: true,
@@ -112,6 +118,26 @@ const RegisterPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  if (isSchoolLoading) {
+    return (
+      <>
+        <div className="flex items-center justify-center mt-28">
+          <Loader />
+        </div>
+      </>
+    );
+  }
+
+  if (!isSchoolLoading && !school) {
+    return (
+      <>
+        <div className="flex items-center justify-center mt-28 border-2 border-400-gray rounded-lg p-4">
+          Default PrepSOM school not found
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex flex-col items-center justify-center p-4 relative overflow-hidden">
