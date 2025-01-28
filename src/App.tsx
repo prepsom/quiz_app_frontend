@@ -11,6 +11,7 @@ import LeaderBoardPage from "./Pages/LeaderBoardPage";
 import ProfilePage from "./Pages/ProfilePage";
 import ProfileLevelsPage from "./Pages/ProfileLevelsPage";
 import RegisterPage from "./Pages/RegisterPage";
+import RegisterPageForSchool from "./Pages/RegisterPageForSchool";
 
 export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -23,6 +24,10 @@ function App() {
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route
+                path="/register/:schoolName"
+                element={<RegisterPageForSchool />}
+              />
               <Route path="/" element={<ProtectedRoute />}>
                 <Route index element={<LandingPage />} />
                 <Route path="/" element={<Layout />}>

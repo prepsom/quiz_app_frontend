@@ -158,3 +158,8 @@ export type QuestionResponseData = {
     correctPairs?: { leftItem: string; rightItem: string }[];
   };
 };
+
+export type School = {
+  id: string;
+  schoolName: string;
+};
