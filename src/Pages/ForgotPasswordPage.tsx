@@ -36,7 +36,6 @@ const ForgotPasswordPage = () => {
       }>(`${API_URL}/user/forgot-password`, {
         email: email,
       });
-      console.log(response);
       setEmail("");
       setIsEmailSent(true);
       setEmailSentTo(response.data.email);

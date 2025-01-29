@@ -41,16 +41,14 @@ const ResetPasswordPage = () => {
       // make api request with token to reset password only if the current datetime is less than the expiration datetime
       // `${API_URL}/user/reset-password , {token , newPassword}
       setIsSubmitting(true);
-      const response = await axios.post(`${API_URL}/user/reset-password`, {
+      await axios.post(`${API_URL}/user/reset-password`, {
         newPassword: newPassword,
         token: token,
       });
-      console.log(response);
       setIsResetPasswordSuccessfull(true);
       setNewPassword("");
       setConfirmPassword("");
     } catch (error: any) {
-      console.log(error);
       setError(
         error.response
           ? error.response.data.message
