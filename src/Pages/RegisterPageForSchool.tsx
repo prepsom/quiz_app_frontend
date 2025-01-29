@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, EyeIcon, EyeOffIcon, Loader } from "lucide-react";
 import { useContext, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
 import owlMascot from "../assets/owl_image.png";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -322,15 +322,6 @@ const RegisterPageForSchool = () => {
                   {errors.confirmPassword.message}
                 </p>
               )}
-            </div>
-            <div className="flex items-center gap-1">
-              <span className="text-blue-600">Already have an account?</span>
-              <Link
-                className="text-blue-600 font-semibold hover:underline hover:underline-offset-2"
-                to="/login"
-              >
-                Click here
-              </Link>
             </div>
             <Button
               type="submit"
