@@ -12,6 +12,8 @@ import ProfilePage from "./Pages/ProfilePage";
 import ProfileLevelsPage from "./Pages/ProfileLevelsPage";
 import RegisterPage from "./Pages/RegisterPage";
 import RegisterPageForSchool from "./Pages/RegisterPageForSchool";
+import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
+import ResetPasswordPage from "./Pages/ResetPasswordPage";
 
 export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -22,6 +24,11 @@ function App() {
         <AppContextProvider>
           <Router>
             <Routes>
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPasswordPage />}
+              />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route

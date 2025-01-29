@@ -157,6 +157,11 @@ export default function LoginPage() {
               </p>
             )}
           </div>
+          <div>
+            <Link className="text-blue-600 font-semibold" to="/forgot-password">
+              Forgot Password
+            </Link>
+          </div>
           <div className="flex items-center gap-1">
             <span className="text-blue-600">Don't have an account?</span>
             <Link
