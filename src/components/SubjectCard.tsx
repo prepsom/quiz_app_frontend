@@ -18,9 +18,10 @@ const subjectImageIcons = {
 
 interface SubjectCardProps {
   subject: SubjectType;
+  availableSubjects: string[];
 }
 
-export function SubjectCard({ subject }: SubjectCardProps) {
+export function SubjectCard({ subject, availableSubjects }: SubjectCardProps) {
   const navigate = useNavigate();
   const Icon =
     subjectImageIcons[subject.subjectName as keyof typeof subjectImageIcons] ||
@@ -52,10 +53,17 @@ export function SubjectCard({ subject }: SubjectCardProps) {
     );
   }
 
+  console.log(subject.subjectName.trim().toLowerCase());
+  console.log(
+    availableSubjects.includes(subject.subjectName.trim().toLowerCase())
+  );
+
   return (
     <Card
       className={`${
-        subject.subjectName !== "Science" ? "grayscale" : ""
+        availableSubjects.includes(subject.subjectName.trim().toLowerCase())
+          ? ""
+          : "grayscale"
       } p-4 hover:shadow-md transition-shadow bg-white rounded-xl cursor-pointer`}
       onClick={() => {
         if (subject.subjectName === "Science") {

@@ -22,6 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { BsQuestion } from "react-icons/bs";
+import { AVAILABLE_SUBJECTS } from "@/consts";
 
 export default function SubjectsPage() {
   const { loggedInUser, setLoggedInUser } = useContext(
@@ -97,7 +98,11 @@ export default function SubjectsPage() {
       </div>
       <div className="max-w-lg mx-auto p-4 space-y-4">
         {subjects.map((subject) => (
-          <SubjectCard key={subject.id} subject={subject} />
+          <SubjectCard
+            key={subject.id}
+            subject={subject}
+            availableSubjects={AVAILABLE_SUBJECTS}
+          />
         ))}
       </div>
       <AlertDialog open={isContactInfoOpen} onOpenChange={setIsContactInfoOpen}>

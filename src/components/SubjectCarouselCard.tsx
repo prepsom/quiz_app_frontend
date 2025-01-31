@@ -4,6 +4,7 @@ import { SubjectType } from "@/types";
 import { Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Progress } from "./ui/progress";
+import { AVAILABLE_SUBJECTS } from "@/consts";
 
 type Props = {
   subject: SubjectType;
@@ -31,7 +32,9 @@ const SubjectCarouselCard = ({ subject, icon }: Props) => {
   return (
     <div
       onClick={() => {
-        if (subject.subjectName === "Science") {
+        if (
+          AVAILABLE_SUBJECTS.includes(subject.subjectName.trim().toLowerCase())
+        ) {
           navigate(`/levels/${subject.id}`);
         } else {
           navigate(`/subjects`);
@@ -39,16 +42,22 @@ const SubjectCarouselCard = ({ subject, icon }: Props) => {
       }}
       key={subject.id}
       className={`${
-        subject.subjectName! !== "Science" ? "grayscale" : "bg-[#ecfbff]"
+        AVAILABLE_SUBJECTS.includes(
+          subject.subjectName.trim().toLowerCase()
+        ) === true
+          ? "bg-[#ecfbff]"
+          : "grayscale"
       } flex flex-col w-56 h-56 items-center justify-between p-6 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group`}
     >
       <div className="group-hover:scale-110 transition-transform duration-200 flex w-full h-full justify-center items-center">
-        <div className="text-blue-600">
+        <div className="text-blue-600 w-full h-full flex items-center justify-center">
           {typeof icon === "string" ? (
             <img className="w-32 h-32 object-contain" src={icon} alt="" />
           ) : (
             <>
-              <div className="flex w-full h-full">{icon}</div>
+              <div className="flex rounded-lg  items-center justify-center w-full h-full">
+                {icon}
+              </div>
             </>
           )}
         </div>
