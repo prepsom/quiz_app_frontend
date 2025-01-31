@@ -54,11 +54,6 @@ export function SubjectCard({ subject, availableSubjects }: SubjectCardProps) {
     );
   }
 
-  console.log(subject.subjectName.trim().toLowerCase());
-  console.log(
-    availableSubjects.includes(subject.subjectName.trim().toLowerCase())
-  );
-
   return (
     <Card
       className={`${
