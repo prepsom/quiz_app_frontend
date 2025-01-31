@@ -9,6 +9,7 @@ import { ProgressCircle } from "./ProgressCircle";
 import mathsImageIcon from "../assets/MathImageIcon.png";
 import scienceImageIcon from "../assets/ScienceImageIcon.png";
 import computerImageIcon from "../assets/ComputerImageIcon.png";
+import { AVAILABLE_SUBJECTS } from "@/consts";
 
 const subjectImageIcons = {
   Mathematics: mathsImageIcon,
@@ -66,7 +67,9 @@ export function SubjectCard({ subject, availableSubjects }: SubjectCardProps) {
           : "grayscale"
       } p-4 hover:shadow-md transition-shadow bg-white rounded-xl cursor-pointer`}
       onClick={() => {
-        if (subject.subjectName === "Science") {
+        if (
+          AVAILABLE_SUBJECTS.includes(subject.subjectName.trim().toLowerCase())
+        ) {
           navigate(`/levels/${subject.id}`);
         } else {
           navigate(`/subjects`);
