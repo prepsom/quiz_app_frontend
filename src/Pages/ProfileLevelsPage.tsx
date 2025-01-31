@@ -64,7 +64,7 @@ const ProfileLevelsPage = () => {
 
   return (
     <>
-      <div className="flex flex-col h-screen bg-[#ecfbff]">
+      <div className="flex flex-col bg-[#ecfbff] min-h-screen">
         <div className="flex items-center p-4 bg-blue-500 text-white">
           <h2 className="font-semibold text-2xl">{subject?.subjectName}</h2>
         </div>
@@ -90,13 +90,22 @@ const ProfileLevelsPage = () => {
               />
             );
           })}
-          <Pagination
-            noOfPages={noOfPages}
-            currentPage={page}
-            setCurrentPage={setPage}
-          />
+          {completedLevelsWithMetaData.length === 0 && (
+            <>
+              <div className="flex items-center justify-center text-blue-500 font-semibold  w-fit mx-auto p-4 rounded-lg">
+                No Levels Completed
+              </div>
+            </>
+          )}
+          {noOfPages > 1 && (
+            <Pagination
+              noOfPages={noOfPages}
+              currentPage={page}
+              setCurrentPage={setPage}
+            />
+          )}
         </div>
-        <div className="flex flex-col gap-4 px-4">
+        <div className="flex flex-col gap-4 px-4 pb-8">
           <div className="text-blue-600 font-semibold text-xl">
             Incomplete Levels
           </div>
@@ -106,7 +115,7 @@ const ProfileLevelsPage = () => {
                 key={incompleteLevel.id}
                 index={index + completedLevelsWithMetaData.length}
                 isCompleted={false}
-                isLocked={incompleteLevel.id !== nextLevel?.id}
+                isLocked={false}
                 level={incompleteLevel}
               />
             );
