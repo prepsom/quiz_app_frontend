@@ -46,11 +46,11 @@ const ProfileLevelsPage = () => {
     () => incompleteLevels.sort((a, b) => a.position - b.position),
     [incompleteLevels]
   );
-  const nextLevel = useMemo(
-    () =>
-      sortedIncompleteLevels.length !== 0 ? sortedIncompleteLevels[0] : null,
-    [sortedIncompleteLevels]
-  );
+  // const nextLevel = useMemo(
+  //   () =>
+  //     sortedIncompleteLevels.length !== 0 ? sortedIncompleteLevels[0] : null,
+  //   [sortedIncompleteLevels]
+  // );
 
   if (isCompletedLevelsLoading || isTotalLevelsLoading || isSubjectLoading) {
     return (
@@ -109,7 +109,7 @@ const ProfileLevelsPage = () => {
           <div className="text-blue-600 font-semibold text-xl">
             Incomplete Levels
           </div>
-          {incompleteLevels.map((incompleteLevel, index) => {
+          {sortedIncompleteLevels.map((incompleteLevel, index) => {
             return (
               <LevelCard
                 key={incompleteLevel.id}
