@@ -101,7 +101,7 @@ export default function MCQQuestion({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0 }}
-                  className="flex items-center w-full"
+                  className="flex items-center w-full p-4"
                 >
                   {isCorrectAnswer && (
                     <motion.div
