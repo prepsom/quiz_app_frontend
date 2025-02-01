@@ -348,7 +348,7 @@ export default function LevelPage() {
           levelCompletionData={completionStatus}
           level={level!}
         />
-        <Navigation />
+        <Navigation levelComplete={completionStatus.isComplete} />
       </>
     );
   }

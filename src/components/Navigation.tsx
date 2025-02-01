@@ -1,7 +1,11 @@
 import { Home, Trophy, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
-export function Navigation() {
+type Props = {
+  levelComplete?: boolean;
+};
+
+export function Navigation({ levelComplete }: Props) {
   const location = useLocation();
 
   return (
@@ -21,8 +25,13 @@ export function Navigation() {
           </Link>
           <Link
             to="/leaderboard"
-            className={`flex flex-col items-center gap-1 ${
-              location.pathname === "/leaderboard"
+            className={`flex flex-col items-center ${
+              levelComplete !== undefined && levelComplete === true
+                ? "animate-pulse"
+                : ""
+            } gap-1 ${
+              location.pathname === "/leaderboard" ||
+              (levelComplete !== undefined && levelComplete === true)
                 ? "text-blue-500"
                 : "text-gray-500"
             }`}
