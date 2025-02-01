@@ -7,24 +7,28 @@ import { Book } from "lucide-react";
 import mathsImageIcon from "../assets/MathImageIcon.png";
 import scienceImageIcon from "../assets/ScienceImageIcon.png";
 import computerImageIcon from "../assets/ComputerImageIcon.png";
+import AiImageIcon from "../assets/AiIcon.png";
 import { ProgressCircle } from "./ProgressCircle";
 import { Skeleton } from "./ui/skeleton";
+import { AVAILABLE_SUBJECTS } from "@/consts";
 
 interface Props {
   subject: SubjectType;
 }
 
 const subjectImageIcons = {
-  Mathematics: mathsImageIcon,
-  Science: scienceImageIcon,
-  Computer: computerImageIcon,
+  mathematics: mathsImageIcon,
+  science: scienceImageIcon,
+  computer: computerImageIcon,
+  "artificial intelligence": AiImageIcon,
 } as const;
 
 const ProfileSubjectCard = ({ subject }: Props) => {
   const navigate = useNavigate();
   const Icon =
-    subjectImageIcons[subject.subjectName as keyof typeof subjectImageIcons] ||
-    Book;
+    subjectImageIcons[
+      subject.subjectName.trim().toLowerCase() as keyof typeof subjectImageIcons
+    ] || Book;
   const { levels: totalLevels, isLoading: isTotalLevelsLoading } =
     useLevelsBySubject(subject.id);
   const { completedLevels, isLoading: isCompletedLevelsLoading } =
@@ -53,7 +57,9 @@ const ProfileSubjectCard = ({ subject }: Props) => {
       <Card
         onClick={() => navigate(`/profile/${subject.id}`)}
         className={`${
-          subject.subjectName !== "Science" ? "grayscale" : ""
+          AVAILABLE_SUBJECTS.includes(subject.subjectName.trim().toLowerCase())
+            ? ""
+            : "grayscale"
         } p-4 hover:shadow-md transition-shadow bg-white rounded-xl cursor-pointer`}
       >
         <div className="flex items-center gap-4">
