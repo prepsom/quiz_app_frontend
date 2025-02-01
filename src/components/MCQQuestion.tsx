@@ -67,7 +67,7 @@ export default function MCQQuestion({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className={`
-                relative flex items-center p-4 rounded-xl transition-colors
+                relative flex items-center rounded-xl transition-colors
                 ${
                   showResult
                     ? isCorrectAnswer
@@ -82,7 +82,7 @@ export default function MCQQuestion({
               `}
             >
               {!showResult ? (
-                <label className="flex items-center space-x-3 cursor-pointer w-full">
+                <label className="flex items-center space-x-3 cursor-pointer w-full p-4">
                   <RadioGroupItem
                     value={answer.id}
                     id={answer.id}
