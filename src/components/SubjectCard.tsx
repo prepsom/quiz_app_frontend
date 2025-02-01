@@ -9,12 +9,14 @@ import { ProgressCircle } from "./ProgressCircle";
 import mathsImageIcon from "../assets/MathImageIcon.png";
 import scienceImageIcon from "../assets/ScienceImageIcon.png";
 import computerImageIcon from "../assets/ComputerImageIcon.png";
+import aiImageIcon from "../assets/AiIcon.png";
 import { AVAILABLE_SUBJECTS } from "@/consts";
 
 const subjectImageIcons = {
-  Mathematics: mathsImageIcon,
-  Science: scienceImageIcon,
-  Computer: computerImageIcon,
+  mathematics: mathsImageIcon,
+  science: scienceImageIcon,
+  computer: computerImageIcon,
+  "artificial intelligence": aiImageIcon,
 } as const;
 
 interface SubjectCardProps {
@@ -25,8 +27,9 @@ interface SubjectCardProps {
 export function SubjectCard({ subject, availableSubjects }: SubjectCardProps) {
   const navigate = useNavigate();
   const Icon =
-    subjectImageIcons[subject.subjectName as keyof typeof subjectImageIcons] ||
-    Book;
+    subjectImageIcons[
+      subject.subjectName.trim().toLowerCase() as keyof typeof subjectImageIcons
+    ] || Book;
   const { levels: totalLevels, isLoading: isTotalLevelsLoading } =
     useLevelsBySubject(subject.id);
   const { completedLevels, isLoading: isCompletedLevelsLoading } =

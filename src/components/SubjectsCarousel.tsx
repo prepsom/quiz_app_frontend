@@ -2,6 +2,7 @@ import { SubjectType } from "@/types";
 import { Book, ComputerIcon } from "lucide-react";
 import scienceSubjectImage from "../assets/scienceSubjectIcon (2).png";
 import mathSubjectImage from "../assets/MathSubjectIcon (2).png";
+import aiSubjectImage from "../assets/AiIcon.png";
 import SubjectCarouselCard from "./SubjectCarouselCard";
 
 type Props = {
@@ -9,9 +10,10 @@ type Props = {
 };
 
 const subjectImages = {
-  Science: scienceSubjectImage,
-  Mathematics: mathSubjectImage,
-  Computer: <ComputerIcon />,
+  science: scienceSubjectImage,
+  mathematics: mathSubjectImage,
+  computer: <ComputerIcon />,
+  "artificial intelligence": aiSubjectImage,
 };
 
 const SubjectsCarousel = ({ subjects }: Props) => {
@@ -20,7 +22,9 @@ const SubjectsCarousel = ({ subjects }: Props) => {
       <div className="grid grid-flow-col auto-cols-max gap-2 overflow-x-auto pb-4">
         {subjects.map((subject: SubjectType) => {
           const icon = subjectImages[
-            subject.subjectName as keyof typeof subjectImages
+            subject.subjectName
+              .trim()
+              .toLowerCase() as keyof typeof subjectImages
           ] || <Book className="w-6 h-6" />;
           return (
             <SubjectCarouselCard
