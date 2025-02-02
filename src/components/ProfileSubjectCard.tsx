@@ -10,7 +10,6 @@ import computerImageIcon from "../assets/ComputerImageIcon.png";
 import AiImageIcon from "../assets/AiIcon.png";
 import { ProgressCircle } from "./ProgressCircle";
 import { Skeleton } from "./ui/skeleton";
-import { AVAILABLE_SUBJECTS } from "@/consts";
 
 interface Props {
   subject: SubjectType;
@@ -55,11 +54,15 @@ const ProfileSubjectCard = ({ subject }: Props) => {
   return (
     <>
       <Card
-        onClick={() => navigate(`/profile/${subject.id}`)}
+        onClick={() => {
+          if (totalLevels.length !== 0) {
+            navigate(`/profile/${subject.id}`);
+          } else {
+            navigate("/profile");
+          }
+        }}
         className={`${
-          AVAILABLE_SUBJECTS.includes(subject.subjectName.trim().toLowerCase())
-            ? ""
-            : "grayscale"
+          totalLevels.length === 0 ? "grayscale" : ""
         } p-4 hover:shadow-md transition-shadow bg-white rounded-xl cursor-pointer`}
       >
         <div className="flex items-center gap-4">

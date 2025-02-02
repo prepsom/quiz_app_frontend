@@ -10,7 +10,6 @@ import mathsImageIcon from "../assets/MathImageIcon.png";
 import scienceImageIcon from "../assets/ScienceImageIcon.png";
 import computerImageIcon from "../assets/ComputerImageIcon.png";
 import aiImageIcon from "../assets/AiIcon.png";
-import { AVAILABLE_SUBJECTS } from "@/consts";
 
 const subjectImageIcons = {
   mathematics: mathsImageIcon,
@@ -21,10 +20,9 @@ const subjectImageIcons = {
 
 interface SubjectCardProps {
   subject: SubjectType;
-  availableSubjects: string[];
 }
 
-export function SubjectCard({ subject, availableSubjects }: SubjectCardProps) {
+export function SubjectCard({ subject }: SubjectCardProps) {
   const navigate = useNavigate();
   const Icon =
     subjectImageIcons[
@@ -60,14 +58,10 @@ export function SubjectCard({ subject, availableSubjects }: SubjectCardProps) {
   return (
     <Card
       className={`${
-        availableSubjects.includes(subject.subjectName.trim().toLowerCase())
-          ? ""
-          : "grayscale"
+        totalLevels.length === 0 ? "grayscale" : ""
       } p-4 hover:shadow-md transition-shadow bg-white rounded-xl cursor-pointer`}
       onClick={() => {
-        if (
-          AVAILABLE_SUBJECTS.includes(subject.subjectName.trim().toLowerCase())
-        ) {
+        if (totalLevels.length !== 0) {
           navigate(`/levels/${subject.id}`);
         } else {
           navigate(`/subjects`);

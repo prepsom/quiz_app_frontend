@@ -4,7 +4,6 @@ import { SubjectType } from "@/types";
 import { Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Progress } from "./ui/progress";
-import { AVAILABLE_SUBJECTS } from "@/consts";
 
 type Props = {
   subject: SubjectType;
@@ -32,9 +31,7 @@ const SubjectCarouselCard = ({ subject, icon }: Props) => {
   return (
     <div
       onClick={() => {
-        if (
-          AVAILABLE_SUBJECTS.includes(subject.subjectName.trim().toLowerCase())
-        ) {
+        if (totalLevels.length !== 0) {
           navigate(`/levels/${subject.id}`);
         } else {
           navigate(`/subjects`);
@@ -42,11 +39,7 @@ const SubjectCarouselCard = ({ subject, icon }: Props) => {
       }}
       key={subject.id}
       className={`${
-        AVAILABLE_SUBJECTS.includes(
-          subject.subjectName.trim().toLowerCase()
-        ) === true
-          ? "bg-[#ecfbff]"
-          : "grayscale"
+        totalLevels.length === 0 ? "grayscale" : "bg-[#ecfbff]"
       } flex flex-col w-56 h-56 items-center justify-between p-6 rounded-2xl border border-blue-100 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group`}
     >
       <div className="group-hover:scale-110 transition-transform duration-200 flex w-full h-full justify-center items-center">

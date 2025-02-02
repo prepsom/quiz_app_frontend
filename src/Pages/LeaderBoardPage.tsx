@@ -9,7 +9,6 @@ import { AppContextType } from "@/types";
 import { Navigate } from "react-router-dom";
 import { SubjectCard } from "@/components/SubjectCard";
 import coins3DIcon from "../assets/3DCoinsIcon.png";
-import { AVAILABLE_SUBJECTS } from "@/consts";
 
 const USERS_PER_PAGE = 10;
 
@@ -127,11 +126,7 @@ const LeaderBoardPage = () => {
         </div>
         <div className="space-y-3">
           {subjects.slice(0, 3).map((subject) => (
-            <SubjectCard
-              key={subject.id}
-              subject={subject}
-              availableSubjects={AVAILABLE_SUBJECTS}
-            />
+            <SubjectCard key={subject.id} subject={subject} />
           ))}
         </div>
       </div>
