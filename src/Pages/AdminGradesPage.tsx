@@ -67,7 +67,7 @@ const AdminGradesPage = () => {
                   </span>
                 )}
                 <div className="flex items-center gap-4 mt-4">
-                  <Button variant="outline">View Students</Button>
+                  <Button onClick={() => navigate(`/admin/students/${grade.id}`)} variant="outline">View Students</Button>
                   <Button onClick={() => navigate(`/admin/subjects/${grade.id}`)} variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white hover:duration-300">View Subjects</Button>
                 </div>
               </div>
