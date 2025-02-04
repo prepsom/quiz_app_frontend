@@ -1,14 +1,13 @@
 
 
 import { QuestionType } from '@/types';
-import React from 'react'
 
 
 type Props = {
     question:QuestionType;
 }
 
-const AdminMatchingQuestionCard = ({question}:Props) => {
+const AdminMatchingQuestionCard = ({}:Props) => {
   return (
     <div>AdminMatchingQuestionCard</div>
   )

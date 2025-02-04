@@ -1,11 +1,10 @@
 import { QuestionType } from '@/types'
-import React from 'react'
 
 type Props = {
     question:QuestionType;
 }
 
-const AdminFillInBlankQuestionCard = ({question}:Props) => {
+const AdminFillInBlankQuestionCard = ({}:Props) => {
   return (
     <div>AdminFillInBlankQuestionCard</div>
   )

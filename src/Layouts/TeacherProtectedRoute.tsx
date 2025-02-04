@@ -1,6 +1,6 @@
 import { AppContext } from "@/Context/AppContext";
 import { AppContextType } from "@/types";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Link, Navigate, Outlet } from "react-router-dom";
 
 const TeacherProtectedRoute = () => {
