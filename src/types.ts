@@ -66,10 +66,13 @@ export type QuestionType = {
   levelId: string;
   explanation: string;
   ready: boolean;
-  Answers?: AnswerType[];
+  MCQAnswers?: AnswerType[];
   MatchingPairs?: MatchingPairType[];
   BlankSegments?: BlankSegmentType[];
 };
+
+export type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";
+export type QuestionTypeType = "MCQ" | "MATCHING" | "FILL_IN_BLANK";
 
 export type AnswerType = {
   id: string;
@@ -162,4 +165,13 @@ export type QuestionResponseData = {
 export type School = {
   id: string;
   schoolName: string;
+};
+
+export type Grade = {
+  id: string;
+  grade: number;
+  schoolId:string;
+  _count?: {
+    students: number;
+  };
 };

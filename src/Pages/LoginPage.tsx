@@ -66,8 +66,19 @@ export default function LoginPage() {
           withCredentials: true,
         }
       );
-      setLoggedInUser(response.data.user);
-      navigate("/");
+      const user = response.data.user;
+      setLoggedInUser(user);
+      let navigatePathAfterLogin = "";
+      if (user.role === "STUDENT") {
+        navigatePathAfterLogin = "/";
+      } else if (user.role === "ADMIN") {
+        console.log("admin acc");
+        navigatePathAfterLogin = "/admin/schools";
+      } else {
+        navigatePathAfterLogin = "/teacher/grades";
+      }
+      console.log(navigatePathAfterLogin);
+      navigate(navigatePathAfterLogin);
     } catch (err) {
       setError("Invalid email or password");
     } finally {
