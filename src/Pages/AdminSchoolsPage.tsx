@@ -53,7 +53,7 @@ const AdminSchoolsPage = () => {
               <div
                 onClick={() => navigate(`/admin/grades/${school.id}`)}
                 key={school.id}
-                className="rounded-lg p-4 flex items-center font-semibold text-gray-700 text-lg justify-start bg-white shadow-md hover:shadow-md hover:duration-300 w-full"
+                className="rounded-lg p-4 flex items-center cursor-pointer font-semibold text-gray-700 text-lg justify-start bg-white shadow-md hover:shadow-md hover:duration-300 w-full"
               >
                 {school.schoolName}
               </div>

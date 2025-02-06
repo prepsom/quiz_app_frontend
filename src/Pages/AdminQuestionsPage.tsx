@@ -24,6 +24,7 @@ import { Link, useParams } from 'react-router-dom'
 
 const QUESTIONS_PER_PAGE=10;
 const QUESTION_TYPES = ["MCQ","FILL_IN_BLANK","MATCHING"];
+const AVAILABLE_QUESTION_TYPES = ["MCQ"];
 const QUESTION_DIFFICULTIES = ["EASY","MEDIUM","HARD"];
 const QUESTION_STATUS = ["READY","NOT_READY"];
 
@@ -345,7 +346,7 @@ const AdminQuestionsPage = () => {
             <div className='flex items-center justify-start w-full px-8 mt-4'>
                 <Button onClick={() => setIsAddQuestionModalOpen(true)} className='bg-blue-500 text-white hover:bg-blue-600 hover:duration-300'>Add Question</Button>
             </div>
-            <div className='flex items-center w-full py-4 px-8 rounded-lg mb- mx-8 flex-wrap gap-2'>
+            <div className='flex items-center w-full py-4 px-8 rounded-lg mx-8 flex-wrap gap-2'>
                 <div className='bg-white'>
                     <Select value={filterByDifficulty} onValueChange={setFilterByDifficulty}>
                         <SelectTrigger>
@@ -450,7 +451,7 @@ const AdminQuestionsPage = () => {
                                 </SelectTrigger>
                                 <SelectContent>
                                     {QUESTION_TYPES.map((questionType) => {
-                                        return <SelectItem key={questionType} value={questionType}>{questionType}</SelectItem>
+                                        return <SelectItem disabled={!AVAILABLE_QUESTION_TYPES.includes(questionType)} key={questionType} value={questionType}>{questionType}</SelectItem>
                                     })}
                                 </SelectContent>
                             </Select>

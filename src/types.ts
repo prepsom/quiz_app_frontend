@@ -16,6 +16,9 @@ export type UserType = {
   createdAt: string;
   avatar: "MALE" | "FEMALE";
   gradeId: string;
+  _count?:{
+    UserLevelComplete:number;
+  }
 };
 
 export type LoginResponse = {
@@ -43,6 +46,7 @@ export type LevelType = {
   id: string;
   levelName: string;
   levelDescription: string | null;
+  subject?:SubjectType;
   position: number;
   subjectId: string;
   passingQuestions: number;
@@ -175,3 +179,16 @@ export type Grade = {
     students: number;
   };
 };
+
+export type UserCompleteLevelType = {
+  id:string;
+  userId:string;
+  levelId:string;
+  level?:LevelType;
+  strengths:string[];
+  weaknesses:string[];
+  recommendations:string[];
+  totalPoints:number;
+  noOfCorrectQuestions:number;
+}
+
