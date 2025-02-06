@@ -1,16 +1,23 @@
 import { useUserDataById } from "@/hooks/useUserDataById";
 import { ArrowLeft, Loader, User } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import maleAvatar from "../assets/MaleAvatar.jpeg";
 import femaleAvatar from "../assets/FemaleAvatar.jpeg";
 import coin3DIcon from "../assets/3DCoinsIcon.png";
-import { LevelWithMetaData, UserCompleteLevelType } from "@/types";
+import { AppContextType, LevelWithMetaData, UserCompleteLevelType } from "@/types";
 import LevelWithMetaDataCard from "@/components/LevelWithMetaDataCard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useContext } from "react";
+import { AppContext } from "@/Context/AppContext";
 
 const AdminUserProfilePage = () => {
   const { userId } = useParams<{ userId: string }>();
   const { userData, isLoading: isUserDataLoading } = useUserDataById(userId!);
+  const {loggedInUser} = useContext(AppContext) as AppContextType;
+  const role = loggedInUser?.role==="ADMIN" ? "admin" : loggedInUser?.role==="TEACHER" ? "teacher" : "student";
+  if(role==="student") return <Navigate to="/"/>
+
+
 
   if (isUserDataLoading) {
     return (
@@ -44,7 +51,7 @@ const AdminUserProfilePage = () => {
 
         <div className="flex flex-col w-full items-center px-8">
           <div className="flex items-center justify-start w-full">
-            <Link to={`/admin/students/${userData.gradeId}`} className="flex items-center gap-2 text-blue-500 font-semibold mt-4">
+            <Link to={`/${role}/students/${userData.gradeId}`} className="flex items-center gap-2 text-blue-500 font-semibold mt-4">
               <ArrowLeft/>
               Back to students
             </Link>
@@ -105,6 +112,7 @@ const AdminUserProfilePage = () => {
                   };
                   return (
                     <LevelWithMetaDataCard
+                      key={userCompletedLevel.id}
                       levelWithMetaData={levelWithMetaData}
                     />
                   );

@@ -13,11 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AppContext } from "@/Context/AppContext";
 import { useGetGradeById } from "@/hooks/useGetGradeById";
 import { useStudentsByGrade } from "@/hooks/useStudentsByGrade";
+import { AppContextType } from "@/types";
 import { ArrowLeft, Loader } from "lucide-react";
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
 
 const STUDENTS_PER_PAGE = 10;
 
@@ -44,11 +46,29 @@ const AdminStudentsPage = () => {
       ? undefined
       : (sortByTotalPoints as "asc" | "desc")
   );
+  const {loggedInUser} = useContext(AppContext) as AppContextType;
+  if(loggedInUser===null) return <Navigate to="/"/>
+  const role = loggedInUser.role==="ADMIN" ? "admin" : loggedInUser.role==="TEACHER" ? "teacher" : "student";
+  if(role==="student") return <Navigate to="/"/>
 
   const handleSearchUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSearchByEmailOrName(filterByNameOrEmail.trim());
   };
+
+  const backToGradesPath = (role:"teacher" | "admin") => {
+    let path;
+
+    if(role==="admin") {
+      path = `/admin/grades/${grade?.schoolId}`
+    } else {
+      path = `/teacher/grades`
+    }
+
+    return path;
+  }
+
+  useEffect(() => setPage(1) , [sortByTotalPoints,searchByEmailOrName]);
 
   if (isStudentsLoading || isGradeLoading) {
     return (
@@ -77,7 +97,7 @@ const AdminStudentsPage = () => {
       <div className="flex flex-col items-center w-full bg-[#ecfbff] min-h-screen">
         <div className="flex items-center justify-start w-full px-8 mt-14 mb-2">
           <Link
-            to={`/admin/grades/${grade.schoolId}`}
+            to={backToGradesPath(role)}
             className="text-blue-500 font-semibold flex items-center gap-2"
           >
             <ArrowLeft />
@@ -150,7 +170,7 @@ const AdminStudentsPage = () => {
         <div className="flex flex-col items-center w-full px-8">
           {students.length > 0 &&
             students.map((student) => {
-              return <AdminStudentCard student={student} />;
+              return <AdminStudentCard student={student} key={student.id}/>;
             })}
           {students.length === 0 && (
             <div className="flex items-center justify-center mx-4">

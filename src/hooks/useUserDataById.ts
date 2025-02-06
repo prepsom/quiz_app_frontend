@@ -44,13 +44,13 @@ export const useUserDataById = (userId:string) => {
                     userCompletedLevels:response.data.userCompletedLevels,
                     totalPoints:response.data.totalPoints
                 });
-                toast({
-                    title:"User Data Fetched Successfully",
-                    description:"User data fetched successfully",
-                    variant:"default",
-                });
             } catch (error) {
                 console.log(error);
+                toast({
+                    title:"Error Fetching User Data",
+                    description:"Error fetching user data",
+                    variant:"destructive",
+                });
             } finally {
                 setIsLoading(false);
             }

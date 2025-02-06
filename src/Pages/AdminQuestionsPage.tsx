@@ -13,14 +13,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem,SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { AppContext } from '@/Context/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { useGetLevelById } from '@/hooks/useGetLevelById';
 import { useQuestionsByLevel } from '@/hooks/useQuestionsByLevel';
-import { QuestionDifficulty, QuestionType, QuestionTypeType } from '@/types';
+import { AppContextType, QuestionDifficulty, QuestionType, QuestionTypeType } from '@/types';
 import axios from 'axios';
 import { ArrowLeft, Loader, TrashIcon } from 'lucide-react';
-import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useContext, useEffect, useState } from 'react'
+import { Link, Navigate, useParams } from 'react-router-dom'
 
 const QUESTIONS_PER_PAGE=10;
 const QUESTION_TYPES = ["MCQ","FILL_IN_BLANK","MATCHING"];
@@ -51,7 +52,6 @@ const AdminQuestionsPage = () => {
     const [mcqAnswerValue,setMcqAnswerValue] = useState<string>("");
     const [mcqAnswerCorrect,setMcqAnswerCorrect] = useState<boolean>(false);
     const [isAddingMcqAnswers,setIsAddingMcqAnswers] = useState<boolean>(false);
-
     const {questions,setQuestions,isLoading:isQuestionsLoading,totalPages} = useQuestionsByLevel(
         levelId!,
         page,
@@ -61,7 +61,10 @@ const AdminQuestionsPage = () => {
         searchByTitle.trim()==="" ? undefined : searchByTitle,
         filterByStatus==="ALL" ? undefined : filterByStatus==="READY" ? true : false,
     );
-    
+    const {loggedInUser} = useContext(AppContext) as AppContextType;
+    const role = loggedInUser?.role==="ADMIN" ? "admin" : loggedInUser?.role==="TEACHER" ? "teacher" : "student";
+    if(role==="student") return <Navigate to="/"/>
+
     const questionsCount = questions.length;
 
     const handleQuestionSearch = () => {
@@ -291,6 +294,10 @@ const AdminQuestionsPage = () => {
         setMcqAnswerCorrect(false);
     }
 
+
+    useEffect(() => setPage(1) , [searchByTitle,filterByDifficulty,filterByQuestionType,filterByStatus]);
+
+
     if(isQuestionsLoading || isLevelLoading) {
         return (
             <>
@@ -319,7 +326,7 @@ const AdminQuestionsPage = () => {
     <>
         <div className='flex flex-col items-center w-full bg-[#ecfbff] min-h-screen'>
             <div className='flex items-center justify-start w-full px-8 mt-14'>
-                <Link className='flex items-center gap-2 text-blue-500 font-semibold hover:text-blue-600 hover:duration-300' to={`/admin/levels/${level.subjectId}`}>
+                <Link className='flex items-center gap-2 text-blue-500 font-semibold hover:text-blue-600 hover:duration-300' to={`/${role}/levels/${level.subjectId}`}>
                     <ArrowLeft/>
                     Back to levels
                 </Link>

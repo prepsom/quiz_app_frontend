@@ -61,7 +61,7 @@ const AdminGradesPage = () => {
                 <span className="text-gray-600 font-semibold">
                   Grade {grade.grade}
                 </span>
-                {grade._count && (
+              {grade._count && (
                   <span className="text-gray-600 font-semibold">
                     No of students : {grade._count.students}
                   </span>

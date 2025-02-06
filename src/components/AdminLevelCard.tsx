@@ -1,15 +1,16 @@
 
 
-import { LevelType } from '@/types'
+import { AppContextType, LevelType } from '@/types'
 import { Button } from './ui/button'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
 import { Label } from './ui/label';
 import { Input } from './ui/input';
 import axios from 'axios';
 import { API_URL } from '@/App';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { AppContext } from '@/Context/AppContext';
 
 
 type Props = {
@@ -28,6 +29,9 @@ const AdminLevelCard = ({level,setLevels}:Props) => {
     const [newLevelName,setNewLevelName] = useState<string>(level.levelName);
     const [isEditingLevel,setIsEditingLevel] = useState<boolean>(false);
     const [newPassingQuestions,setNewPassingQuestions] = useState<number>(level.passingQuestions);
+    const {loggedInUser} = useContext(AppContext) as AppContextType;
+    const role = loggedInUser?.role==="ADMIN" ? "admin" : loggedInUser?.role==="TEACHER" ? "teacher" : "student";
+    if(role==="student") return <Navigate to="/"/>
 
     const handleDeleteLevel = async () => {
         try {
@@ -123,7 +127,7 @@ const AdminLevelCard = ({level,setLevels}:Props) => {
                     </div>
                 </div>
                 <div className='flex items-center gap-2'>
-                    <Button onClick={() => navigate(`/admin/questions/${level.id}`)} variant="outline">View Questions</Button>
+                    <Button onClick={() => navigate(`/${role}/questions/${level.id}`)} variant="outline">View Questions</Button>
                 </div>
             </div>
             <div className='flex items-center gap-2'>

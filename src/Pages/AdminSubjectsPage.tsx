@@ -11,17 +11,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AppContext } from "@/Context/AppContext";
 import { useToast } from "@/hooks/use-toast";
 import { useGetGradeById } from "@/hooks/useGetGradeById";
 import { useSubjectsByGrade } from "@/hooks/useSubjectsByGrade";
-import { SubjectType } from "@/types";
+import { AppContextType, SubjectType } from "@/types";
 import axios from "axios";
 import { ArrowLeft, Loader, PlusCircle } from "lucide-react";
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
 
 const AdminSubjectsPage = () => {
   const { toast } = useToast();
+  const {loggedInUser} = useContext(AppContext) as AppContextType;
   const { gradeId } = useParams<{ gradeId: string }>();
   const {
     subjects,
@@ -33,6 +35,9 @@ const AdminSubjectsPage = () => {
     useState<boolean>(false);
   const [subjectName, setSubjectName] = useState<string>("");
   const [isAddingSubject, setIsAddingSubject] = useState<boolean>(false);
+  if(loggedInUser===null) return <Navigate to="/"/>
+  const role = loggedInUser.role==="ADMIN" ? "admin" : loggedInUser.role==="TEACHER" ? "teacher" : "student";
+  if(role==="student") return <Navigate to="/"/>
 
   const handleAddSubject = async () => {
     if (!subjectName.trim()) return;
@@ -73,6 +78,18 @@ const AdminSubjectsPage = () => {
     }
   };
 
+  const backToGradesPath = (role:"teacher" | "admin") => {
+    let path;
+
+    if(role==="admin") {
+      path = `/admin/grades/${grade?.schoolId}`
+    } else {
+      path = `/teacher/grades`
+    }
+
+    return path;
+  }
+
   if (isSubjectsLoading || isGradeLoading) {
     return (
       <>
@@ -101,7 +118,7 @@ const AdminSubjectsPage = () => {
         <div className="flex items-center justify-start w-full px-8 my-8">
           <Link
             className="text-blue-500 font-semibold flex items-center gap-2"
-            to={`/admin/grades/${grade.schoolId}`}
+            to={backToGradesPath(role)}
           >
             <ArrowLeft/>
             Back to grades

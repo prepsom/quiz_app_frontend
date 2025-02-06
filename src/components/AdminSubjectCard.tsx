@@ -1,6 +1,6 @@
 import { useLevelsBySubject } from "@/hooks/useLevelsBySubject";
-import { SubjectType } from "@/types";
-import React, { useState } from "react";
+import { AppContextType, SubjectType } from "@/types";
+import React, { useContext, useState } from "react";
 import { Button } from "./ui/button";
 import {
   AlertDialog,
@@ -27,7 +27,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { AppContext } from "@/Context/AppContext";
 
 type Props = {
   subject: SubjectType;
@@ -52,6 +53,10 @@ const AdminSubjectCard = ({ subject, setSubjects }: Props) => {
   const [newSubjectName, setNewSubjectName] = useState<string>(
     subject.subjectName
   );
+  const {loggedInUser} = useContext(AppContext) as AppContextType;
+  if(loggedInUser===null) return <Navigate to="/"/>
+  const role = loggedInUser.role==="ADMIN" ? "admin" : loggedInUser.role==="TEACHER" ? "teacher" : "student";
+  if(role==="student") return <Navigate to="/"/>
 
   const handleDeleteSubject = async () => {
     try {
@@ -160,7 +165,7 @@ const AdminSubjectCard = ({ subject, setSubjects }: Props) => {
             )}
           </div>
           <div>
-            <Button onClick={() => navigate(`/admin/levels/${subject.id}`)} variant="outline">View Levels</Button>
+            <Button onClick={() => navigate(`/${role}/levels/${subject.id}`)} variant="outline">View Levels</Button>
           </div>
         </div>
         <div className="flex items-center gap-2 mt-2">

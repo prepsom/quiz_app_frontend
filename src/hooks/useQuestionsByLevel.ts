@@ -2,7 +2,6 @@ import { API_URL } from "@/App";
 import { QuestionDifficulty, QuestionType, QuestionTypeType } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useToast } from "./use-toast";
 
 // // const {
 // filterByReady,
@@ -36,7 +35,6 @@ export const useQuestionsByLevel = (
 ) => {
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { toast } = useToast();
   const [totalPages, setTotalPages] = useState<number | undefined>(undefined);
 
   // optional arguments are for pagination and filtering , if no arguments are provided
@@ -44,6 +42,7 @@ export const useQuestionsByLevel = (
 
   useEffect(() => {
     const queryParams = new URLSearchParams();
+    const abortController = new AbortController();
 
     if (page !== undefined && limit !== undefined) {
       queryParams.set("page", page.toString());
@@ -75,6 +74,7 @@ export const useQuestionsByLevel = (
         const response = await axios.get<Response | PaginationResponse>(
           `${API_URL}/question/${levelId}?${queryParams.toString()}`,
           {
+            signal:abortController.signal,
             withCredentials: true,
           }
         );
@@ -83,17 +83,16 @@ export const useQuestionsByLevel = (
           setTotalPages((response.data as PaginationResponse).totalPages);
         }
       } catch (error) {
-        toast({
-          title: "Error in fetching questions by level",
-          description: "check your network connection",
-          variant: "destructive",
-        });
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchQuestionsByLevel();
+
+    return () => abortController.abort();
+
   }, [
     levelId,
     page,

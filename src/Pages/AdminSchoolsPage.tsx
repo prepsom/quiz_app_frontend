@@ -1,14 +1,35 @@
+import { API_URL } from "@/App";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent,AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, AlertDialogFooter, AlertDialogDescription, AlertDialogAction } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { AppContext } from "@/Context/AppContext";
 import { useGetSchools } from "@/hooks/useGetSchools";
 import { AppContextType, School } from "@/types";
+import axios from "axios";
 import { Loader } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const AdminSchoolsPage = () => {
   const navigate = useNavigate();
   const { schools, isLoading: isSchoolsLoading } = useGetSchools();
-  const { loggedInUser } = useContext(AppContext) as AppContextType;
+  const { loggedInUser ,setLoggedInUser} = useContext(AppContext) as AppContextType;
+  const [isLoggingOut,setIsLoggingOut] = useState<boolean>(false);
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      const response = await axios.get(`${API_URL}/auth/logout`,{
+        withCredentials:true,
+      });
+      console.log(response);
+      setLoggedInUser(null);
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    } finally { 
+      setIsLoggingOut(false);
+    }
+  }
 
   if (isSchoolsLoading) {
     return (
@@ -33,8 +54,27 @@ const AdminSchoolsPage = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center bg-[#ecfbff] h-screen">
-        <div className="mt-14 flex flex-col gap-2 px-8">
+      <div className="flex flex-col items-center bg-[#ecfbff] min-h-screen">
+        <div className="flex items-center justify-end w-full px-8 mt-14">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+            <Button variant="outline" className="bg-blue-500 text-white hover:text-white hover:bg-blue-600 hover:duration-300">Logout</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+                <AlertDialogDescription></AlertDialogDescription>
+              </AlertDialogHeader>
+              
+
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={isLoggingOut}>Cancel</AlertDialogCancel>
+                <AlertDialogAction disabled={isLoggingOut} onClick={handleLogout}>Logout</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+        <div className="flex flex-col gap-2 px-8">
           <h1 className="text-blue-500 text-2xl font-semibold ">
             Welcome Admin {loggedInUser?.name}
           </h1>

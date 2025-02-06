@@ -4,14 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { AppContext } from '@/Context/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { useGetSubjectById } from '@/hooks/useGetSubjectById';
 import { useLevelsBySubject } from '@/hooks/useLevelsBySubject';
-import { LevelType } from '@/types';
+import { AppContextType, LevelType } from '@/types';
 import axios from 'axios';
 import { ArrowLeft, Loader } from 'lucide-react';
-import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom'
+import { useContext, useState } from 'react';
+import { Link, Navigate, useParams } from 'react-router-dom'
 
 type AddLevelRequestBody = {
     levelName: string;
@@ -29,6 +30,10 @@ const AdminLevelsPage = () => {
     const  [levelName,setLevelName] = useState<string>("");
     const [passingQuestions,setPassingQuestions] = useState<number>(0);
     const [isAddingLevel,setIsAddingLevel] = useState<boolean>(false);
+    const {loggedInUser} = useContext(AppContext) as AppContextType;
+    const role = loggedInUser?.role==="ADMIN" ? "admin" : loggedInUser?.role==="TEACHER" ? "teacher" : "student";
+    if(role==="student") return <Navigate to="/"/>
+
 
     const handleAddLevel = async () => {
         
@@ -89,7 +94,7 @@ const AdminLevelsPage = () => {
     <>
         <div className='flex flex-col items-center w-full bg-[#ecfbff] min-h-screen'>
             <div className='flex items-center justify-start w-full px-8 mt-14 mb-2'>
-                <Link to={`/admin/subjects/${subject.gradeId}`} className='text-blue-500 flex items-center gap-2 hover:text-blue-600 hover:duration-300'>
+                <Link to={`/${role}/subjects/${subject.gradeId}`} className='text-blue-500 flex items-center gap-2 hover:text-blue-600 hover:duration-300'>
                     <ArrowLeft/>
                     Back to subjects
                 </Link>
