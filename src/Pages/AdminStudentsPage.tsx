@@ -167,7 +167,7 @@ const AdminStudentsPage = () => {
             </Select>
           </div>
         </div>
-        <div className="flex flex-col items-center w-full px-8">
+        <div className="flex flex-col items-center w-full px-8 gap-2">
           {students.length > 0 &&
             students.map((student) => {
               return <AdminStudentCard student={student} key={student.id}/>;
