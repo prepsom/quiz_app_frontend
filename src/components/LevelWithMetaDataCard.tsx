@@ -5,8 +5,10 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
@@ -134,6 +136,11 @@ const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
                 </div>
               )}
             </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Close</Button>
+              </DialogClose>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       
