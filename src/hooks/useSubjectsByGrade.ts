@@ -33,5 +33,5 @@ export const useSubjectsByGrade = (gradeId: string) => {
     fetchSubjectsByGrade();
   }, [gradeId]);
 
-  return { subjects, isLoading };
+  return { subjects, isLoading,setSubjects};
 };

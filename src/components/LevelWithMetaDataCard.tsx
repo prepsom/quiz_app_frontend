@@ -18,7 +18,6 @@ type Props = {
 };
 
 const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
-  console.log(levelWithMetaData);
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] =
     useState<boolean>(false);
   const { questions, isLoading: isQuestionsLoading } = useQuestionsByLevel(
@@ -27,7 +26,7 @@ const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
 
   return (
     <>
-      <div className="flex flex-col gap-2 p-2">
+      <div className="flex flex-col gap-2 p-2  w-full">
         <div className="text-gray-500 text-md font-light">
           {levelWithMetaData.subject.subjectName}
         </div>

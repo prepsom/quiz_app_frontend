@@ -34,5 +34,5 @@ export const useLevelsBySubject = (subjectId: string) => {
     fetchLevelsBySubject();
   }, [subjectId]);
 
-  return { levels, isLoading };
+  return { levels, isLoading , setLevels};
 };

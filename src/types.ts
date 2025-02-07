@@ -16,6 +16,9 @@ export type UserType = {
   createdAt: string;
   avatar: "MALE" | "FEMALE";
   gradeId: string;
+  _count?:{
+    UserLevelComplete:number;
+  }
 };
 
 export type LoginResponse = {
@@ -43,6 +46,7 @@ export type LevelType = {
   id: string;
   levelName: string;
   levelDescription: string | null;
+  subject?:SubjectType;
   position: number;
   subjectId: string;
   passingQuestions: number;
@@ -66,10 +70,13 @@ export type QuestionType = {
   levelId: string;
   explanation: string;
   ready: boolean;
-  Answers?: AnswerType[];
+  MCQAnswers?: AnswerType[];
   MatchingPairs?: MatchingPairType[];
   BlankSegments?: BlankSegmentType[];
 };
+
+export type QuestionDifficulty = "EASY" | "MEDIUM" | "HARD";
+export type QuestionTypeType = "MCQ" | "MATCHING" | "FILL_IN_BLANK";
 
 export type AnswerType = {
   id: string;
@@ -163,3 +170,25 @@ export type School = {
   id: string;
   schoolName: string;
 };
+
+export type Grade = {
+  id: string;
+  grade: number;
+  schoolId:string;
+  _count?: {
+    students: number;
+  };
+};
+
+export type UserCompleteLevelType = {
+  id:string;
+  userId:string;
+  levelId:string;
+  level?:LevelType;
+  strengths:string[];
+  weaknesses:string[];
+  recommendations:string[];
+  totalPoints:number;
+  noOfCorrectQuestions:number;
+}
+

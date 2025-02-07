@@ -10,6 +10,14 @@ const ProtectedRoute = () => {
     return <Navigate to="/login" />;
   }
 
+  if(loggedInUser.role==="ADMIN") {
+    return <Navigate to="/admin/schools"/>
+  }
+
+  if(loggedInUser.role==="TEACHER") {
+    return <Navigate to="/teacher/grades"/>
+  }
+
   return <Outlet />;
 };
 
