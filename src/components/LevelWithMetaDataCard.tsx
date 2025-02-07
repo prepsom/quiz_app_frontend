@@ -87,7 +87,7 @@ const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
           open={isFeedbackDialogOpen}
           onOpenChange={setIsFeedbackDialogOpen}
         >
-          <DialogContent>
+          <DialogContent className="max-h-screen overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Level Feedback</DialogTitle>
               <DialogDescription></DialogDescription>
@@ -136,6 +136,7 @@ const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
             </div>
           </DialogContent>
         </Dialog>
+      
       </div>
     </>
   );
