@@ -36,10 +36,9 @@ const AdminLevelCard = ({level,setLevels}:Props) => {
     const handleDeleteLevel = async () => {
         try {
             setIsDeletingLevel(true);
-            const response = await axios.delete(`${API_URL}/level/${level.id}` ,{
+            await axios.delete(`${API_URL}/level/${level.id}` ,{
                 withCredentials:true,
             });
-            console.log(response);
             setLevels(prevLevels => prevLevels.filter((lev) => lev.id !== level.id));
             toast({
                 title:"Level deleted successfully",
@@ -47,7 +46,6 @@ const AdminLevelCard = ({level,setLevels}:Props) => {
                 variant:"default",
             });
         } catch (error) {
-            console.log(error);
             toast({
                 title:"Failed to delete level",
                 description:"check your network connection",
@@ -68,7 +66,6 @@ const AdminLevelCard = ({level,setLevels}:Props) => {
             },{
                 withCredentials:true,
             });
-            console.log(response);
             const updatedLevel = response.data.level;
 
             setLevels((prevLevels) => {
@@ -93,7 +90,6 @@ const AdminLevelCard = ({level,setLevels}:Props) => {
             setNewLevelName("");
             setIsEditLevelModalOpen(false);
         } catch (error) {
-            console.log(error);
             toast({
                 title:"Failed to update level",
                 description:"check your network connection",

@@ -2,6 +2,7 @@ import { API_URL } from "@/App";
 import { QuestionDifficulty, QuestionType, QuestionTypeType } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useToast } from "./use-toast";
 
 // // const {
 // filterByReady,
@@ -36,6 +37,7 @@ export const useQuestionsByLevel = (
   const [questions, setQuestions] = useState<QuestionType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number | undefined>(undefined);
+  const {toast} = useToast();
 
   // optional arguments are for pagination and filtering , if no arguments are provided
   // then all questions in level are fetched
@@ -82,8 +84,14 @@ export const useQuestionsByLevel = (
         if ((response.data as PaginationResponse).totalPages) {
           setTotalPages((response.data as PaginationResponse).totalPages);
         }
-      } catch (error) {
-        console.log(error);
+      } catch (error:any) {
+        if(error.name!=="CanceledError") {
+          toast({
+            title:"Error",
+            description:"Failed to fetch questions",
+            variant:"destructive",
+          });
+        }
       } finally {
         setIsLoading(false);
       }

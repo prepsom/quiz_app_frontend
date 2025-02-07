@@ -20,10 +20,8 @@ export const useTeacherGrades = () => {
                 const response = await axios.get<{success:boolean;grades:{gradeId:string;grade:number;noOfStudents:number}[]}>(`${API_URL}/user/teacher/grades`,{
                     withCredentials:true,
                 });
-                console.log(response);
                 setTeacherGrades(response.data.grades);
             } catch (error) {
-                console.log(error);
                 toast({
                     title:"Error",
                     description:"Error fetching teacher grades",

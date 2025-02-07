@@ -84,9 +84,6 @@ const AdminQuestionsPage = () => {
         return false;
     }
 
-    console.log(questionType);
-    console.log(questionDifficulty);
-
     const handleAddQuestion = async () => {
         type BaseQuestionRequestBody = {
             difficulty: QuestionDifficulty;
@@ -106,7 +103,6 @@ const AdminQuestionsPage = () => {
             } as BaseQuestionRequestBody , {
                 withCredentials:true,
             });
-            console.log(response.data.data);
             setQuestions((prevQuestions) => [...prevQuestions,response.data.data]);
             setQuestionTitle("");
             setQuestionExplanation("");
@@ -125,7 +121,6 @@ const AdminQuestionsPage = () => {
             }
 
         } catch (error) {
-            console.log(error);
             toast({
                 title:"Error adding question",
                 description:"An error occurred while adding the question",
@@ -155,7 +150,7 @@ const AdminQuestionsPage = () => {
 
             await Promise.all(mcqAnswers.map(async (mcqAnswer) => {
 
-                const response = await axios.post<{success:boolean;answer:{id:string;questionId:string;value:string;isCorrect:boolean}}>(`${API_URL}/answer`,{
+                await axios.post<{success:boolean;answer:{id:string;questionId:string;value:string;isCorrect:boolean}}>(`${API_URL}/answer`,{
                     value:mcqAnswer.value,
                     isCorrect:mcqAnswer.isCorrect,
                     questionId:isAddMcqAnswerModalOpenForQuestion.question?.id!,
@@ -163,8 +158,6 @@ const AdminQuestionsPage = () => {
                 } as CreateMcqAnswerRequestBody,{
                     withCredentials:true,
                 });
-
-                console.log(response);
 
             }));
 
@@ -178,7 +171,6 @@ const AdminQuestionsPage = () => {
             setMcqAnswers([]);
             window.location.reload();
         } catch (error) {
-            console.log(error);
             toast({
                 title:"Error adding answers",
                 description:"An error occurred while adding the answers",

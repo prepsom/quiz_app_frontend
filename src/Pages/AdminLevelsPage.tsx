@@ -48,7 +48,6 @@ const AdminLevelsPage = () => {
         try {
             setIsAddingLevel(true);
             const response = await axios.post<{success:boolean;message:string;level:LevelType}>(`${API_URL}/level`,createLevelRequestBody,{withCredentials:true});
-            console.log(response);
             setLevels((prevLevels) => [...prevLevels,response.data.level]);
             setLevelName("");
             setPassingQuestions(0);
@@ -59,7 +58,6 @@ const AdminLevelsPage = () => {
                 variant:"default"
             });
         } catch (error) {
-            console.log(error);
             toast({
                 title:"Error adding level",
                 description:"An error occurred while adding the level",

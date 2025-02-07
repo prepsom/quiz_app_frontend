@@ -61,10 +61,9 @@ const AdminSubjectCard = ({ subject, setSubjects }: Props) => {
   const handleDeleteSubject = async () => {
     try {
       setIsDeletingSubject(true);
-      const response = await axios.delete(`${API_URL}/subject/${subject.id}`, {
+      await axios.delete(`${API_URL}/subject/${subject.id}`, {
         withCredentials: true,
       });
-      console.log(response);
       setSubjects((prevSubjects) =>
         prevSubjects.filter((sub) => sub.id !== subject.id)
       );
@@ -75,7 +74,6 @@ const AdminSubjectCard = ({ subject, setSubjects }: Props) => {
       });
       setIsDeleteSubjectAlertOpen(false);
     } catch (error) {
-      console.log(error);
       toast({
         title: "Error deleting subject",
         description: "check your network connection",
@@ -104,7 +102,6 @@ const AdminSubjectCard = ({ subject, setSubjects }: Props) => {
           withCredentials: true,
         }
       );
-      console.log(response);
       setSubjects((prevSubjects) => {
         const updatedSubjects = prevSubjects.map((sub) => {
           if (sub.id === subject.id) {
@@ -124,7 +121,6 @@ const AdminSubjectCard = ({ subject, setSubjects }: Props) => {
       });
       setIsEditSubjectModalOpen(false);
     } catch (error) {
-      console.log(error);
       toast({
         title: "Error updating subject",
         description: "check your network connection",

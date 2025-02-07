@@ -2,6 +2,7 @@ import { API_URL } from "@/App";
 import { UserType } from "@/types"
 import axios from "axios";
 import { useEffect, useState } from "react"
+import { useToast } from "./use-toast";
 
 
 
@@ -12,6 +13,7 @@ export const useStudentsByGrade = (gradeId:string,page:number,limit:number,filte
     const [students,setStudents] = useState<UserType[]>([]);
     const [isLoading,setIsLoading] = useState<boolean>(false);
     const [totalPages,setTotalPages] = useState<number>(1);
+    const {toast} = useToast();
 
     useEffect(() => {
 
@@ -37,11 +39,16 @@ export const useStudentsByGrade = (gradeId:string,page:number,limit:number,filte
                     signal:abortController.signal,
                     withCredentials:true,
                 });
-                console.log(response);
                 setStudents(response.data.students);
                 setTotalPages(response.data.totalPages);
-            } catch (error) {
-                console.log(error);
+            } catch (error:any) {
+                if(error.name!=="CanceledError") {
+                    toast({
+                        title:"Error",
+                        description:"Failed to fetch students",
+                        variant:"destructive",
+                    });
+                }
             } finally {
                 setIsLoading(false);
             }

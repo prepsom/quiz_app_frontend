@@ -26,7 +26,6 @@ const TeacherGradesPage = () => {
             setLoggedInUser(null);
             navigate("/");
         } catch (error) {
-            console.log(error);
             toast({
                 title:"Error",
                 description:"Something went wrong while logging out",

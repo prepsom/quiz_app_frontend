@@ -57,7 +57,6 @@ const AdminSubjectsPage = () => {
           withCredentials: true,
         }
       );
-      console.log(response);
       setSubjects((prevSubjects) => [...prevSubjects, response.data.subject]);
       toast({
         title: "Subject added successfully",
@@ -67,7 +66,6 @@ const AdminSubjectsPage = () => {
       setSubjectName("");
       setIsCreateSubjectModalOpen(false);
     } catch (error) {
-      console.log(error);
       toast({
         title: "Failed to add subject",
         description: "Please check your internet connection and try again",
