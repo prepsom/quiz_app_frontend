@@ -33,7 +33,7 @@ const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <CheckCircle className="w-6 h-6 text-green-500" />
-            <span className="text-lg font-bold text-gray-600">
+            <span className="text-lg font-bold text-gray-600 flex flex-wrap">
               {levelWithMetaData.levelName}
             </span>
           </div>
@@ -41,7 +41,7 @@ const LevelWithMetaDataCard = ({ levelWithMetaData }: Props) => {
             {levelWithMetaData.levelDescription}
           </span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
             <img src={coin3DIcon} alt="" />
             <span className="font-bold">{levelWithMetaData.totalPoints}</span>

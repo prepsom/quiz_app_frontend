@@ -80,7 +80,7 @@ const AdminUserProfilePage = () => {
                 <div className="text-gray-700 font-semibold text-xl">
                   {userData.name}
                 </div>
-                <div className="text-gray-500 font-semibold text-md">
+                <div className="text-gray-500 font-semibold text-sm">
                   {userData.email}
                 </div>
               </div>
