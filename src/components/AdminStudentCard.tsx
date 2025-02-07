@@ -2,7 +2,7 @@ import { AppContextType, UserType } from "@/types";
 import { Button } from "./ui/button";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useUserTotalPointsById } from "@/hooks/useUserTotalPointsById";
-import coin3DIcon from "../assets/3DCoinsIcon.png"
+import coin3DIcon from "../assets/3DCoinsIcon.png";
 import { Loader } from "lucide-react";
 import { useContext } from "react";
 import { AppContext } from "@/Context/AppContext";
@@ -16,12 +16,17 @@ const AdminStudentCard = ({ student }: Props) => {
   const navigate = useNavigate();
   const { isLoading: isTotalPointsLoading, totalPoints } =
     useUserTotalPointsById(student.id);
-  const {loggedInUser} = useContext(AppContext) as AppContextType;
-  const role = loggedInUser?.role==="ADMIN" ? "admin" : loggedInUser?.role==="TEACHER" ? "teacher" : "student";
-  if(role==="student") return <Navigate to="/"/>
+  const { loggedInUser } = useContext(AppContext) as AppContextType;
+  const role =
+    loggedInUser?.role === "ADMIN"
+      ? "admin"
+      : loggedInUser?.role === "TEACHER"
+      ? "teacher"
+      : "student";
+  if (role === "student") return <Navigate to="/" />;
 
   return (
-    <div className="flex items-center justify-between w-full px-8 bg-white py-4">
+    <div className="flex items-center justify-between w-full px-8 bg-white py-4 rounded-lg shadow-md">
       <div className="flex flex-col w-full gap-2">
         <div className="flex items-center gap-2">
           <div className="text-lg font-semibold text-gray-700">
@@ -38,12 +43,14 @@ const AdminStudentCard = ({ student }: Props) => {
             View Profile
           </Button>
         </div>
+        {!isTotalPointsLoading && (
+          <div className="flex items-center gap-2">
+            <img src={coin3DIcon} alt="" />
+            <span className="text-lg font-semibold">{totalPoints}</span>
+          </div>
+        )}
+        {isTotalPointsLoading && <Loader />}
       </div>
-      {!isTotalPointsLoading && <div className="flex items-center justify-center gap-2">
-        <img src={coin3DIcon} alt=""/>
-        <span className="text-lg font-semibold">{totalPoints}</span>
-      </div>}
-      {isTotalPointsLoading && <Loader/>}
     </div>
   );
 };
