@@ -19,6 +19,7 @@ export type UserType = {
   _count?:{
     UserLevelComplete:number;
   }
+  phoneNumber?:string;
 };
 
 export type LoginResponse = {

@@ -4,7 +4,11 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import maleAvatar from "../assets/MaleAvatar.jpeg";
 import femaleAvatar from "../assets/FemaleAvatar.jpeg";
 import coin3DIcon from "../assets/3DCoinsIcon.png";
-import { AppContextType, LevelWithMetaData, UserCompleteLevelType } from "@/types";
+import {
+  AppContextType,
+  LevelWithMetaData,
+  UserCompleteLevelType,
+} from "@/types";
 import LevelWithMetaDataCard from "@/components/LevelWithMetaDataCard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useContext } from "react";
@@ -13,11 +17,16 @@ import { AppContext } from "@/Context/AppContext";
 const AdminUserProfilePage = () => {
   const { userId } = useParams<{ userId: string }>();
   const { userData, isLoading: isUserDataLoading } = useUserDataById(userId!);
-  const {loggedInUser} = useContext(AppContext) as AppContextType;
-  const role = loggedInUser?.role==="ADMIN" ? "admin" : loggedInUser?.role==="TEACHER" ? "teacher" : "student";
-  if(role==="student") return <Navigate to="/"/>
+  const { loggedInUser } = useContext(AppContext) as AppContextType;
+  const role =
+    loggedInUser?.role === "ADMIN"
+      ? "admin"
+      : loggedInUser?.role === "TEACHER"
+      ? "teacher"
+      : "student";
+  if (role === "student") return <Navigate to="/" />;
 
-
+  console.log(userData?.phoneNumber);
 
   if (isUserDataLoading) {
     return (
@@ -51,8 +60,11 @@ const AdminUserProfilePage = () => {
 
         <div className="flex flex-col w-full items-center px-8">
           <div className="flex items-center justify-start w-full">
-            <Link to={`/${role}/students/${userData.gradeId}`} className="flex items-center gap-2 text-blue-500 font-semibold mt-4">
-              <ArrowLeft/>
+            <Link
+              to={`/${role}/students/${userData.gradeId}`}
+              className="flex items-center gap-2 text-blue-500 font-semibold mt-4"
+            >
+              <ArrowLeft />
               Back to students
             </Link>
           </div>
@@ -83,6 +95,11 @@ const AdminUserProfilePage = () => {
                 <div className="text-gray-500 font-semibold text-sm">
                   {userData.email}
                 </div>
+                {userData.phoneNumber && (
+                  <div className="text-gray-600 font-semibold">
+                    {userData.phoneNumber}
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-2 mt-4">
@@ -93,35 +110,39 @@ const AdminUserProfilePage = () => {
             </div>
           </div>
 
-          {userData.userCompletedLevels.length > 0 ?  <div className="flex flex-col w-full px-8 border-2 rounded-lg shadow-md p-4 bg-white my-8">
-            <div className="flex items-center text-gray-700 font-semibold text-xl">
-              Completed Levels
+          {userData.userCompletedLevels.length > 0 ? (
+            <div className="flex flex-col w-full px-8 border-2 rounded-lg shadow-md p-4 bg-white my-8">
+              <div className="flex items-center text-gray-700 font-semibold text-xl">
+                Completed Levels
+              </div>
+              <div className="flex flex-col gap-2 items-center justify-center">
+                {userData.userCompletedLevels.map(
+                  (userCompletedLevel: UserCompleteLevelType) => {
+                    const levelWithMetaData: LevelWithMetaData = {
+                      ...userCompletedLevel.level!,
+                      subject: userCompletedLevel.level?.subject!,
+                      totalPoints: userCompletedLevel.totalPoints,
+                      strengths: userCompletedLevel.strengths,
+                      weaknesses: userCompletedLevel.weaknesses,
+                      recommendations: userCompletedLevel.recommendations,
+                      noOfCorrectQuestions:
+                        userCompletedLevel.noOfCorrectQuestions,
+                    };
+                    return (
+                      <LevelWithMetaDataCard
+                        key={userCompletedLevel.id}
+                        levelWithMetaData={levelWithMetaData}
+                      />
+                    );
+                  }
+                )}
+              </div>
             </div>
-            <div className="flex flex-col gap-2 items-center justify-center">
-              {userData.userCompletedLevels.map(
-                (userCompletedLevel: UserCompleteLevelType) => {
-                  const levelWithMetaData: LevelWithMetaData = {
-                    ...userCompletedLevel.level!,
-                    subject: userCompletedLevel.level?.subject!,
-                    totalPoints: userCompletedLevel.totalPoints,
-                    strengths: userCompletedLevel.strengths,
-                    weaknesses: userCompletedLevel.weaknesses,
-                    recommendations: userCompletedLevel.recommendations,
-                    noOfCorrectQuestions:
-                      userCompletedLevel.noOfCorrectQuestions,
-                  };
-                  return (
-                    <LevelWithMetaDataCard
-                      key={userCompletedLevel.id}
-                      levelWithMetaData={levelWithMetaData}
-                    />
-                  );
-                }
-              )}
-            </div>
-          </div> : <div className="flex item-center justify-center mt-8 text-gray-600 font-semibold text-xl">
+          ) : (
+            <div className="flex item-center justify-center mt-8 text-gray-600 font-semibold text-xl">
               No Completed Levels
-            </div>}
+            </div>
+          )}
         </div>
       </div>
     </>
