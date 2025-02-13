@@ -12,7 +12,7 @@ import { capitalizeEachWord } from "@/utils";
 import { useNotificationsByGrade } from "@/hooks/useNotificationsByGrade";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Pagination from "@/components/Pagination";
-import {format,formatDate} from "date-fns"
+import {formatDate} from "date-fns"
 
 const schoolIconMap = new Map<string, string>([
   ["Radha Krishna Educational Institute", RkInstitute],
