@@ -13,7 +13,7 @@ const Pagination = ({
   setCurrentPage,
 }: PaginationProps) => {
   return (
-    <div className="flex justify-center items-center gap-2">
+    <div className="flex flex-wrap justify-center items-center gap-2">
       <Button
         variant="outline"
         size="icon"

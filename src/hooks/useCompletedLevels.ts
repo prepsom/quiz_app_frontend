@@ -4,7 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useToast } from "./use-toast";
 
-export const useCompletedLevels = (page: number, limit: number) => {
+export const useCompletedLevels = (page: number, limit: number,filterBySubjectId:string | undefined) => {
   const [completedLevelsWithMetaData, setCompletedLevelsWithMetaData] =
     useState<LevelWithMetaData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -12,6 +12,17 @@ export const useCompletedLevels = (page: number, limit: number) => {
   const { toast } = useToast();
 
   useEffect(() => {
+
+    const abortController = new AbortController();
+
+    const queryParams = new URLSearchParams();
+    queryParams.set("page",page.toString());
+    queryParams.set("limit",limit.toString());
+    if(filterBySubjectId!==undefined) {
+      queryParams.set("filterBySubjectId",filterBySubjectId);
+    }
+
+
     const fetchAllCompletedLevelsByUser = async () => {
       try {
         setIsLoading(true);
@@ -19,26 +30,30 @@ export const useCompletedLevels = (page: number, limit: number) => {
           success: true;
           completedLevels: LevelWithMetaData[];
           noOfPages: number;
-        }>(`${API_URL}/level/levels/completed?page=${page}&limit=${limit}`, {
+        }>(`${API_URL}/level/levels/completed?${queryParams.toString()}`, {
           withCredentials: true,
+          signal:abortController.signal,
         });
-        console.log(response);
         setCompletedLevelsWithMetaData(response.data.completedLevels);
         setNoOfPages(response.data.noOfPages);
-      } catch (error) {
-        console.log(error);
-        toast({
-          title: "Failed to get user's completed levels",
-          description: "Please check your network connection",
-          variant: "destructive",
-        });
+      } catch (error:any) {
+        if(error.name!=="CanceledError") {
+          toast({
+            title: "Failed to get user's completed levels",
+            description: "Please check your network connection",
+            variant: "destructive",
+          });
+        }
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchAllCompletedLevelsByUser();
-  }, [page, limit]);
+
+    return () => abortController.abort();
+
+  }, [page, limit,filterBySubjectId]);
 
   return { completedLevelsWithMetaData, isLoading, noOfPages };
 };

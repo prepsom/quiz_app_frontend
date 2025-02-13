@@ -11,13 +11,22 @@ import {
 } from "@/types";
 import LevelWithMetaDataCard from "@/components/LevelWithMetaDataCard";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "@/Context/AppContext";
+import Pagination from "@/components/Pagination";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useSubjectsByGrade } from "@/hooks/useSubjectsByGrade";
+
+const COMPLETED_LEVELS_PER_PAGE=10;
 
 const AdminUserProfilePage = () => {
   const { userId } = useParams<{ userId: string }>();
-  const { userData, isLoading: isUserDataLoading } = useUserDataById(userId!);
+  const [page,setPage] = useState<number>(1);
+  const [filterBySubjectId,setFilterBySubjectId] = useState<string>("ALL");
+  const { userData, isLoading: isUserDataLoading,totalPages} = useUserDataById(userId!,page,COMPLETED_LEVELS_PER_PAGE,filterBySubjectId==="ALL" ? undefined : filterBySubjectId);
   const { loggedInUser } = useContext(AppContext) as AppContextType;
+  const {subjects,isLoading:isSubjectsLoading} = useSubjectsByGrade(userData?.gradeId!);
+
   const role =
     loggedInUser?.role === "ADMIN"
       ? "admin"
@@ -26,7 +35,7 @@ const AdminUserProfilePage = () => {
       : "student";
   if (role === "student") return <Navigate to="/" />;
 
-  console.log(userData?.phoneNumber);
+  useEffect(() => setPage(1) , [filterBySubjectId]);
 
   if (isUserDataLoading) {
     return (
@@ -43,7 +52,7 @@ const AdminUserProfilePage = () => {
       <>
         <div className="flex items-center justify-center mt-28">
           <h1 className="text-gray-700 font-semibold text-xl">
-            User not found
+            <Loader/>
           </h1>
         </div>
       </>
@@ -109,9 +118,31 @@ const AdminUserProfilePage = () => {
               </div>
             </div>
           </div>
-
+          {(userData.userCompletedLevels.length > 0 && !isSubjectsLoading && subjects.length!==0) ? (
+            <>
+              <div className="flex items-center w-full my-4">
+                <div className="bg-white">
+                  <Select value={filterBySubjectId} onValueChange={setFilterBySubjectId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Filter by subject"/>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ALL">All</SelectItem>
+                      {subjects.map((subject) => {
+                        return <SelectItem key={subject.id} value={subject.id}>{subject.subjectName}</SelectItem>
+                      })}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <Loader/>
+            </>
+          )}
           {userData.userCompletedLevels.length > 0 ? (
-            <div className="flex flex-col w-full px-8 border-2 rounded-lg shadow-md p-4 bg-white my-8">
+            <div className="flex flex-col w-full px-8 mb-4 border-2 rounded-lg shadow-md p-4 bg-white">
               <div className="flex items-center text-gray-700 font-semibold text-xl">
                 Completed Levels
               </div>
@@ -136,6 +167,7 @@ const AdminUserProfilePage = () => {
                     );
                   }
                 )}
+                {totalPages > 1 && <Pagination noOfPages={totalPages} currentPage={page} setCurrentPage={setPage}/>}
               </div>
             </div>
           ) : (

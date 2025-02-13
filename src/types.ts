@@ -193,3 +193,10 @@ export type UserCompleteLevelType = {
   noOfCorrectQuestions:number;
 }
 
+
+export type Notification = {
+  id:string;
+  message:string;
+  gradeId:string;
+  createdAt:string;
+}
