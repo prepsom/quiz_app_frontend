@@ -294,7 +294,7 @@ export default function LevelPage() {
           setIsShowGoodJob(true);
           setTimeout(() => {
             setIsShowGoodJob(false);
-          },2500);
+          },1500);
         }
         
         if (consecutiveCorrect === QUESTION_DIFFICULTY_INCREASE_CONSECUTIVE_REQUIRED-1) {
