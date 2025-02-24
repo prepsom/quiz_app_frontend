@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -158,6 +159,7 @@ const AdminSubjectsPage = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Subject</DialogTitle>
+            <DialogDescription></DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
             <Label htmlFor="subjectName">Subject Name</Label>

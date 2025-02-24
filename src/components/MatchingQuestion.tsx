@@ -103,13 +103,20 @@ export default function MatchingQuestion({
     setRightItems(shuffled);
   }, [pairs]);
 
-  useEffect(() => {
-    const matchArray = Array.from(matches.entries()).map(([left, right]) => ({
-      leftItem: left,
-      rightItem: right,
-    }));
-    onMatch(matchArray);
-  }, [matches, onMatch, pairs.length]);
+  useEffect(() =>
+    {
+      // Only update parent when matches actually change
+      if (matches.size > 0) {
+        const matchArray = Array.from(matches.entries()).map(([left, right]) => ({
+          leftItem: left,
+          rightItem: right,
+        }))
+        onMatch(matchArray)
+      }
+    }
+    , [matches]);
+    
+    
 
   const handleItemClick = (item: string, isLeft: boolean) => {
     if (questionResponse) return;

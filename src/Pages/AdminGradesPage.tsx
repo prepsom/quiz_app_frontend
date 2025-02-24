@@ -70,6 +70,9 @@ const AdminGradesPage = () => {
                   <Button onClick={() => navigate(`/admin/students/${grade.id}`)} variant="outline">View Students</Button>
                   <Button onClick={() => navigate(`/admin/subjects/${grade.id}`)} variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white hover:duration-300">View Subjects</Button>
                 </div>
+                <div className="my-2">
+                  <Button onClick={() => navigate(`/admin/notifications/${grade.id}`)} variant={"outline"}>View Notifications</Button>
+                </div>
               </div>
             );
           })}

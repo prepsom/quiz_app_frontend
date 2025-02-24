@@ -94,6 +94,7 @@ const AdminQuestionsPage = () => {
           };
         try {
             setIsAddingQuestion(true);
+            
             const response = await axios.post<{success:boolean;data:QuestionType}>(`${API_URL}/question` , {
                 questionTitle:questionTitle.trim(),
                 difficulty:questionDifficulty as QuestionDifficulty,
@@ -103,6 +104,7 @@ const AdminQuestionsPage = () => {
             } as BaseQuestionRequestBody , {
                 withCredentials:true,
             });
+            
             setQuestions((prevQuestions) => [...prevQuestions,response.data.data]);
             setQuestionTitle("");
             setQuestionExplanation("");

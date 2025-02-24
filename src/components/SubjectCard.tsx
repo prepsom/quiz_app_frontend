@@ -10,12 +10,14 @@ import mathsImageIcon from "../assets/MathImageIcon.png";
 import scienceImageIcon from "../assets/ScienceImageIcon.png";
 import computerImageIcon from "../assets/ComputerImageIcon.png";
 import aiImageIcon from "../assets/AiIcon.png";
+import englishIcon from "../assets/englishIcon.png"
 
 const subjectImageIcons = {
   mathematics: mathsImageIcon,
   science: scienceImageIcon,
   computer: computerImageIcon,
   "artificial intelligence": aiImageIcon,
+  "english":englishIcon
 } as const;
 
 interface SubjectCardProps {

@@ -24,6 +24,7 @@ import AdminStudentsPage from "./Pages/AdminStudentsPage";
 import AdminUserProfilePage from "./Pages/AdminUserProfilePage";
 import TeacherProtectedRoute from "./Layouts/TeacherProtectedRoute";
 import TeacherGradesPage from "./Pages/TeacherGradesPage";
+import AdminNotificationsPage from "./Pages/AdminNotificationsPage";
 
 export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -53,6 +54,7 @@ function App() {
                 <Route path="questions/:levelId" element={<AdminQuestionsPage/>}/>
                 <Route path="students/:gradeId" element={<AdminStudentsPage/>}/>
                 <Route path="profile/:userId" element={<AdminUserProfilePage/>}/>
+                <Route path="notifications/:gradeId" element={<AdminNotificationsPage/>}/>
               </Route>
               <Route path="teacher" element={<TeacherProtectedRoute/>}>
                 <Route path="grades" element={<TeacherGradesPage/>}/>
@@ -61,6 +63,7 @@ function App() {
                 <Route path="levels/:subjectId" element={<AdminLevelsPage/>}/>
                 <Route path="profile/:userId" element={<AdminUserProfilePage/>}/>
                 <Route path="questions/:levelId" element={<AdminQuestionsPage/>}/>
+                <Route path="notifications/:gradeId" element={<AdminNotificationsPage/>}/>
               </Route>
               <Route path="/" element={<ProtectedRoute />}>
                 <Route index element={<LandingPage />} />

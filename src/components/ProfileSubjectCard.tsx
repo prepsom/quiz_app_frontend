@@ -10,6 +10,7 @@ import computerImageIcon from "../assets/ComputerImageIcon.png";
 import AiImageIcon from "../assets/AiIcon.png";
 import { ProgressCircle } from "./ProgressCircle";
 import { Skeleton } from "./ui/skeleton";
+import englishIcon from "../assets/englishIcon.png"
 
 interface Props {
   subject: SubjectType;
@@ -20,6 +21,7 @@ const subjectImageIcons = {
   science: scienceImageIcon,
   computer: computerImageIcon,
   "artificial intelligence": AiImageIcon,
+  "english":englishIcon
 } as const;
 
 const ProfileSubjectCard = ({ subject }: Props) => {

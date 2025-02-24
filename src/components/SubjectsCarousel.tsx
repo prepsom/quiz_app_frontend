@@ -4,6 +4,7 @@ import scienceSubjectImage from "../assets/scienceSubjectIcon (2).png";
 import mathSubjectImage from "../assets/MathSubjectIcon (2).png";
 import aiSubjectImage from "../assets/AiIcon.png";
 import SubjectCarouselCard from "./SubjectCarouselCard";
+import englishIcon from "../assets/englishIcon.png"
 
 type Props = {
   subjects: SubjectType[];
@@ -14,6 +15,7 @@ const subjectImages = {
   mathematics: mathSubjectImage,
   computer: <ComputerIcon />,
   "artificial intelligence": aiSubjectImage,
+  "english":englishIcon,
 };
 
 const SubjectsCarousel = ({ subjects }: Props) => {

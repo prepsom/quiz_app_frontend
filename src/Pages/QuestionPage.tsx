@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
 import {
   LevelType,
@@ -12,6 +12,9 @@ import MCQQuestion from "@/components/MCQQuestion";
 import MatchingQuestion from "@/components/MatchingQuestion";
 import FillInBlankQuestion from "@/components/FillInBlankQuestion";
 import { motion } from "motion/react";
+import { AlertDialog,AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import owlImage from "../assets/owl_image.png"
+
 
 interface QuestionPageProps {
   question: QuestionType;
@@ -24,6 +27,8 @@ interface QuestionPageProps {
   currentQuestionTimerInSeconds: number;
   currentQuestionNumber: number;
   correctAnswerData: QuestionResponseData["correctData"] | null;
+  isShowGoodJob:boolean;
+  setIsShowGoodJob:React.Dispatch<SetStateAction<boolean>>;
 }
 
 export default function QuestionPage({
@@ -36,6 +41,8 @@ export default function QuestionPage({
   currentQuestionTimerInSeconds,
   currentQuestionNumber,
   correctAnswerData,
+  isShowGoodJob,
+  setIsShowGoodJob
 }: QuestionPageProps) {
   const { question: currentQuestion, isLoading: isQuestionWithAnswersLoading } =
     useQuestionWithAnswers(question.id);
@@ -204,6 +211,29 @@ export default function QuestionPage({
           )}
         </div>
       </div>
+      <AlertDialog open={isShowGoodJob} onOpenChange={setIsShowGoodJob}>
+        <AlertDialogContent className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-100">
+          <div className="flex flex-col items-center text-center">
+            <div className="w-32 h-32 relative mb-4">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full animate-pulse" />
+              <img
+                src={owlImage || "/placeholder.svg"}
+                alt="Congratulations owl"
+                className="w-full h-full object-contain relative z-10 drop-shadow-xl"
+              />
+            </div>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
+                Excellent Work!
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-blue-600/80 mt-2">
+                You're on a roll! Keep up the great work and maintain your winning streak.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
+    
   );
 }

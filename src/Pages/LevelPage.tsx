@@ -47,6 +47,8 @@ import { useToast } from "@/hooks/use-toast";
 // };
 
 export const MAX_QUESTIONS_PER_LEVEL = 15;
+const QUESTION_DIFFICULTY_INCREASE_CONSECUTIVE_REQUIRED=2;
+const SHOW_GOOD_JOB_POPUP_CONSECUTIVE_REQUIRED=5;
 
 export default function LevelPage() {
   const { toast } = useToast();
@@ -88,6 +90,8 @@ export default function LevelPage() {
   const [pickedQuestions, setPickedQuestions] = useState<QuestionType[]>([]);
   const [isFirstQuestionOfLevel, setIsFirstQuestionOfLevel] =
     useState<boolean>(true);
+  const [actualConsecutiveCorrectCount,setActualConsecutiveCorrectCount] = useState<number>(0);
+  const [isShowGoodJobPopUp,setIsShowGoodJob] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isQuestionsLoading && questions.length > 0 && !isInitialized) {
@@ -281,9 +285,19 @@ export default function LevelPage() {
       setCurrentQuestionResponse(questionResponse);
 
       if (questionResponse.isCorrect) {
+        setActualConsecutiveCorrectCount(prev => prev+1);
         setConsecutiveCorrect((prev) => prev + 1);
         setConsecutiveIncorrect(0);
-        if (consecutiveCorrect === 1) {
+
+        if(actualConsecutiveCorrectCount===SHOW_GOOD_JOB_POPUP_CONSECUTIVE_REQUIRED-1) {
+          setActualConsecutiveCorrectCount(0);
+          setIsShowGoodJob(true);
+          setTimeout(() => {
+            setIsShowGoodJob(false);
+          },2500);
+        }
+        
+        if (consecutiveCorrect === QUESTION_DIFFICULTY_INCREASE_CONSECUTIVE_REQUIRED-1) {
           setConsecutiveCorrect(0);
           if (difficulty === "EASY") setDifficulty("MEDIUM");
           else if (difficulty === "MEDIUM") setDifficulty("HARD");
@@ -291,6 +305,7 @@ export default function LevelPage() {
       } else {
         setConsecutiveIncorrect((prev) => prev + 1);
         setConsecutiveCorrect(0);
+        setActualConsecutiveCorrectCount(0);
         if (consecutiveIncorrect === 1) {
           setConsecutiveIncorrect(0);
           if (difficulty === "HARD") setDifficulty("MEDIUM");
@@ -399,6 +414,8 @@ export default function LevelPage() {
             currentQuestionTimerInSeconds={questionTimerInSeconds}
             currentQuestionNumber={questionNumber}
             correctAnswerData={correctAnswerData || null}
+            isShowGoodJob={isShowGoodJobPopUp}
+            setIsShowGoodJob={setIsShowGoodJob}
           />
         )}
       </div>

@@ -20,7 +20,7 @@ export const useNotificationsByGrade = (gradeId:string,page:number,limit:number)
         const fetchNotificationsByGrade = async () => {
             try {
                 setIsLoading(true);
-                const response = await axios.get<{success:boolean;notifications:Notification[];totalPages:number}>(`${API_URL}/grade/${gradeId}/notifications?${queryParams.toString()}`,{
+                const response = await axios.get<{success:boolean;notifications:Notification[];totalPages:number}>(`${API_URL}/notification/notifications/${gradeId}?${queryParams.toString()}`,{
                     withCredentials:true,
                 });
                 setNotifications(response.data.notifications);
@@ -39,5 +39,5 @@ export const useNotificationsByGrade = (gradeId:string,page:number,limit:number)
         fetchNotificationsByGrade();
     } , [gradeId,page,limit]);
 
-    return {notifications,isLoading,totalPages};
+    return {notifications,isLoading,totalPages,setNotifications};
 }
