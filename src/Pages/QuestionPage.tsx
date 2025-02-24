@@ -12,7 +12,7 @@ import MCQQuestion from "@/components/MCQQuestion";
 import MatchingQuestion from "@/components/MatchingQuestion";
 import FillInBlankQuestion from "@/components/FillInBlankQuestion";
 import { motion } from "motion/react";
-import { AlertDialog,AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { AlertDialog,AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import owlImage from "../assets/owl_image.png"
 
 
