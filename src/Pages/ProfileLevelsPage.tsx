@@ -115,7 +115,7 @@ const ProfileLevelsPage = () => {
                 key={incompleteLevel.id}
                 index={index + completedLevelsWithMetaData.length}
                 isCompleted={false}
-                isLocked={false}
+                isLocked={index===0 ? false : true}
                 level={incompleteLevel}
               />
             );

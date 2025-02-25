@@ -116,7 +116,7 @@ const LevelsPage = () => {
                 index={index + completedLevels.length}
                 key={level.id}
                 level={level}
-                isLocked={false} // Only unlock the next level
+                isLocked={index===0 ? false : true} // Only unlock the next level
                 isCompleted={false}
               />
             ))}
