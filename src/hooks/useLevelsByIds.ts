@@ -1,5 +1,5 @@
 import { API_URL } from "@/App";
-import { LevelType, LevelWithMetaData } from "@/types";
+import { LevelType } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useToast } from "./use-toast";

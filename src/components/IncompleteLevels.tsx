@@ -8,7 +8,6 @@ import aiImageIcon from "../assets/AiIcon.png";
 import englishIcon from "../assets/englishIcon.png";
 import { MAX_QUESTIONS_PER_LEVEL } from "@/Pages/LevelPage";
 import { useNavigate } from "react-router-dom";
-import { useAllCompletedLevels } from "@/hooks/useAllCompletedLevels";
 
 const subjectImageIcons = {
   mathematics: mathsImageIcon,
