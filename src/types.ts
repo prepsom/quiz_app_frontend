@@ -16,10 +16,10 @@ export type UserType = {
   createdAt: string;
   avatar: "MALE" | "FEMALE";
   gradeId: string;
-  _count?:{
-    UserLevelComplete:number;
-  }
-  phoneNumber?:string;
+  _count?: {
+    UserLevelComplete: number;
+  };
+  phoneNumber?: string;
 };
 
 export type LoginResponse = {
@@ -47,7 +47,7 @@ export type LevelType = {
   id: string;
   levelName: string;
   levelDescription: string | null;
-  subject?:SubjectType;
+  subject?: SubjectType;
   position: number;
   subjectId: string;
   passingQuestions: number;
@@ -175,28 +175,27 @@ export type School = {
 export type Grade = {
   id: string;
   grade: number;
-  schoolId:string;
+  schoolId: string;
   _count?: {
     students: number;
   };
 };
 
 export type UserCompleteLevelType = {
-  id:string;
-  userId:string;
-  levelId:string;
-  level?:LevelType;
-  strengths:string[];
-  weaknesses:string[];
-  recommendations:string[];
-  totalPoints:number;
-  noOfCorrectQuestions:number;
-}
-
+  id: string;
+  userId: string;
+  levelId: string;
+  level?: LevelType;
+  strengths: string[];
+  weaknesses: string[];
+  recommendations: string[];
+  totalPoints: number;
+  noOfCorrectQuestions: number;
+};
 
 export type Notification = {
-  id:string;
-  message:string;
-  gradeId:string;
-  createdAt:string;
-}
+  id: string;
+  message: string;
+  gradeId: string;
+  createdAt: string;
+};

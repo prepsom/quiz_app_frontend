@@ -22,6 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { BsQuestion } from "react-icons/bs";
+import IncompleteLevels from "@/components/IncompleteLevels";
 
 export default function SubjectsPage() {
   const { loggedInUser, setLoggedInUser } = useContext(
@@ -91,6 +92,11 @@ export default function SubjectsPage() {
       </div>
 
       <SubjectsCarousel subjects={subjects} />
+
+      <div className="p-4 flex items-center my-2 text-2xl font-semibold text-gray-700">
+        In progress Levels
+      </div>
+      <IncompleteLevels />
 
       <div className="p-4 flex items-center my-2 text-2xl font-semibold text-gray-700">
         Unfinished games
