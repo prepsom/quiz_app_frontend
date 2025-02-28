@@ -43,8 +43,13 @@ const IncompleteLevels = () => {
     );
   }
 
+  if (levels.length === 0) return <></>;
+
   return (
     <>
+      <div className="p-4 flex items-center my-2 text-2xl font-semibold text-gray-700">
+        In progress Levels
+      </div>
       <div className="flex flex-col gap-2 px-4">
         {levels.map((level) => {
           const Icon =

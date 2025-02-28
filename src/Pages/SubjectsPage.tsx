@@ -93,9 +93,6 @@ export default function SubjectsPage() {
 
       <SubjectsCarousel subjects={subjects} />
 
-      <div className="p-4 flex items-center my-2 text-2xl font-semibold text-gray-700">
-        In progress Levels
-      </div>
       <IncompleteLevels />
 
       <div className="p-4 flex items-center my-2 text-2xl font-semibold text-gray-700">
