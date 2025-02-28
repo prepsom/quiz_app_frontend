@@ -55,11 +55,11 @@ export default function LevelPage() {
   const navigate = useNavigate();
   const { levelId } = useParams<{ levelId: string }>();
   const { level, isLoading: isLevelLoading } = useGetLevelById(levelId);
-  const { questions, isLoading: isQuestionsLoading } =
-    useQuestionsByLevel(levelId);
   const { subject, isLoading: isSubjectLoading } = useGetSubjectById(
     level?.subjectId ? level.subjectId : null
   );
+  const { questions, isLoading: isQuestionsLoading } =
+    useQuestionsByLevel(levelId);
 
   const [showExitAlert, setShowExitAlert] = useState<boolean>(false);
   const [gameComplete, setGameComplete] = useState<boolean>(false);
@@ -85,21 +85,31 @@ export default function LevelPage() {
   const [consecutiveIncorrect, setConsecutiveIncorrect] = useState<number>(0);
   const [correctAnswerData, setCorrectAnswerData] =
     useState<QuestionResponseData["correctData"]>();
-  const [questionsPickedCounter, setQuestionsPickedCounter] =
-    useState<number>(0);
   const [pickedQuestions, setPickedQuestions] = useState<QuestionType[]>([]);
   const [isFirstQuestionOfLevel, setIsFirstQuestionOfLevel] =
     useState<boolean>(true);
   const [actualConsecutiveCorrectCount, setActualConsecutiveCorrectCount] =
     useState<number>(0);
   const [isShowGoodJobPopUp, setIsShowGoodJob] = useState<boolean>(false);
+  const [answeredQuestionIds, setAnsweredQuestionIds] = useState<string[]>(
+    JSON.parse(localStorage.getItem(levelId!) || "[]")
+  );
+
+  const questionsPickedCounter = pickedQuestions.length;
 
   useEffect(() => {
     if (!isQuestionsLoading && questions.length > 0 && !isInitialized) {
-      setAvailableQuestions(questions);
+      const answeredQuestions = questions.filter((question) =>
+        answeredQuestionIds.includes(question.id)
+      );
+      const available = questions.filter(
+        (question) => !answeredQuestionIds.includes(question.id)
+      );
+      setPickedQuestions(answeredQuestions);
+      setAvailableQuestions(available);
       setIsInitialized(true);
     }
-  }, [isQuestionsLoading, questions, isInitialized]);
+  }, [isQuestionsLoading, questions, isInitialized, answeredQuestionIds]);
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -123,7 +133,6 @@ export default function LevelPage() {
       questionsPickedCounter <= MAX_QUESTIONS_PER_LEVEL
     ) {
       pickQuestion();
-      setQuestionsPickedCounter((prev) => prev + 1);
     }
   }, [isInitialized, availableQuestions, currentQuestion, gameComplete]);
 
@@ -139,6 +148,10 @@ export default function LevelPage() {
   }, [currentQuestion]);
 
   useEffect(() => {
+    localStorage.setItem(levelId!, JSON.stringify(answeredQuestionIds));
+  }, [answeredQuestionIds]);
+
+  useEffect(() => {
     console.log("resetting states");
     // Reset states when levelId changes
     setGameComplete(false);
@@ -152,9 +165,9 @@ export default function LevelPage() {
     setConsecutiveCorrect(0);
     setConsecutiveIncorrect(0);
     setCorrectAnswerData(undefined);
-    setQuestionsPickedCounter(0);
     setPickedQuestions([]);
     setIsFirstQuestionOfLevel(true);
+    setAnsweredQuestionIds(JSON.parse(localStorage.getItem(levelId!) || "[]"));
   }, [levelId]);
 
   const questionNumber = useMemo(
@@ -176,6 +189,7 @@ export default function LevelPage() {
         { withCredentials: true }
       );
       setCompletionStatus(response.data);
+      localStorage.removeItem(levelId!);
     } catch (error: any) {
       setCompletionStatus({
         success: false,
@@ -281,6 +295,9 @@ export default function LevelPage() {
       );
 
       const { questionResponse, correctData } = response.data;
+      const answeredQuestionId = responseData.questionId;
+
+      setAnsweredQuestionIds((prev) => [...prev, answeredQuestionId]);
 
       setTotalPointsInLevel((prev) => prev + questionResponse.pointsEarned);
       setCurrentQuestionResponse(questionResponse);
