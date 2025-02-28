@@ -26,7 +26,7 @@ import { API_URL } from "@/App";
 import { AppContext } from "@/Context/AppContext";
 import { AppContextType, RegisterResponse } from "@/types";
 
-const GRADES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const GRADES = [6, 7, 8, 9, 10, 11, 12];
 
 const schoolAndTheirAvailableGrades = new Map<string, number[]>([
   ["Radiant group tuitions", [8, 9]],
