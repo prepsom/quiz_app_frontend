@@ -110,6 +110,7 @@ const RegisterPage: React.FC = () => {
       );
       console.log(response);
       setLoggedInUser(response.data.user);
+      localStorage.setItem("firstTimeLogin", "true");
       navigate("/");
     } catch (error: any) {
       console.log(error);

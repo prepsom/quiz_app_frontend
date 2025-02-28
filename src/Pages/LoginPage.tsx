@@ -68,6 +68,11 @@ export default function LoginPage() {
       );
       const user = response.data.user;
       setLoggedInUser(user);
+
+      if (!localStorage.getItem("firstTimeLogin")) {
+        localStorage.setItem("firstTimeLogin", "true");
+      }
+
       let navigatePathAfterLogin = "";
       if (user.role === "STUDENT") {
         navigatePathAfterLogin = "/";
