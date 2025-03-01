@@ -6,46 +6,42 @@ import { Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { SubjectCard } from "@/components/SubjectCard";
 import SubjectsCarousel from "@/components/SubjectsCarousel";
-import { Button } from "@/components/ui/button";
-import axios from "axios";
-import { API_URL } from "@/App";
-import { toast } from "@/hooks/use-toast";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { BsQuestion } from "react-icons/bs";
 import IncompleteLevels from "@/components/IncompleteLevels";
+// import RkInstitute from "../assets/RKInstituteLogo.png";
+// import RadiantInstitute from "../assets/RadiantInstituteLogo.png";
+// import owlMascotImage from "../assets/owl_image.png";
+// import { useGetSchoolNameByGrade } from "@/hooks/useGetSchoolName";
+
+// const schoolIconMap = new Map<string, string>([
+//   ["Radha Krishna Educational Institute", RkInstitute],
+//   ["Radiant group tuitions", RadiantInstitute],
+//   ["PrepSOM School", owlMascotImage],
+// ]);
 
 export default function SubjectsPage() {
-  const { loggedInUser, setLoggedInUser } = useContext(
-    AppContext
-  ) as AppContextType;
+  const { loggedInUser } = useContext(AppContext) as AppContextType;
   if (loggedInUser === null) return <Navigate to="/login" />;
   const { subjects, isLoading } = useSubjectsByGrade(loggedInUser?.gradeId);
   const [isContactInfoOpen, setIsContactInfoOpen] = useState<boolean>(false);
+  // const { schoolName, isLoading: isSchoolNameLoading } =
+  //   useGetSchoolNameByGrade(loggedInUser.gradeId);
 
-  const handleLogout = async () => {
-    try {
-      await axios.get(`${API_URL}/auth/logout`, {
-        withCredentials: true,
-      });
-      setLoggedInUser(null);
-    } catch (error) {
-      toast({
-        title: "Failed to logout",
-        description: "check your network connection",
-        variant: "destructive",
-      });
-    }
-  };
+  // const schoolIconImage = useMemo(() => {
+  //   if (schoolName === "" || isSchoolNameLoading) return;
+  //   return schoolName !== "" && !isSchoolNameLoading
+  //     ? schoolIconMap.get(schoolName)
+  //     : "";
+  // }, [schoolName]);
 
   if (isLoading) {
     return (
@@ -60,25 +56,9 @@ export default function SubjectsPage() {
       <div className="p-4 flex flex-col justify-center gap-2">
         <div className="flex items-center justify-between">
           <div className="text-gray-500 mt-4">Hello {loggedInUser.name}!</div>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline">Logout</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Are you sure you want to logout?
-                </AlertDialogTitle>
-                <AlertDialogDescription></AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="my-1">Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleLogout}>
-                  Logout
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          {/* <div className="rounded-full w-12 h-12 flex items-center justify-center p-1 border-2 border-blue-300 bg-[#ecfbff]">
+            <img src={schoolIconImage} alt="" />
+          </div> */}
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <span className="text-2xl text-gray-600 font-semibold ">

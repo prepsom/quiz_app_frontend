@@ -40,6 +40,17 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useUsersTotalPoints } from "@/hooks/useUsersTotalPoints";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const ProfilePage = () => {
   const { toast } = useToast();
@@ -138,6 +149,21 @@ const ProfilePage = () => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await axios.get(`${API_URL}/auth/logout`, {
+        withCredentials: true,
+      });
+      setLoggedInUser(null);
+    } catch (error) {
+      toast({
+        title: "Failed to logout",
+        description: "check your network connection",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col items-center bg-[#ecfbff] h-screen">
@@ -147,7 +173,28 @@ const ProfilePage = () => {
           <h1 className="font-semibold text-xl">Profile</h1>
         </div>
         <div className="flex flex-col items-center bg-[#ecfbff] px-4 w-full gap-8">
-          <div className="flex flex-col border-2 shadow-md p-4 w-full mt-14 bg-white rounded-lg">
+          <div className="flex items-center justify-end w-full mt-8">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline">Logout</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure you want to logout?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription></AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="my-1">Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleLogout}>
+                    Logout
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+          <div className="flex flex-col border-2 shadow-md p-4 w-full bg-white rounded-lg">
             <div className="flex items-center justify-end">
               <DropdownMenu>
                 <DropdownMenuTrigger>
