@@ -11,7 +11,7 @@ export const useSubjectsByGrade = (gradeId: string) => {
 
   useEffect(() => {
     const fetchSubjectsByGrade = async () => {
-      if(gradeId===undefined) return;
+      if (gradeId === undefined) return;
       try {
         setIsLoading(true);
         const response = await axios.get<{
@@ -34,5 +34,5 @@ export const useSubjectsByGrade = (gradeId: string) => {
     fetchSubjectsByGrade();
   }, [gradeId]);
 
-  return { subjects, isLoading,setSubjects};
+  return { subjects, isLoading, setSubjects };
 };
