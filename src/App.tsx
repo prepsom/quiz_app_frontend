@@ -25,6 +25,7 @@ import AdminUserProfilePage from "./Pages/AdminUserProfilePage";
 import TeacherProtectedRoute from "./Layouts/TeacherProtectedRoute";
 import TeacherGradesPage from "./Pages/TeacherGradesPage";
 import AdminNotificationsPage from "./Pages/AdminNotificationsPage";
+import ChatPage from "./Pages/ChatPage";
 
 export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -49,26 +50,56 @@ function App() {
               <Route path="/admin" element={<AdminProtectedRoute />}>
                 <Route path="schools" element={<AdminSchoolsPage />} />
                 <Route path="grades/:schoolId" element={<AdminGradesPage />} />
-                <Route path="subjects/:gradeId" element={<AdminSubjectsPage/>}/>
-                <Route path="levels/:subjectId" element={<AdminLevelsPage/>}/>
-                <Route path="questions/:levelId" element={<AdminQuestionsPage/>}/>
-                <Route path="students/:gradeId" element={<AdminStudentsPage/>}/>
-                <Route path="profile/:userId" element={<AdminUserProfilePage/>}/>
-                <Route path="notifications/:gradeId" element={<AdminNotificationsPage/>}/>
+                <Route
+                  path="subjects/:gradeId"
+                  element={<AdminSubjectsPage />}
+                />
+                <Route path="levels/:subjectId" element={<AdminLevelsPage />} />
+                <Route
+                  path="questions/:levelId"
+                  element={<AdminQuestionsPage />}
+                />
+                <Route
+                  path="students/:gradeId"
+                  element={<AdminStudentsPage />}
+                />
+                <Route
+                  path="profile/:userId"
+                  element={<AdminUserProfilePage />}
+                />
+                <Route
+                  path="notifications/:gradeId"
+                  element={<AdminNotificationsPage />}
+                />
               </Route>
-              <Route path="teacher" element={<TeacherProtectedRoute/>}>
-                <Route path="grades" element={<TeacherGradesPage/>}/>
-                <Route path="subjects/:gradeId" element={<AdminSubjectsPage/>}/>
-                <Route path="students/:gradeId" element={<AdminStudentsPage/>}/>
-                <Route path="levels/:subjectId" element={<AdminLevelsPage/>}/>
-                <Route path="profile/:userId" element={<AdminUserProfilePage/>}/>
-                <Route path="questions/:levelId" element={<AdminQuestionsPage/>}/>
-                <Route path="notifications/:gradeId" element={<AdminNotificationsPage/>}/>
+              <Route path="teacher" element={<TeacherProtectedRoute />}>
+                <Route path="grades" element={<TeacherGradesPage />} />
+                <Route
+                  path="subjects/:gradeId"
+                  element={<AdminSubjectsPage />}
+                />
+                <Route
+                  path="students/:gradeId"
+                  element={<AdminStudentsPage />}
+                />
+                <Route path="levels/:subjectId" element={<AdminLevelsPage />} />
+                <Route
+                  path="profile/:userId"
+                  element={<AdminUserProfilePage />}
+                />
+                <Route
+                  path="questions/:levelId"
+                  element={<AdminQuestionsPage />}
+                />
+                <Route
+                  path="notifications/:gradeId"
+                  element={<AdminNotificationsPage />}
+                />
               </Route>
               <Route path="/" element={<ProtectedRoute />}>
                 <Route index element={<LandingPage />} />
                 <Route path="/" element={<Layout />}>
-                  <Route path="profile" element={<ProfilePage/>} />
+                  <Route path="profile" element={<ProfilePage />} />
                   <Route
                     path="profile/:subjectId"
                     element={<ProfileLevelsPage />}
@@ -76,6 +107,7 @@ function App() {
                   <Route path="subjects" element={<SubjectsPage />} />
                   <Route path="leaderboard" element={<LeaderBoardPage />} />
                   <Route path="levels/:subjectId" element={<LevelsPage />} />
+                  <Route path="chat" element={<ChatPage />} />
                 </Route>
                 <Route path="level/:levelId" element={<LevelPage />} />
               </Route>

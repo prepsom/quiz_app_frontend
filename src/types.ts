@@ -199,3 +199,19 @@ export type Notification = {
   gradeId: string;
   createdAt: string;
 };
+
+export type Chat = {
+  id: string;
+  title: string;
+  userId: string;
+  botId: string;
+};
+
+export type ChatMessage = {
+  messageText: string;
+  chatId: string;
+  id: string;
+  messageSenderId: string;
+  messageReceiverId: string;
+  messageCreatedAt: Date;
+};
