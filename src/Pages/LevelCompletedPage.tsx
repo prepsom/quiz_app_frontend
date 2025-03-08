@@ -24,7 +24,6 @@ const LevelCompletedPage = ({
   levelCompletionData,
   level,
   handleNextLevel,
-  nextLevel,
 }: Props) => {
   const [currentTotalPoints, setCurrentTotalPoints] = useState<number>(0);
   const pointsEarnedInLevel = levelCompletionData.totalPointsEarnedInLevel!;
