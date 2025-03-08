@@ -46,29 +46,34 @@ const AdminStudentsPage = () => {
       ? undefined
       : (sortByTotalPoints as "asc" | "desc")
   );
-  const {loggedInUser} = useContext(AppContext) as AppContextType;
-  if(loggedInUser===null) return <Navigate to="/"/>
-  const role = loggedInUser.role==="ADMIN" ? "admin" : loggedInUser.role==="TEACHER" ? "teacher" : "student";
-  if(role==="student") return <Navigate to="/"/>
+  const { loggedInUser } = useContext(AppContext) as AppContextType;
+  if (loggedInUser === null) return <Navigate to="/" />;
+  const role =
+    loggedInUser.role === "ADMIN"
+      ? "admin"
+      : loggedInUser.role === "TEACHER"
+      ? "teacher"
+      : "student";
+  if (role === "student") return <Navigate to="/" />;
 
   const handleSearchUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSearchByEmailOrName(filterByNameOrEmail.trim());
   };
 
-  const backToGradesPath = (role:"teacher" | "admin") => {
+  const backToGradesPath = (role: "teacher" | "admin") => {
     let path;
 
-    if(role==="admin") {
-      path = `/admin/grades/${grade?.schoolId}`
+    if (role === "admin") {
+      path = `/admin/grades/${grade?.schoolId}`;
     } else {
-      path = `/teacher/grades`
+      path = `/teacher/grades`;
     }
 
     return path;
-  }
+  };
 
-  useEffect(() => setPage(1) , [sortByTotalPoints,searchByEmailOrName]);
+  useEffect(() => setPage(1), [sortByTotalPoints, searchByEmailOrName]);
 
   if (isStudentsLoading || isGradeLoading) {
     return (
@@ -156,9 +161,11 @@ const AdminStudentsPage = () => {
                   {SORY_BY_OPTIONS.map((option) => {
                     return (
                       <SelectItem value={option} key={option}>
-                        {
-                          option==="asc" ? "lowest to highest" : option==="desc" ? "highest to lowest" : "none"
-                        }
+                        {option === "asc"
+                          ? "lowest to highest"
+                          : option === "desc"
+                          ? "highest to lowest"
+                          : "none"}
                       </SelectItem>
                     );
                   })}
@@ -170,7 +177,7 @@ const AdminStudentsPage = () => {
         <div className="flex flex-col items-center w-full px-8 gap-2">
           {students.length > 0 &&
             students.map((student) => {
-              return <AdminStudentCard student={student} key={student.id}/>;
+              return <AdminStudentCard student={student} key={student.id} />;
             })}
           {students.length === 0 && (
             <div className="flex items-center justify-center mx-4">

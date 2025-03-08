@@ -95,50 +95,54 @@ const TeacherGradesPage = () => {
         </div>
         {!isTeacherGradesLoading ? (
           <div className="flex flex-col gap-2 items-center justify-center w-full px-8 my-4">
-            {teacherGrades.map((teacherGrade) => {
-              return (
-                <div
-                  key={teacherGrade.gradeId}
-                  className="bg-white flex flex-col justify-between p-4 w-full border-2 rounded-lg shadow-md"
-                >
-                  <span className="text-gray-600 font-semibold">
-                    Grade {teacherGrade.grade}
-                  </span>
-                  <span className="text-gray-600 font-semibold">
-                    No of students : {teacherGrade.noOfStudents}
-                  </span>
-                  <div className="flex items-center gap-4 mt-4">
-                    <Button
-                      onClick={() =>
-                        navigate(`/teacher/students/${teacherGrade.gradeId}`)
-                      }
-                      variant="outline"
-                    >
-                      View Students
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        navigate(`/teacher/subjects/${teacherGrade.gradeId}`)
-                      }
-                      variant="outline"
-                      className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white hover:duration-300"
-                    >
-                      View Subjects
-                    </Button>
+            {teacherGrades
+              .filter((grade) => grade.noOfStudents !== 0)
+              .map((teacherGrade) => {
+                return (
+                  <div
+                    key={teacherGrade.gradeId}
+                    className="bg-white flex flex-col justify-between p-4 w-full border-2 rounded-lg shadow-md"
+                  >
+                    <span className="text-gray-600 font-semibold">
+                      Grade {teacherGrade.grade}
+                    </span>
+                    <span className="text-gray-600 font-semibold">
+                      No of students : {teacherGrade.noOfStudents}
+                    </span>
+                    <div className="flex items-center gap-4 mt-4">
+                      <Button
+                        onClick={() =>
+                          navigate(`/teacher/students/${teacherGrade.gradeId}`)
+                        }
+                        variant="outline"
+                      >
+                        View Students
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          navigate(`/teacher/subjects/${teacherGrade.gradeId}`)
+                        }
+                        variant="outline"
+                        className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white hover:duration-300"
+                      >
+                        View Subjects
+                      </Button>
+                    </div>
+                    <div className="my-2">
+                      <Button
+                        onClick={() =>
+                          navigate(
+                            `/teacher/notifications/${teacherGrade.gradeId}`
+                          )
+                        }
+                        variant={"outline"}
+                      >
+                        View Notifications
+                      </Button>
+                    </div>
                   </div>
-                  <div className="my-2">
-                    <Button
-                      onClick={() =>
-                        navigate(`/teacher/notifications/${teacherGrade.gradeId}`)
-                      }
-                      variant={"outline"}
-                    >
-                      View Notifications
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         ) : (
           <>

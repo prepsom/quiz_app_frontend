@@ -34,8 +34,11 @@ const AdminGradesPage = () => {
       <div className="flex flex-col items-center bg-[#ecfbff] min-h-screen">
         <div className="flex flex-col w-full px-8 gap-4">
           <div className="flex items-center justify-start w-full my-8">
-            <Link to="/admin/schools" className="flex items-center gap-2 text-blue-500">
-              <ArrowLeft/>
+            <Link
+              to="/admin/schools"
+              className="flex items-center gap-2 text-blue-500"
+            >
+              <ArrowLeft />
               Back to schools
             </Link>
           </div>
@@ -52,30 +55,50 @@ const AdminGradesPage = () => {
           <p className="text-gray-600 font-semibold">Please select a grade</p>
         </div>
         <div className="flex flex-col items-center w-full px-8 gap-4">
-          {grades.map((grade) => {
-            return (
-              <div
-                key={grade.id}
-                className="bg-white flex flex-col justify-between p-4 w-full border-2 rounded-lg shadow-md"
-              >
-                <span className="text-gray-600 font-semibold">
-                  Grade {grade.grade}
-                </span>
-              {grade._count && (
+          {grades
+            .filter((grade) => grade._count?.students !== 0)
+            .map((grade) => {
+              return (
+                <div
+                  key={grade.id}
+                  className="bg-white flex flex-col justify-between p-4 w-full border-2 rounded-lg shadow-md"
+                >
                   <span className="text-gray-600 font-semibold">
-                    No of students : {grade._count.students}
+                    Grade {grade.grade}
                   </span>
-                )}
-                <div className="flex items-center gap-4 mt-4">
-                  <Button onClick={() => navigate(`/admin/students/${grade.id}`)} variant="outline">View Students</Button>
-                  <Button onClick={() => navigate(`/admin/subjects/${grade.id}`)} variant="outline" className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white hover:duration-300">View Subjects</Button>
+                  {grade._count && (
+                    <span className="text-gray-600 font-semibold">
+                      No of students : {grade._count.students}
+                    </span>
+                  )}
+                  <div className="flex items-center gap-4 mt-4">
+                    <Button
+                      onClick={() => navigate(`/admin/students/${grade.id}`)}
+                      variant="outline"
+                    >
+                      View Students
+                    </Button>
+                    <Button
+                      onClick={() => navigate(`/admin/subjects/${grade.id}`)}
+                      variant="outline"
+                      className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white hover:duration-300"
+                    >
+                      View Subjects
+                    </Button>
+                  </div>
+                  <div className="my-2">
+                    <Button
+                      onClick={() =>
+                        navigate(`/admin/notifications/${grade.id}`)
+                      }
+                      variant={"outline"}
+                    >
+                      View Notifications
+                    </Button>
+                  </div>
                 </div>
-                <div className="my-2">
-                  <Button onClick={() => navigate(`/admin/notifications/${grade.id}`)} variant={"outline"}>View Notifications</Button>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
     </>
