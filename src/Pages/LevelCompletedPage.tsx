@@ -15,12 +15,16 @@ type Props = {
     SetStateAction<LevelCompletionResponse | null>
   >;
   setGameComplete: React.Dispatch<SetStateAction<boolean>>;
+  handleNextLevel: () => void;
+  nextLevel: LevelType;
 };
 
 const LevelCompletedPage = ({
   setShowLevelCompletedPage,
   levelCompletionData,
   level,
+  handleNextLevel,
+  nextLevel,
 }: Props) => {
   const [currentTotalPoints, setCurrentTotalPoints] = useState<number>(0);
   const pointsEarnedInLevel = levelCompletionData.totalPointsEarnedInLevel!;
@@ -65,12 +69,20 @@ const LevelCompletedPage = ({
           />
         </div>
 
-        <Button
-          className="w-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-300"
-          onClick={() => setShowLevelCompletedPage(false)}
-        >
-          View Feedback
-        </Button>
+        <div className="flex items-center justify-center gap-2">
+          <Button
+            className="w-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-300"
+            onClick={() => setShowLevelCompletedPage(false)}
+          >
+            View Feedback
+          </Button>
+          <Button
+            onClick={handleNextLevel}
+            className="w-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-300"
+          >
+            Next Level
+          </Button>
+        </div>
 
         <div className="grid grid-cols-2 gap-4">
           <StatCard

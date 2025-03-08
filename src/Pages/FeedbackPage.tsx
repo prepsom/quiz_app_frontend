@@ -44,6 +44,8 @@ const FeedbackPage = ({
         level={level}
         setGameComplete={setGameComplete}
         setCompletionStatus={setCompletionStatus}
+        nextLevel={nextLevel!}
+        handleNextLevel={handleNextLevel}
       />
     );
   }
