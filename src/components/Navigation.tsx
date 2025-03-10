@@ -57,7 +57,7 @@ export function Navigation({ levelComplete }: Props) {
             }`}
           >
             <MessageCircle />
-            <span className="text-xs">Chatbot</span>
+            <span className="text-xs">Ask doubts</span>
           </Link>
         </div>
       </nav>
