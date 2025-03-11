@@ -1,4 +1,4 @@
-import { Home, MessageCircle, Trophy, User } from "lucide-react";
+import { Home, Trophy, User } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 type Props = {
@@ -49,15 +49,6 @@ export function Navigation({ levelComplete }: Props) {
           >
             <User className="w-6 h-6" />
             <span className="text-xs">Profile</span>
-          </Link>
-          <Link
-            to="/chat"
-            className={`flex flex-col items-center gap-1 ${
-              location.pathname === "/chat" ? "text-blue-500" : "text-gray-500"
-            }`}
-          >
-            <MessageCircle />
-            <span className="text-xs">Ask doubts</span>
           </Link>
         </div>
       </nav>

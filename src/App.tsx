@@ -1,6 +1,11 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import LoginPage from "./Pages/LoginPage";
-import { AppContextProvider } from "./Context/AppContext";
+import { AppContext, AppContextProvider } from "./Context/AppContext";
 import ProtectedRoute from "./Layouts/ProtectedRoute";
 import LandingPage from "./Pages/LandingPage";
 import SubjectsPage from "./Pages/SubjectsPage";
@@ -26,6 +31,9 @@ import TeacherProtectedRoute from "./Layouts/TeacherProtectedRoute";
 import TeacherGradesPage from "./Pages/TeacherGradesPage";
 import AdminNotificationsPage from "./Pages/AdminNotificationsPage";
 import ChatPage from "./Pages/ChatPage";
+import ChatWidget from "./Pages/ChatWidget";
+import { useContext } from "react";
+import { AppContextType } from "./types";
 
 export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
@@ -112,11 +120,30 @@ function App() {
                 <Route path="level/:levelId" element={<LevelPage />} />
               </Route>
             </Routes>
+            <ProtectedChatWidget />
           </Router>
         </AppContextProvider>
       </div>
     </div>
   );
+}
+
+function ProtectedChatWidget() {
+  const { loggedInUser } = useContext(AppContext) as AppContextType;
+
+  if (loggedInUser === null) {
+    return <Navigate to="/login" />;
+  }
+
+  if (loggedInUser.role === "ADMIN") {
+    return <Navigate to="/admin/schools" />;
+  }
+
+  if (loggedInUser.role === "TEACHER") {
+    return <Navigate to="/teacher/grades" />;
+  }
+
+  return <ChatWidget />;
 }
 
 export default App;
