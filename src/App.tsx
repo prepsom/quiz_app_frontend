@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./Pages/LoginPage";
 import { AppContext, AppContextProvider } from "./Context/AppContext";
 import ProtectedRoute from "./Layouts/ProtectedRoute";
