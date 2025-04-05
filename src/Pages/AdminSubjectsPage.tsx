@@ -31,7 +31,7 @@ const AdminSubjectsPage = () => {
     isLoading: isSubjectsLoading,
     setSubjects,
   } = useSubjectsByGrade(gradeId!);
-  const { grade, isLoading: isGradeLoading } = useGetGradeById(gradeId!);
+  const {grade, isLoading: isGradeLoading } = useGetGradeById(gradeId!);
   const [isCreateSubjectModalOpen, setIsCreateSubjectModalOpen] =
     useState<boolean>(false);
   const [subjectName, setSubjectName] = useState<string>("");

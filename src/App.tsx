@@ -131,16 +131,8 @@ function App() {
 function ProtectedChatWidget() {
   const { loggedInUser } = useContext(AppContext) as AppContextType;
 
-  if (loggedInUser === null) {
-    return <Navigate to="/login" />;
-  }
-
-  if (loggedInUser.role === "ADMIN") {
-    return <Navigate to="/admin/schools" />;
-  }
-
-  if (loggedInUser.role === "TEACHER") {
-    return <Navigate to="/teacher/grades" />;
+  if (loggedInUser?.role !== "STUDENT") {
+    return null;
   }
 
   return <ChatWidget />;
