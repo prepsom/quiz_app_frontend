@@ -1,0 +1,39 @@
+# Node modules
+node_modules
+
+# Build directories
+/build
+/.next
+/.nuxt
+
+# Logs
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# npm debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+.vscode
+.idea
+*.sublime-workspace
+*.sublime-project
+
+# Git and version control directories
+.git
+.gitignore
+.gitmodules
+
+# Docker files
+Dockerfile
+docker-compose.yml

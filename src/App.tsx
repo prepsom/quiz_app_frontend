@@ -30,7 +30,7 @@ import ChatWidget from "./Pages/ChatWidget";
 import { useContext } from "react";
 import { AppContextType } from "./types";
 
-export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+export const API_URL = import.meta.env.VITE_API_URL||  "http://localhost:3001";
 
 function App() {
   return (
