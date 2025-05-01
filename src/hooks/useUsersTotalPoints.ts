@@ -19,6 +19,7 @@ export const useUsersTotalPoints = () => {
         //   description: "check your network connection",
         //   variant: "destructive",
         // });
+        console.log(error);
       } finally {
         setIsLoading(false);
       }

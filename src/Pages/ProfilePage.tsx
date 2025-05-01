@@ -79,6 +79,8 @@ const ProfilePage = () => {
   useEffect(() => {
     if (loggedInUser === null) return;
     setNewName(loggedInUser.name);
+
+    console.log("loggedInUser", loggedInUser);
   }, [loggedInUser]);
 
   const handleUpdateName = async () => {
