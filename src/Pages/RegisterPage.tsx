@@ -16,6 +16,8 @@ import axios from "axios";
 import { validatePassword } from "@/utils";
 import owlMascot from "../assets/owl_image.png";
 import circleLoaderSvg from "../assets/circleLoader.svg";
+import MaleAvatar from "../assets/MaleAvatar.jpeg";
+import FemaleAvatar from "../assets/FemaleAvatar.jpeg";
 import {
   Select,
   SelectContent,
@@ -48,6 +50,7 @@ const RegisterFormSchema = z
       .refine((phoneNumber) => phoneNumber.toString().length === 10, {
         message: "phone number should be of length 10",
       }),
+   avatar: z.enum(["MALE", "FEMALE"], { message: "Select a valid avatar" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -89,7 +92,7 @@ const RegisterPage: React.FC = () => {
   const onSubmit = async (data: RegisterFormType) => {
     setIsLoading(true);
     setError("");
-    const { email, grade, password, name, schoolName, phoneNumber } = data;
+    const { email, grade, password, name, schoolName, phoneNumber, avatar } = data;
     const gradeNumber = parseInt(grade);
     try {
       if (!school) return;
@@ -101,6 +104,7 @@ const RegisterPage: React.FC = () => {
           name,
           grade: gradeNumber,
           phoneNumber,
+          avatar,
           schoolName,
           schoolId: school.id,
         },
@@ -288,6 +292,48 @@ const RegisterPage: React.FC = () => {
               </p>
             )}
           </div>
+
+          <div className="space-y-2">
+            <Controller
+              name="avatar"
+              control={control}
+              render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an avatar" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Avatar</SelectLabel>
+                      <SelectItem value="MALE">Male</SelectItem>
+                      <SelectItem value="FEMALE">Female</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          {errors.avatar && (
+              <p className="text-sm text-red-500 font-medium animate-slideDown">
+                {errors.avatar.message}
+              </p>
+            )}
+          </div>
+
+
+          {control._formValues.avatar && (
+            <div className="flex justify-center mt-2">
+              <img
+                src={
+                  control._formValues.avatar === "MALE"
+                    ? MaleAvatar // or use import if require fails
+                    : FemaleAvatar
+                }
+                alt="Selected Avatar"
+                className="w-20 h-20 object-contain rounded-full border-2 border-blue-300 shadow-md"
+              />
+            </div>
+          )}
+
 
           <div className="space-y-2">
             <div className="relative">
